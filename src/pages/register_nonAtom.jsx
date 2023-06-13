@@ -21,7 +21,7 @@ const Register = () => {
     password: "",
     confirm_password: "",
     role: "user",
-    status: "inactive",
+    isActive: false,
   };
 
   const validationSchema = Yup.object().shape({
@@ -50,47 +50,39 @@ const Register = () => {
         Swal.fire({
           icon: "success",
           title: "Registration Success",
-          text: "Registration successful. Please wait for admin verification.",
+          text: "Please wait for admin verification.",
         }).then(() => {
           navigate("/login");
         });
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        if (
-          error.response.data.error ===
-          "Password and Confirm Password must match"
-        ) {
+        const errorMessage = error.response.data.error;
+
+        if (errorMessage === "Password and Confirm Password must match") {
           setFieldError("confirm_password", "Passwords must match");
         } else if (
-          error.response.data.error ===
+          errorMessage ===
           "Password must contain a combination of letters and numbers"
         ) {
           setFieldError(
             "password",
             "Password must contain a combination of letters and numbers"
           );
-        } else if (
-          error.response.data.error === "Email is already registered"
-        ) {
-          setFieldError("email", "Email is already taken");
-        } else if (
-          error.response.data.error === "Username is already registered"
-        ) {
-          setFieldError("username", "Username is already taken");
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Registration Failed",
-            text: "An error occurred. Please try again later.",
-          });
+          // Check if email or username already registered
+          if (
+            errorMessage.includes("Email is already registered") ||
+            errorMessage.includes("Username is already registered")
+          ) {
+            if (errorMessage.includes("Email is already registered")) {
+              setFieldError("email", "Email is already taken");
+            }
+            if (errorMessage.includes("Username is already registered")) {
+              setFieldError("username", "Username is already taken");
+            }
+          }
         }
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Registration Failed",
-          text: "An error occurred. Please try again later.",
-        });
       }
     } finally {
       setSubmitting(false);
