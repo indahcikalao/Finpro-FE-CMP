@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Register from "./pages/register_nonAtom";
+import Register from "./pages/register";
 import Login from "./pages/login";
 
 function App() {

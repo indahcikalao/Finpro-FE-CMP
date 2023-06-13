@@ -4,6 +4,7 @@ import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
   Button,
   Input,
@@ -26,7 +27,7 @@ const Register = () => {
     password: "",
     confirm_password: "",
     role: "user",
-    status: "inactive",
+    isActive: false,
   };
 
   const validationSchema = Yup.object().shape({
@@ -44,36 +45,54 @@ const Register = () => {
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
   });
 
-  const handleRegister = (values, { setSubmitting }) => {
-    // Simulate API request
-    axios
-      .post("http://localhost:3005/register", values)
-      .then((res) => {
-        console.log(res);
+  const handleRegister = async (values, { setSubmitting, setFieldError }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/register",
+        values
+      );
 
-        if (res.status === 200) {
-          const data = res.data;
-          if (data.error) {
-            // Handle username or email already exists error
-            alert(data.error);
-          } else {
-            if (data.status === "active") {
-              navigate("/login");
-            } else {
-              alert(
-                "User registration is not yet active, please wait for admin verification"
-              );
-              navigate("/login");
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Registration Success",
+          text: "Please wait for admin verification.",
+        }).then(() => {
+          navigate("/login");
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        const errorMessage = error.response.data.error;
+
+        if (errorMessage === "Password and Confirm Password must match") {
+          setFieldError("confirm_password", "Passwords must match");
+        } else if (
+          errorMessage ===
+          "Password must contain a combination of letters and numbers"
+        ) {
+          setFieldError(
+            "password",
+            "Password must contain a combination of letters and numbers"
+          );
+        } else {
+          // Check if email or username already registered
+          if (
+            errorMessage.includes("Email is already registered") ||
+            errorMessage.includes("Username is already registered")
+          ) {
+            if (errorMessage.includes("Email is already registered")) {
+              setFieldError("email", "Email is already taken");
+            }
+            if (errorMessage.includes("Username is already registered")) {
+              setFieldError("username", "Username is already taken");
             }
           }
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -98,7 +117,6 @@ const Register = () => {
                     >
                       Email
                     </label>
-
                     <Input
                       type="email"
                       name="email"
@@ -114,14 +132,12 @@ const Register = () => {
                     >
                       Username
                     </label>
-
                     <Input
                       type="text"
                       name="username"
                       id="username"
                       placeholder="Insert your Username"
                     />
-
                     <ErrorMessageInput name="username" />
                   </div>
                   <div>
@@ -131,14 +147,12 @@ const Register = () => {
                     >
                       Full Name
                     </label>
-
                     <Input
                       type="text"
                       name="full_name"
                       id="full_name"
                       placeholder="Insert your Full Name"
                     />
-
                     <ErrorMessageInput name="full_name" />
                   </div>
                   <div className="relative">
@@ -155,19 +169,18 @@ const Register = () => {
                         id="password"
                         placeholder="••••••••"
                       />
-                      <TogglePassword
+                      <button
                         type="button"
                         onClick={togglePassword}
-                        children={
-                          passwordShown ? (
-                            <RiEyeOffLine className="w-5 h-5" />
-                          ) : (
-                            <RiEyeLine className="w-5 h-5" />
-                          )
-                        }
-                      />
+                        className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500"
+                      >
+                        {passwordShown ? (
+                          <RiEyeOffLine className="w-5 h-5" />
+                        ) : (
+                          <RiEyeLine className="w-5 h-5" />
+                        )}
+                      </button>
                     </div>
-
                     <ErrorMessageInput name="password" />
                   </div>
                   <div className="relative">
@@ -183,8 +196,8 @@ const Register = () => {
                         name="confirm_password"
                         id="confirm_password"
                         placeholder="••••••••"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10"
                       />
-
                       <TogglePassword
                         type="button"
                         onClick={togglePassword}
@@ -197,7 +210,6 @@ const Register = () => {
                         }
                       />
                     </div>
-
                     <ErrorMessageInput name="confirm_password" />
                   </div>
                   <div className="flex items-start">
@@ -221,25 +233,30 @@ const Register = () => {
 
                     <ErrorMessageInput name="terms" />
                   </div>
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    children={
-                      isSubmitting ? "Creating account..." : "Create an account"
-                    }
-                  />
-                  <p className="text-sm font-light text-gray-500">
-                    Already have an account?{" "}
-                    <Link
-                      to={"/login"}
-                      className="font-medium text-primary-600 hover:underline"
-                    >
-                      Login here
-                    </Link>
-                  </p>
+                  <div className="text-center mt-6">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      children={
+                        isSubmitting
+                          ? "Creating account..."
+                          : "Create an account"
+                      }
+                    />
+                  </div>
                 </Form>
               )}
             </Formik>
+            <p className="text-sm text-center text-gray-600">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-primary-600 hover:text-primary-500"
+              >
+                Log in
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </div>
