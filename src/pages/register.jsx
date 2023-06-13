@@ -1,9 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import {
+  Button,
+  Input,
+  TogglePassword,
+  ErrorMessageInput,
+} from "../Components/Atoms";
 
 const Register = () => {
   const [passwordShown, setPasswordShown] = React.useState(false);
@@ -92,18 +98,14 @@ const Register = () => {
                     >
                       Email
                     </label>
-                    <Field
+
+                    <Input
                       type="email"
                       name="email"
                       id="email"
                       placeholder="Insert your Email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+                    <ErrorMessageInput name="email" />
                   </div>
                   <div>
                     <label
@@ -112,18 +114,15 @@ const Register = () => {
                     >
                       Username
                     </label>
-                    <Field
+
+                    <Input
                       type="text"
                       name="username"
                       id="username"
                       placeholder="Insert your Username"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     />
-                    <ErrorMessage
-                      name="username"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+
+                    <ErrorMessageInput name="username" />
                   </div>
                   <div>
                     <label
@@ -132,18 +131,15 @@ const Register = () => {
                     >
                       Full Name
                     </label>
-                    <Field
+
+                    <Input
                       type="text"
                       name="full_name"
                       id="full_name"
                       placeholder="Insert your Full Name"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     />
-                    <ErrorMessage
-                      name="full_name"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+
+                    <ErrorMessageInput name="full_name" />
                   </div>
                   <div className="relative">
                     <label
@@ -153,30 +149,26 @@ const Register = () => {
                       Password
                     </label>
                     <div className="relative">
-                      <Field
+                      <Input
                         type={passwordShown ? "text" : "password"}
                         name="password"
                         id="password"
                         placeholder="••••••••"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10"
                       />
-                      <button
+                      <TogglePassword
                         type="button"
                         onClick={togglePassword}
-                        className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500"
-                      >
-                        {passwordShown ? (
-                          <RiEyeOffLine className="w-5 h-5" />
-                        ) : (
-                          <RiEyeLine className="w-5 h-5" />
-                        )}
-                      </button>
+                        children={
+                          passwordShown ? (
+                            <RiEyeOffLine className="w-5 h-5" />
+                          ) : (
+                            <RiEyeLine className="w-5 h-5" />
+                          )
+                        }
+                      />
                     </div>
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+
+                    <ErrorMessageInput name="password" />
                   </div>
                   <div className="relative">
                     <label
@@ -186,39 +178,31 @@ const Register = () => {
                       Confirm Password
                     </label>
                     <div className="relative">
-                      <Field
+                      <Input
                         type={passwordShown ? "text" : "password"}
                         name="confirm_password"
                         id="confirm_password"
                         placeholder="••••••••"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10"
                       />
-                      <button
+
+                      <TogglePassword
                         type="button"
                         onClick={togglePassword}
-                        className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500"
-                      >
-                        {passwordShown ? (
-                          <RiEyeOffLine className="w-5 h-5" />
-                        ) : (
-                          <RiEyeLine className="w-5 h-5" />
-                        )}
-                      </button>
+                        children={
+                          passwordShown ? (
+                            <RiEyeOffLine className="w-5 h-5" />
+                          ) : (
+                            <RiEyeLine className="w-5 h-5" />
+                          )
+                        }
+                      />
                     </div>
-                    <ErrorMessage
-                      name="confirm_password"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+
+                    <ErrorMessageInput name="confirm_password" />
                   </div>
                   <div className="flex items-start">
                     <div className="flex items-center h-5">
-                      <Field
-                        type="checkbox"
-                        name="terms"
-                        id="terms"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                      />
+                      <Input type="checkbox" name="terms" id="terms" />
                     </div>
                     <div className="ml-3 text-sm">
                       <label
@@ -234,19 +218,16 @@ const Register = () => {
                         </Link>
                       </label>
                     </div>
-                    <ErrorMessage
-                      name="terms"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+
+                    <ErrorMessageInput name="terms" />
                   </div>
-                  <button
+                  <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                  >
-                    {isSubmitting ? "Creating account..." : "Create an account"}
-                  </button>
+                    children={
+                      isSubmitting ? "Creating account..." : "Create an account"
+                    }
+                  />
                   <p className="text-sm font-light text-gray-500">
                     Already have an account?{" "}
                     <Link
