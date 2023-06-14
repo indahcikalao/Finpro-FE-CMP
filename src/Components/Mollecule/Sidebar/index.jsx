@@ -33,8 +33,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 	return (
 		<Card
 			className={clsx(
-				'z-10 fixed top-4 left-4 h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform',
-				{ '-translate-x-full': !openSidebar }
+				'z-10 fixed top-4 xl:left-4 h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform',
+				{ '-translate-x-full left-0': !openSidebar }
 			)}
 		>
 			<button
