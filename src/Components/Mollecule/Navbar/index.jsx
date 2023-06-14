@@ -2,10 +2,9 @@ import React from 'react';
 import {
 	Navbar as MTNavbar,
 	Typography,
-	Button,
 	IconButton,
 } from '@material-tailwind/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 
 const Navbar = ({ openSidebar, setOpenSidebar }) => {
 	return (
@@ -25,11 +24,7 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
 					className='xl:hidden'
 					onClick={() => setOpenSidebar(!openSidebar)}
 				>
-					{openSidebar ? (
-						<XMarkIcon className='h-6 w-6' strokeWidth={2} />
-					) : (
-						<Bars3Icon className='h-6 w-6' strokeWidth={2} />
-					)}
+					<Bars3Icon className='h-6 w-6' strokeWidth={2} />
 				</IconButton>
 			</div>
 		</MTNavbar>
