@@ -20,8 +20,10 @@ import {
 	InboxIcon,
 	PowerIcon,
 	XMarkIcon,
+	TableCellsIcon,
 } from '@heroicons/react/24/solid';
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 	const [open, setOpen] = React.useState(0);
@@ -138,11 +140,12 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 						</List>
 					</AccordionBody>
 				</Accordion>
+				<Link to="/role-management">
 				<ListItem>
 					<ListItemPrefix>
-						<InboxIcon className='h-5 w-5' />
+						<TableCellsIcon className='h-5 w-5' />
 					</ListItemPrefix>
-					Inbox
+					Roles Management
 					<ListItemSuffix>
 						<Chip
 							value='14'
@@ -153,6 +156,8 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 						/>
 					</ListItemSuffix>
 				</ListItem>
+					</Link>
+			
 				<ListItem>
 					<ListItemPrefix>
 						<UserCircleIcon className='h-5 w-5' />
