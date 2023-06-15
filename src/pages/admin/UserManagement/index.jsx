@@ -16,6 +16,17 @@ const url = process.env.REACT_APP_BASE_URL;
 
 const ActionsColumn = ({ row, handleEditUser }) => {
 	const handleDeleteUser = async (id) => {
+		const confirm = await Swal.fire({
+			icon: 'warning',
+			title: 'Delete User',
+			text: 'Are you sure want to delete this user?',
+			showCancelButton: true,
+		});
+
+		if (confirm.isDismissed) {
+			return;
+		}
+
 		try {
 			const response = await axios.delete(`${url}/admin/${id}`);
 
