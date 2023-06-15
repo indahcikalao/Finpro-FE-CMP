@@ -12,12 +12,12 @@ import Swal from 'sweetalert2';
 
 import { Badge } from '../../../Components/Atoms';
 
+const url = process.env.REACT_APP_BASE_URL;
+
 const ActionsColumn = ({ row, handleEditUser }) => {
 	const handleDeleteUser = async (id) => {
 		try {
-			const response = await axios.delete(
-				`https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/admin/${id}`
-			);
+			const response = await axios.delete(`${url}/admin/${id}`);
 
 			if (response.status === 200) {
 				Swal.fire({
@@ -91,10 +91,9 @@ const UserManagement = () => {
 			};
 
 			try {
-				const { data: response } = await axios.get(
-					'https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/admin/user/active',
-					{ headers }
-				);
+				const { data: response } = await axios.get(`${url}/admin/user/active`, {
+					headers,
+				});
 
 				setData(response.data);
 			} catch (error) {
@@ -112,7 +111,7 @@ const UserManagement = () => {
 
 		try {
 			const { data: response } = await axios.put(
-				`https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/admin/active/${id}`,
+				`${url}/admin/active/${id}`,
 				data
 			);
 
