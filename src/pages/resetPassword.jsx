@@ -57,7 +57,7 @@ export default function ResetPassword() {
         Swal.fire({
           icon: "success",
           title: "Password Updated!",
-          text: "your password has been successfully updated.",
+          text: "Your password has been successfully updated.",
         }).then(() => {
           navigate("/login");
         });
@@ -177,6 +177,12 @@ export default function ResetPassword() {
               variant="gradient"
               fullWidth
               onClick={() => handleResetPassword(formik.values)}
+              disabled={
+                (!formik.touched.email && !formik.touched.password && !formik.touched.confirm_password) ||
+                formik.errors.password ||
+                formik.errors.email
+                || formik.errors.confirm_password
+              }
             >
               Reset Password
             </Button>
