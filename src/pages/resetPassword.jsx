@@ -30,8 +30,8 @@ export default function ResetPassword() {
     password: Yup.string()
       .required("Required")
       .matches(
-        /^(?=.*\d)(?=.*[a-zA-Z]).*$/,
-        "Password must contain a combination of letters and numbers"
+        /^(?=.*\d)(?=.*[a-zA-Z]).{8,}.*$/,
+        "Password must contain at least 8 characters and combination of letters and numbers"
       ),
     confirm_password: Yup.string()
       .required("Required")
@@ -40,7 +40,7 @@ export default function ResetPassword() {
 
   const navigate = useNavigate();
 
-  const urlMock = "https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io";
+  const urlMock = process.env.REACT_APP_BASE_URL;
 
   const handleResetPassword = async (value) => {
     const data = {
@@ -178,10 +178,12 @@ export default function ResetPassword() {
               fullWidth
               onClick={() => handleResetPassword(formik.values)}
               disabled={
-                (!formik.touched.email && !formik.touched.password && !formik.touched.confirm_password) ||
+                (!formik.touched.email &&
+                  !formik.touched.password &&
+                  !formik.touched.confirm_password) ||
                 formik.errors.password ||
-                formik.errors.email
-                || formik.errors.confirm_password
+                formik.errors.email ||
+                formik.errors.confirm_password
               }
             >
               Reset Password
