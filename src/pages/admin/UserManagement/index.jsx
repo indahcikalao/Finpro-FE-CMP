@@ -3,6 +3,8 @@ import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { Typography, Button } from '@material-tailwind/react';
 
+import { Badge } from '../../../Components/Atoms';
+
 const ActionsColumn = () => (
 	<div className='flex gap-2'>
 		<Typography
@@ -83,6 +85,12 @@ const UserManagement = () => {
 					{
 						name: 'Status',
 						selector: (row) => (row.is_active ? 'Active' : 'Inactive'),
+						cell: (row) =>
+							row.is_active ? (
+								<Badge type='success'>Active</Badge>
+							) : (
+								<Badge type='danger'>Inactive</Badge>
+							),
 					},
 					{
 						name: 'Role',
