@@ -8,6 +8,7 @@ import {
 	IconButton,
 } from '@material-tailwind/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import Swal from 'sweetalert2';
 
 import { Badge } from '../../../Components/Atoms';
 
@@ -19,12 +20,24 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 			);
 
 			if (response.status === 200) {
-				alert('User deleted!');
-
-				window.location.reload();
+				Swal.fire({
+					icon: 'success',
+					title: 'Deleted',
+					text: 'User has been deleted!',
+					timer: 1500,
+					showConfirmButton: false,
+				}).then(() => window.location.reload());
 			}
 		} catch (error) {
-			alert('Unable to delete user!');
+			Swal.fire({
+				icon: 'error',
+				title: 'Failed',
+				text:
+					'Unable to delete user: ' + error?.response?.data?.message ||
+					error.message,
+				timer: 1500,
+				showConfirmButton: false,
+			});
 		}
 	};
 
@@ -110,8 +123,24 @@ const UserManagement = () => {
 					user.id === activatedUser.id ? { ...user, ...activatedUser } : user
 				)
 			);
+
+			Swal.fire({
+				icon: 'success',
+				title: 'Activated',
+				text: 'User account successfully activated!',
+				timer: 1500,
+				showConfirmButton: false,
+			});
 		} catch (error) {
-			console.log('Error:', error);
+			Swal.fire({
+				icon: 'error',
+				title: 'Failed',
+				text:
+					'Unable to activate user: ' + error?.response?.data?.message ||
+					error.message,
+				timer: 1500,
+				showConfirmButton: false,
+			});
 		} finally {
 			handleCloseEditUser();
 		}
