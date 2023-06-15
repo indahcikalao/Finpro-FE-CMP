@@ -95,17 +95,12 @@ const UserManagement = () => {
 
 	return (
 		<div className='my-4 space-y-4'>
-			<div className='flex items-end justify-between'>
-				<Typography
-					variant='h1'
-					className='font-bold capitalize text-lg md:text-2xl'
-				>
-					user management
-				</Typography>
-				<Button variant='filled' size='sm'>
-					Add New User
-				</Button>
-			</div>
+			<Typography
+				variant='h1'
+				className='font-bold capitalize text-lg md:text-2xl'
+			>
+				user management
+			</Typography>
 			<DataTable
 				columns={[
 					{
