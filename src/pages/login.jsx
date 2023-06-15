@@ -1,30 +1,21 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import { Formik, Form, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  // Button,
-  // Input,
-  TogglePassword,
-  ErrorMessageInput,
-} from "../Components/Atoms";
+import { TogglePassword } from "../Components/Atoms";
 import {
   Card,
   CardHeader,
   CardBody,
   CardFooter,
   Input,
-  Checkbox,
   Button,
   Typography,
-  IconButton,
 } from "@material-tailwind/react";
 
 export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
-
-  const navigate = useNavigate();
 
   const initialValues = {
     email: "",
@@ -36,8 +27,10 @@ export default function Login() {
     password: Yup.string().required("Required"),
   });
 
-  const handleLogin = (value) => {
+  const handleLogin = async (value) => {
     console.log(value);
+    try {
+    } catch {}
   };
 
   const bg =
@@ -53,6 +46,7 @@ export default function Login() {
       <img
         src={bg}
         className="absolute inset-0 z-0 h-full w-full object-cover"
+        alt="background"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
       <div className="container mx-auto p-4">
