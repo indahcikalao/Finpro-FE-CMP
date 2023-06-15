@@ -239,7 +239,7 @@ export function Register() {
             </Button>
             <Typography variant="small" className="mt-3 flex justify-center">
               Already have an account?
-              <Link to="/auth/sign-in">
+              <Link to="/login">
                 <Typography
                   as="span"
                   variant="small"
