@@ -7,7 +7,7 @@ function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route index element={<AppRoutes />} />
+				<Route path='/*' element={<AppRoutes />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='*' element={<Navigate to='.' />} />
