@@ -5,28 +5,46 @@ import { Typography, Button } from '@material-tailwind/react';
 
 import { Badge } from '../../../Components/Atoms';
 
-const ActionsColumn = () => (
-	<div className='flex gap-2'>
-		<Typography
-			as='button'
-			href='#'
-			variant='small'
-			color='blue'
-			className='font-medium'
-		>
-			Edit
-		</Typography>
-		<Typography
-			as='button'
-			href='#'
-			variant='small'
-			color='red'
-			className='font-medium'
-		>
-			Delete
-		</Typography>
-	</div>
-);
+const ActionsColumn = ({ id }) => {
+	const handleDeleteUser = async (id) => {
+		try {
+			const response = await axios.delete(
+				`https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/admin/${id}`
+			);
+
+			if (response.status === 200) {
+				alert('User deleted!');
+
+				window.location.reload();
+			}
+		} catch (error) {
+			alert('Unable to delete user!');
+		}
+	};
+
+	return (
+		<div className='flex gap-2'>
+			<Typography
+				as='button'
+				href='#'
+				variant='small'
+				color='blue'
+				className='font-medium'
+			>
+				Edit
+			</Typography>
+			<Typography
+				as='button'
+				onClick={() => handleDeleteUser(id)}
+				variant='small'
+				color='red'
+				className='font-medium'
+			>
+				Delete
+			</Typography>
+		</div>
+	);
+};
 
 const UserManagement = () => {
 	const [data, setData] = React.useState([]);
@@ -74,8 +92,6 @@ const UserManagement = () => {
 			console.log('Error:', error);
 		}
 	};
-
-	const handleDeleteUser = async (id) => {};
 
 	return (
 		<div className='my-4 space-y-4'>
@@ -129,7 +145,7 @@ const UserManagement = () => {
 					{
 						name: 'Actions',
 						button: true,
-						cell: (row) => <ActionsColumn />,
+						cell: (row) => <ActionsColumn id={row.id} />,
 					},
 				]}
 				data={data}
