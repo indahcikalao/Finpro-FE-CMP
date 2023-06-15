@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +13,8 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -27,10 +29,32 @@ export default function Login() {
     password: Yup.string().required("Required"),
   });
 
+  const navigate = useNavigate();
+
+  const urlMock = "https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io";
+
   const handleLogin = async (value) => {
-    console.log(value);
+    console.log("==>value sent (later)", value);
     try {
-    } catch {}
+      const res = await axios.post(`${urlMock}/login`, value, {
+        headers: {
+          "x-mock-response-code": 200,
+        },
+      });
+      console.log("==>response", res);
+
+      if (res.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Welcome Back!",
+          text: "You are logged in.",
+        }).then(() => {
+          navigate("/");
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const bg =
