@@ -52,6 +52,31 @@ const UserManagement = () => {
 		getUsers();
 	}, []);
 
+	const handleActivateUser = async (id) => {
+		const data = {
+			is_active: true,
+		};
+
+		try {
+			const { data: response } = await axios.put(
+				`https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/admin/active/${id}`,
+				data
+			);
+
+			const activatedUser = response.data;
+
+			setData((prev) =>
+				prev.map((user) =>
+					user.id === activatedUser.id ? { ...user, ...activatedUser } : user
+				)
+			);
+		} catch (error) {
+			console.log('Error:', error);
+		}
+	};
+
+	const handleDeleteUser = async (id) => {};
+
 	return (
 		<div className='my-4 space-y-4'>
 			<div className='flex items-end justify-between'>
@@ -89,7 +114,12 @@ const UserManagement = () => {
 							row.is_active ? (
 								<Badge type='success'>Active</Badge>
 							) : (
-								<Badge type='danger'>Inactive</Badge>
+								<button
+									className='hover:opacity-80 whitespace-nowrap'
+									onClick={() => handleActivateUser(row.id)}
+								>
+									<Badge type='danger'>Activate User</Badge>
+								</button>
 							),
 					},
 					{
