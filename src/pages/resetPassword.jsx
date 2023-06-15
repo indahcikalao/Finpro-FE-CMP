@@ -12,6 +12,9 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function ResetPassword() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -35,12 +38,33 @@ export default function ResetPassword() {
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
   });
 
-  const handleResetPassword = (value) => {
+  const navigate = useNavigate();
+
+  const urlMock = "https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io";
+
+  const handleResetPassword = async (value) => {
     const data = {
       email: value.email,
       password: value.password,
     };
-    console.log(data);
+
+    console.log("==>value sent (later)", data);
+    try {
+      const res = await axios.patch(`${urlMock}/user/forgot-password`, data);
+      console.log("==>response", res);
+
+      if (res.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Password Updated!",
+          text: "your password has been successfully updated.",
+        }).then(() => {
+          navigate("/login");
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const bg =
@@ -55,6 +79,7 @@ export default function ResetPassword() {
     <>
       <img
         src={bg}
+        alt="background"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
