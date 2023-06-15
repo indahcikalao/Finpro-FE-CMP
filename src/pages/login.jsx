@@ -31,7 +31,7 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const urlMock = "https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io";
+  const urlMock = process.env.REACT_APP_BASE_URL;
 
   const handleLogin = async (value) => {
     console.log("==>value sent (later)", value);
