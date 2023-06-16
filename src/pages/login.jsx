@@ -19,19 +19,27 @@ import Swal from "sweetalert2";
 export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
 
+  const navigate = useNavigate();
+  const urlMock = process.env.REACT_APP_BASE_URL;
+  const bg =
+    "https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80";
+
   const initialValues = {
     email: "",
     password: "",
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Required"),
-    password: Yup.string().required("Required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
 
-  const navigate = useNavigate();
-
-  const urlMock = process.env.REACT_APP_BASE_URL;
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+  });
 
   const handleLogin = async (value) => {
     console.log("==>value sent (later)", value);
@@ -57,14 +65,6 @@ export default function Login() {
     }
   };
 
-  const bg =
-    "https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80";
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-  });
-
   return (
     <>
       <img
@@ -85,7 +85,7 @@ export default function Login() {
             </Typography>
             <p>It's nice to see you again.</p>
           </CardHeader>
-          <CardBody className="flex flex-col gap-2">
+          <CardBody className="flex flex-col gap-4">
             <div className="mb-2">
               <Input
                 type="email"
@@ -131,7 +131,7 @@ export default function Login() {
                 </Typography>
               )}
             </div>
-            <Link className="text-sm text-right">
+            <Link className="text-sm text-right" to='/reset-password'>
               <Typography variant="small" color="blue" className="ml-1">
                 Forgot Password?
               </Typography>
