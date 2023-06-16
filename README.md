@@ -6,7 +6,7 @@
 ## Progress Pages 
 - Login 
 - Regsiter ✅ (still need integration with API BE)
-- Homepage
+- Homepage ⏳ (alerady have navbar, sidebar, footer)
 - User Management
 - Role Management
 - Monitoring Satker
