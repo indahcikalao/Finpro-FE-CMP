@@ -85,14 +85,11 @@ const UserManagement = () => {
 
 	const handleEditUser = (row) => {
 		setOpen(true);
-		drawerRef.current.style.transform = 'none';
 		setEditUser(row);
 	};
 
 	const handleCloseEditUser = () => {
 		setOpen(false);
-		drawerRef.current.style.transform =
-			'translateX(-300px) translateY(0px) translateZ(0px)';
 	};
 
 	React.useEffect(() => {

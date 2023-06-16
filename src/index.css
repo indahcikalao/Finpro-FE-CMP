@@ -5,7 +5,3 @@
 body {
   margin: 0;
 }
-
-.absolute.inset-0.pointer-events-auto {
-  opacity: 1 !important;
-}
