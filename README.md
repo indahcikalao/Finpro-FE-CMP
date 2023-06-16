@@ -1,7 +1,8 @@
 # Final Project CMP BRI 2023
 Front End Dev : Arya, Cikal, Rhenald, Aziz <br>
+Back End Dev : Roby, Indra, Andre <br>
 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
-Pages : Login, Regsiter, Homepage, User Management, Role Management, Monitoring Satker, Download Monitoring Satker <br>
+Pages : Login, Regsiter, Homepage, User Management, Role Management, Monitoring Satker, Download Report Satker <br>
 Feature : Download report VA convert into Spreadsheet, etc <br>
 
 ## Layout Register
