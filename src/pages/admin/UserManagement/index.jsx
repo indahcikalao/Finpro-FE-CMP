@@ -6,6 +6,9 @@ import {
 	Button,
 	Drawer,
 	IconButton,
+	Input,
+	Select,
+	Option,
 } from '@material-tailwind/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
@@ -79,7 +82,6 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 const UserManagement = () => {
 	const [data, setData] = React.useState([]);
 	const [editUser, setEditUser] = React.useState({});
-	const drawerRef = React.useRef();
 
 	const [open, setOpen] = React.useState(false);
 
@@ -90,6 +92,7 @@ const UserManagement = () => {
 
 	const handleCloseEditUser = () => {
 		setOpen(false);
+		setEditUser({});
 	};
 
 	React.useEffect(() => {
@@ -133,8 +136,8 @@ const UserManagement = () => {
 
 			Swal.fire({
 				icon: 'success',
-				title: 'Activated',
-				text: 'User account successfully activated!',
+				title: 'Success',
+				text: 'User account successfully updated!',
 				timer: 1500,
 				showConfirmButton: false,
 			});
@@ -205,15 +208,10 @@ const UserManagement = () => {
 					pagination
 				/>
 			</div>
-			<Drawer
-				ref={drawerRef}
-				open={open}
-				onClose={handleCloseEditUser}
-				className='transition-all p-4'
-			>
+			<Drawer open={open} onClose={handleCloseEditUser} className='p-4'>
 				<div className='mb-6 flex items-center justify-between'>
 					<Typography variant='h5' color='blue-gray'>
-						Edit User
+						{editUser.is_active ? 'Edit' : 'Activate'} User
 					</Typography>
 					<IconButton
 						variant='text'
@@ -227,58 +225,56 @@ const UserManagement = () => {
 					<div className='form-group'>
 						<label
 							htmlFor='fullname'
-							className='block mb-2 text-sm font-medium text-gray-900'
+							className='block text-sm font-medium text-gray-900'
 						>
 							Fullname
 						</label>
-						<input
+						<Input
 							type='text'
 							name='fullname'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 disabled:opacity-50 disabled:cursor-not-allowed'
+							className='pl-3'
 							value={editUser.fullname}
+							variant='static'
 							disabled
 						/>
 					</div>
 					<div className='form-group'>
 						<label
 							htmlFor='email'
-							className='block mb-2 text-sm font-medium text-gray-900'
+							className='block text-sm font-medium text-gray-900'
 						>
 							Email
 						</label>
-						<input
+						<Input
 							type='email'
 							name='email'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 disabled:opacity-50 disabled:cursor-not-allowed'
+							className='pl-3'
 							value={editUser.email}
+							variant='static'
 							disabled
 						/>
 					</div>
 					<div className='form-group'>
 						<label
 							htmlFor='role'
-							className='block mb-2 text-sm font-medium text-gray-900'
+							className='block text-sm font-medium text-gray-900'
 						>
 							Role
 						</label>
-						<select
+						<Select
 							name='role'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
-							defaultValue=''
-							required
-							onChange={(e) =>
-								setEditUser({ ...editUser, role: e.target.value })
-							}
+							onChange={(val) => setEditUser({ ...editUser, role: val })}
 							value={editUser.role}
+							variant='static'
+							defaultValue=''
 						>
-							<option value=''>Assign role</option>
-							<option value='admin'>Admin</option>
-							<option value='user'>User</option>
-						</select>
+							<Option value='admin'>Admin</Option>
+							<Option value='user'>User</Option>
+						</Select>
 					</div>
 					<div className='form-group'>
 						<Button fullWidth onClick={() => handleActivateUser(editUser.id)}>
-							Activate User
+							{editUser.is_active ? 'Update' : 'Activate'} User
 						</Button>
 					</div>
 				</div>
