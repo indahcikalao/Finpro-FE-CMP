@@ -4,8 +4,8 @@
 📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
 
 ## Progress Pages 
-- Login ✅ (still need integration with API BE)
-- Regsiter
+- Login 
+- Regsiter ✅ (still need integration with API BE)
 - Homepage
 - User Management
 - Role Management
