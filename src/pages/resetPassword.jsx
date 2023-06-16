@@ -143,7 +143,7 @@ export default function ResetPassword() {
             <div className="mb-2">
               <div className="relative">
                 <Input
-                  type={passwordShown ? "text" : "password"}
+                  type={confirmPasswordShown ? "text" : "password"}
                   label="Confrim Password"
                   size="lg"
                   name="confirm_password"
@@ -155,7 +155,7 @@ export default function ResetPassword() {
                   type="button"
                   onClick={() => setConfirmPasswordShown(!confirmPasswordShown)}
                   children={
-                    passwordShown ? (
+                    confirmPasswordShown ? (
                       <RiEyeOffLine className="w-5 h-5" />
                     ) : (
                       <RiEyeLine className="w-5 h-5" />
