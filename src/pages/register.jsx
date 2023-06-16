@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import {
   Card,
   CardHeader,
@@ -13,6 +13,7 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import axios from "axios";
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,35 +47,36 @@ export function Register() {
       fullname: "",
       password: "",
       confirmPassword: "",
+      is_active: "",
+      role_id: "",
       agreeTerms: false,
     },
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch(
+        const response = await axios.post(
           "https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/register",
           {
-            method: "POST",
+            status: "created",
+            data: {
+              id: values.id,
+              fullname: values.fullname,
+              username: values.username,
+              email: values.email,
+              is_active: values.is_active,
+              role_id: values.role_id,
+            },
+          },
+          {
             headers: {
               "Content-Type": "application/json",
               "x-mock-response-code": "201",
             },
-            body: JSON.stringify({
-              status: "created",
-              data: {
-                id: values.id,
-                fullname: values.fullname,
-                username: values.username,
-                email: values.email,
-                is_active: values.is_active,
-                role_id: values.role_id,
-              },
-            }),
           }
         );
 
-        const data = await response.json();
-        console.log(data);
+        console.log(response);
+        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -167,13 +169,13 @@ export function Register() {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-4 focus:outline-none"
+                  className="absolute right-4 top-3 focus:outline-none"
                   onClick={handleTogglePassword}
                 >
                   {showPassword ? (
-                    <EyeOffIcon className="h-6 w-6" />
+                    <RiEyeOffLine className="h-6 w-6" />
                   ) : (
-                    <EyeIcon className="h-6 w-6" />
+                    <RiEyeLine className="h-6 w-6" />
                   )}
                 </button>
               </div>
@@ -196,13 +198,13 @@ export function Register() {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-4 focus:outline-none"
+                  className="absolute right-4 top-3 focus:outline-none"
                   onClick={handleToggleConfirmPassword}
                 >
                   {showConfirmPassword ? (
-                    <EyeOffIcon className="h-6 w-6" />
+                    <RiEyeOffLine className="h-6 w-6" />
                   ) : (
-                    <EyeIcon className="h-6 w-6" />
+                    <RiEyeLine className="h-6 w-6" />
                   )}
                 </button>
               </div>
