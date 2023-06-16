@@ -12,7 +12,7 @@ function App() {
 				<Route path='/register' element={<Register />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='*' element={<Navigate to='.' />} />
-				<Route path='/role-management' element={<Tables />} />
+				{/* <Route path='/role-management' element={<Tables />} /> */}
 			</Routes>
 		</BrowserRouter>
 	);
