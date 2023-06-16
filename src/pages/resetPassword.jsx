@@ -18,6 +18,12 @@ import Swal from "sweetalert2";
 
 export default function ResetPassword() {
   const [passwordShown, setPasswordShown] = useState(false);
+  const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
+
+  const navigate = useNavigate();
+  const urlMock = process.env.REACT_APP_BASE_URL;
+  const bg =
+    "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80";
 
   const initialValues = {
     email: "",
@@ -26,21 +32,22 @@ export default function ResetPassword() {
   };
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Required"),
+    email: Yup.string().email("Invalid email").required("Email is equired"),
     password: Yup.string()
-      .required("Required")
+      .required("Password is required")
       .matches(
         /^(?=.*\d)(?=.*[a-zA-Z]).{8,}.*$/,
-        "Password must contain at least 8 characters and combination of letters and numbers"
+        "Password must contain at least 8 characters, one letter, and one number"
       ),
     confirm_password: Yup.string()
-      .required("Required")
+      .required("Confirm Password is required")
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
   });
 
-  const navigate = useNavigate();
-
-  const urlMock = process.env.REACT_APP_BASE_URL;
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+  });
 
   const handleResetPassword = async (value) => {
     const data = {
@@ -67,14 +74,6 @@ export default function ResetPassword() {
     }
   };
 
-  const bg =
-    "https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80";
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-  });
-
   return (
     <>
       <img
@@ -95,7 +94,7 @@ export default function ResetPassword() {
             </Typography>
             <p>No worries, we got you!</p>
           </CardHeader>
-          <CardBody className="flex flex-col gap-2">
+          <CardBody className="flex flex-col gap-4">
             <div className="mb-2">
               <Input
                 type="email"
@@ -154,7 +153,7 @@ export default function ResetPassword() {
                 />
                 <TogglePassword
                   type="button"
-                  onClick={() => setPasswordShown(!passwordShown)}
+                  onClick={() => setConfirmPasswordShown(!confirmPasswordShown)}
                   children={
                     passwordShown ? (
                       <RiEyeOffLine className="w-5 h-5" />
@@ -172,7 +171,7 @@ export default function ResetPassword() {
                 )}
             </div>
           </CardBody>
-          <CardFooter className="pt-0">
+          <CardFooter className="pt-0 pb-8">
             <Button
               variant="gradient"
               fullWidth
