@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Final Project CMP BRI 2023
+👩‍💻 Front End Dev : Arya, Cikal, Rhenald, Aziz <br>
+👨‍💻 Back End Dev : Roby, Irfan, Andre <br>
+📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Progress Pages 
+- Login 
+- Regsiter ✅ (done, connect with BE, can insert new Account into mySQL)
+- Homepage ⏳ (already have navbar, sidebar, footer)
+- User Management
+- Role Management
+- Monitoring Satker
+- Download Report Satker
 
-## Available Scripts
+## Feature
+- Download report VA convert into Spreadsheet, etc <br>
 
-In the project directory, you can run:
+## Layout Register
+![register account](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/d48e26d5-828d-46dc-8bfe-1e6b22357e73)
 
-### `npm start`
+## Validation on Register
+![Slide1](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/b0b78fa8-6f71-4d88-9782-91a4340b8f33)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Slide2](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/7d69e419-521d-4ba3-974d-2fb233d0c428)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![Slide3](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/5d458cea-3a5d-4890-abcc-cf9b3324456f)
 
-### `npm test`
+![Slide4](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/124e2dbd-83a5-4796-8f81-c7878dea802e)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Slide5](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/de629673-961b-478d-a21d-4698c84d451a)
 
-### `npm run build`
+![Slide6](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/80367125-5ec2-4153-9a4c-c52a7fe771c8)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![Slide7](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/b6c39863-8b76-4aff-bf42-e832281e242d)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![Slide8](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/bfbfc7cb-c0b9-4334-a814-1e9a4419d8a4)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## More detail, layout and feature will update soon ⏰
