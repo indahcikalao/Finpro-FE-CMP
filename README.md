@@ -19,20 +19,20 @@
 ![register account](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/d48e26d5-828d-46dc-8bfe-1e6b22357e73)
 
 ## Validation on Register
-![Slide1](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/b0b78fa8-6f71-4d88-9782-91a4340b8f33)
+![Slide2](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/4103d4dd-e822-4b94-b3ce-47c2b877aca3)
 
-![Slide2](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/7d69e419-521d-4ba3-974d-2fb233d0c428)
+![Slide3](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/7f4ed4ff-0a0b-4004-af2c-2ef59ac23a2d)
 
-![Slide3](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/5d458cea-3a5d-4890-abcc-cf9b3324456f)
+![Slide4](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/eeed63de-412e-422e-a51a-b9aa800a09d0)
 
-![Slide4](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/124e2dbd-83a5-4796-8f81-c7878dea802e)
+![Slide5](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/acf208c6-e633-4430-822c-03c53297f5a4)
 
-![Slide5](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/de629673-961b-478d-a21d-4698c84d451a)
+![Slide6](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/9afca186-03d3-42e6-aa9a-0eb3644d3434)
 
-![Slide6](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/80367125-5ec2-4153-9a4c-c52a7fe771c8)
+![Slide7](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/7f050301-c7a0-4f4f-87cb-d2426e4c5b98)
 
-![Slide7](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/b6c39863-8b76-4aff-bf42-e832281e242d)
+![Slide8](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/30c67799-43a5-4768-9dba-e2edda40aa44)
 
-![Slide8](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/bfbfc7cb-c0b9-4334-a814-1e9a4419d8a4)
+![Slide9](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/c2a92c9e-a34e-42fe-ba04-34bfb6eec8e6)
 
 ## More detail, layout and feature will update soon ⏰
