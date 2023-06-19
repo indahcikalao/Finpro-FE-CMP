@@ -36,8 +36,8 @@ export default function ResetPassword() {
     password: Yup.string()
       .required("Password is required")
       .matches(
-        /^(?=.*\d)(?=.*[a-zA-Z]).{8,}.*$/,
-        "Password must contain at least 8 characters, one letter, and one number"
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+_!@#$%^&*.,?]).{8,}$/,
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one symbol"
       ),
     confirm_password: Yup.string()
       .required("Confirm Password is required")
