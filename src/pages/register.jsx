@@ -14,11 +14,13 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  //Yup validation
   const validationSchema = Yup.object().shape({
     fullname: Yup.string().required("Full Name is required"),
     username: Yup.string().required("Username is required"),
@@ -27,8 +29,8 @@ export function Register() {
       .required("Email is required"),
     password: Yup.string()
       .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        "Password must contain at least 8 characters, one letter, and one number"
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+_!@#$%^&*.,?]).{8,}$/,
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one symbol"
       )
       .required("Password is required"),
     confirmPassword: Yup.string()
@@ -47,46 +49,66 @@ export function Register() {
       fullname: "",
       password: "",
       confirmPassword: "",
-      is_active: "",
-      role_id: "",
+      active: 0,
+      role_id: 0,
       agreeTerms: false,
     },
     validationSchema,
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          "https://88857839-8bc7-4b7e-ae66-3aac4cfcacf1.mock.pstmn.io/register",
-          {
-            status: "created",
-            data: {
-              id: values.id,
-              fullname: values.fullname,
-              username: values.username,
-              email: values.email,
-              is_active: values.is_active,
-              role_id: values.role_id,
-            },
-          },
+          "http://localhost:8080/register",
+          values,
           {
             headers: {
               "Content-Type": "application/json",
-              "x-mock-response-code": "201",
             },
           }
         );
+
+        // Show success popup sweetalert2
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful",
+          text: "Please wait admin to verify your Account",
+        }).then(() => {
+          // Redirect to login page
+          window.location.href = "/login";
+        });
 
         console.log(response);
         console.log(response.data);
       } catch (error) {
         console.error(error);
+
+        //check if email already registered
+        if (error.response.data.message === "Email already registered") {
+          formik.setFieldError(
+            "email",
+            "Email already taken. Choose another one"
+          );
+        }
+        //check if username already registered
+        else if (
+          error.response.data.message === "Username already registered"
+        ) {
+          formik.setFieldError(
+            "username",
+            "Username already taken. Choose another one"
+          );
+        } else {
+          formik.setFieldError("email", "Error happend. Please try again.");
+        }
       }
     },
   });
 
+  //function to show password
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
+  //function to show confirm password
   const handleToggleConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
@@ -126,6 +148,7 @@ export function Register() {
                 </Typography>
               )}
             </div>
+
             <div className="mb-2">
               <Input
                 label="Username"
@@ -141,6 +164,7 @@ export function Register() {
                 </Typography>
               )}
             </div>
+
             <div className="mb-2">
               <Input
                 label="Full Name"
