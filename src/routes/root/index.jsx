@@ -1,6 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import AdminRoutes from '../admin';
 import UserRoutes from '../user';
+import { AutoLogout } from '../../Components/Layout';
 
 /* TODO: From backend */
 const ROLES = {
@@ -16,7 +17,7 @@ const AppRoutes = () => {
 
 	const element = useRoutes([...routes]);
 
-	return <>{element}</>;
+	return <AutoLogout>{element}</AutoLogout>;
 };
 
 export default AppRoutes;
