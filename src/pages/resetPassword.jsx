@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,33 +8,40 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Typography,
   Input,
   Button,
+  Typography,
 } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-export default function Login() {
+export default function ResetPassword() {
   const [passwordShown, setPasswordShown] = useState(false);
+  const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
 
   const navigate = useNavigate();
   const urlMock = process.env.REACT_APP_BASE_URL;
   const bg =
-    "https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80";
+    "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80";
 
   const initialValues = {
     email: "",
     password: "",
+    confirm_password: "",
   };
 
-  const token = localStorage.getItem("token");
-
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    email: Yup.string().email("Invalid email").required("Email is equired"),
+    password: Yup.string()
+      .required("Password is required")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+_!@#$%^&*.,?]).{8,}$/,
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one symbol"
+      ),
+    confirm_password: Yup.string()
+      .required("Confirm Password is required")
+      .oneOf([Yup.ref("password"), null], "Passwords must match"),
   });
 
   const formik = useFormik({
@@ -43,24 +49,24 @@ export default function Login() {
     validationSchema,
   });
 
-  const handleLogin = async (value) => {
-    console.log("==>value sent (later)", value);
+  const handleResetPassword = async (value) => {
+    const data = {
+      email: value.email,
+      password: value.password,
+    };
+
+    console.log("==>value sent (later)", data);
     try {
-      const res = await axios.post(`${urlMock}/login`, value, {
-        headers: {
-          "x-mock-response-code": 200,
-        },
-      });
-      console.log("==>response", res.data);
+      const res = await axios.patch(`${urlMock}/user/forgot-password`, data);
+      console.log("==>response", res);
 
       if (res.status === 200) {
-        localStorage.setItem("token", res.data.data.token);
         Swal.fire({
           icon: "success",
-          title: "Welcome Back!",
-          text: "You are logged in.",
+          title: "Password Updated!",
+          text: "Your password has been successfully updated.",
         }).then(() => {
-          navigate("/");
+          navigate("/login");
         });
       }
     } catch (error) {
@@ -68,18 +74,12 @@ export default function Login() {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
-  }, [token, navigate]);
-
   return (
     <>
       <img
         src={bg}
-        className="absolute inset-0 z-0 h-full w-full object-cover"
         alt="background"
+        className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
       <div className="container mx-auto p-4">
@@ -90,9 +90,9 @@ export default function Login() {
             className="mb-4 h-28 flex flex-col justify-center items-center"
           >
             <Typography variant="h3" color="white">
-              Welcome Back
+              Forgot Password?
             </Typography>
-            <p>It's nice to see you again.</p>
+            <p>No worries, we got you!</p>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
             <div className="mb-2">
@@ -140,39 +140,53 @@ export default function Login() {
                 </Typography>
               )}
             </div>
-            <Link className="text-sm text-right" to="/reset-password">
-              <Typography variant="small" color="blue" className="ml-1">
-                Forgot Password?
-              </Typography>
-            </Link>
+            <div className="mb-2">
+              <div className="relative">
+                <Input
+                  type={confirmPasswordShown ? "text" : "password"}
+                  label="Confrim Password"
+                  size="lg"
+                  name="confirm_password"
+                  value={formik.values.confirm_password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <TogglePassword
+                  type="button"
+                  onClick={() => setConfirmPasswordShown(!confirmPasswordShown)}
+                  children={
+                    confirmPasswordShown ? (
+                      <RiEyeOffLine className="w-5 h-5" />
+                    ) : (
+                      <RiEyeLine className="w-5 h-5" />
+                    )
+                  }
+                />
+              </div>
+              {formik.touched.confirm_password &&
+                formik.errors.confirm_password && (
+                  <Typography variant="small" color="red">
+                    {formik.errors.confirm_password}
+                  </Typography>
+                )}
+            </div>
           </CardBody>
-          <CardFooter className="pt-0">
+          <CardFooter className="pt-0 pb-8">
             <Button
               variant="gradient"
               fullWidth
-              onClick={() => handleLogin(formik.values)}
+              onClick={() => handleResetPassword(formik.values)}
               disabled={
-                (!formik.touched.email && !formik.touched.password) ||
+                (!formik.touched.email &&
+                  !formik.touched.password &&
+                  !formik.touched.confirm_password) ||
                 formik.errors.password ||
-                formik.errors.email
+                formik.errors.email ||
+                formik.errors.confirm_password
               }
             >
-              Login
+              Reset Password
             </Button>
-
-            <Typography variant="small" className="mt-6 flex justify-center">
-              Don't have an account?
-              <Link to="/register">
-                <Typography
-                  as="span"
-                  variant="small"
-                  color="blue"
-                  className="ml-1 font-bold"
-                >
-                  Register
-                </Typography>
-              </Link>
-            </Typography>
           </CardFooter>
         </Card>
       </div>
