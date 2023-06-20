@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
@@ -9,9 +9,9 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
+  Typography,
   Input,
   Button,
-  Typography,
 } from "@material-tailwind/react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -28,6 +28,8 @@ export default function Login() {
     email: "",
     password: "",
   };
+
+  const token = localStorage.getItem("token");
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -49,9 +51,10 @@ export default function Login() {
           "x-mock-response-code": 200,
         },
       });
-      console.log("==>response", res);
+      console.log("==>response", res.data);
 
       if (res.status === 200) {
+        localStorage.setItem("token", res.data.data.token);
         Swal.fire({
           icon: "success",
           title: "Welcome Back!",
@@ -64,6 +67,12 @@ export default function Login() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
 
   return (
     <>
@@ -131,7 +140,7 @@ export default function Login() {
                 </Typography>
               )}
             </div>
-            <Link className="text-sm text-right" to='/reset-password'>
+            <Link className="text-sm text-right" to="/reset-password">
               <Typography variant="small" color="blue" className="ml-1">
                 Forgot Password?
               </Typography>
@@ -150,6 +159,7 @@ export default function Login() {
             >
               Login
             </Button>
+
             <Typography variant="small" className="mt-6 flex justify-center">
               Don't have an account?
               <Link to="/register">
