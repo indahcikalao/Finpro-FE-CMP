@@ -1,51 +1,51 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 const events = [
-  "load",
-  "mousemove",
-  "mousedown",
-  "click",
-  "scroll",
-  "keypress",
+	"load",
+	"mousemove",
+	"mousedown",
+	"click",
+	"scroll",
+	"keypress",
 ];
 
 const AutoLogout = ({ children }) => {
-  const token = localStorage.getItem("token");
-  const navigate = useNavigate();
-  let timer;
+	const token = localStorage.getItem("token");
+	const navigate = useNavigate();
+	const timerRef = useRef();
 
-  const logoutAction = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
+	const logoutAction = useCallback(() => {
+		localStorage.clear();
+		navigate("/login");
+	}, [navigate]);
 
-  const resetTimer = () => {
-    if (timer) clearTimeout(timer);
-  };
+	const resetTimer = useCallback(() => {
+		if (timerRef.current) clearTimeout(timerRef.current);
+	}, []);
 
-  const handleLogoutTimer = () => {
-    timer = setTimeout(() => {
-      resetTimer();
-      Object.values(events).forEach((item) => {
-        window.removeEventListener(item, resetTimer);
-      });
+	const handleLogoutTimer = useCallback(() => {
+		timerRef.current = setTimeout(() => {
+			resetTimer();
+			Object.values(events).forEach((item) => {
+				window.removeEventListener(item, resetTimer);
+			});
 
-      logoutAction();
-    }, 1800000);
-  };
+			logoutAction();
+		}, 1800000);
+	}, [resetTimer, logoutAction]);
 
-  useEffect(() => {
-    if (token) {
-      Object.values(events).forEach((item) => {
-        window.addEventListener(item, () => {
-          resetTimer();
-          handleLogoutTimer();
-        });
-      });
-    } else navigate("/login");
-  }, [token, navigate]);
+	useEffect(() => {
+		if (token) {
+			Object.values(events).forEach((item) => {
+				window.addEventListener(item, () => {
+					resetTimer();
+					handleLogoutTimer();
+				});
+			});
+		} else navigate("/login");
+	}, [token, navigate, resetTimer, handleLogoutTimer]);
 
-  return children;
+	return children;
 };
 
 export default AutoLogout;
