@@ -17,7 +17,8 @@ import { Typography,
          Avatar,
          Tooltip,
          Dialog,
-         DialogHeader 
+         DialogHeader,
+         DialogBody 
 } from '@material-tailwind/react';
 import Swal from 'sweetalert2';
 import DataTable from 'react-data-table-component';
@@ -25,69 +26,70 @@ import { UserRoles, TabsUser, TableHead } from '../../../utils/dummyData';
 import { PencilIcon, UserPlusIcon } from '@heroicons/react/24/solid';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import AddRole from './addRole';
 
 
 const url = process.env.REACT_APP_BASE_URL;
 
-// const ActionsColumn = ({ row, handleEditRole }) => {
-//   const handleDeleteRole = async (id) => {
-//     const confirm = await Swal.fire({
-//       icon: 'warning',
-//       title: 'Delete Role',
-//       text: 'Are you sure want to delete this role?',
-//       showCancelButton: true,
-//     });
+const ActionsColumn = ({ row, handleEditRole }) => {
+  const handleDeleteRole = async (id) => {
+    const confirm = await Swal.fire({
+      icon: 'warning',
+      title: 'Delete Role',
+      text: 'Are you sure want to delete this role?',
+      showCancelButton: true,
+    });
 
-//     if (confirm.isDismissed) {
-//       return;
-//     }
+    if (confirm.isDismissed) {
+      return;
+    }
 
-//     try {
-//       const response = await axios.delete(`${url}/admin/roles/${id}`);
+    try {
+      const response = await axios.delete(`${url}/admin/roles/${id}`);
 
-//       if (response.status === 200) {
-//         Swal.fire({
-//           icon: 'success',
-//           title: 'Deleted',
-//           text: 'Role has been deleted!',
-//           timer: 1500,
-//           showConfirmButton: false,
-//         }).then(() => window.location.reload());
-//       }
-//     } catch (error) {
-//       Swal.fire({
-//         icon: 'error',
-//         title: 'Failed',
-//         text: 'Unable to delete role: ' + error?.response?.data?.message || error.message,
-//         timer: 1500,
-//         showConfirmButton: false,
-//       });
-//     }
-//   };
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted',
+          text: 'Role has been deleted!',
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => window.location.reload());
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed',
+        text: 'Unable to delete role: ' + error?.response?.data?.message || error.message,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
+  };
 
-//   return (
-//     <div className='flex gap-2'>
-//       <Typography
-//         as='button'
-//         onClick={() => handleEditRole(row)}
-//         variant='small'
-//         color='blue'
-//         className='font-medium'
-//       >
-//         Edit
-//       </Typography>
-//       <Typography
-//         as='button'
-//         onClick={() => handleDeleteRole(row.id)}
-//         variant='small'
-//         color='red'
-//         className='font-medium'
-//       >
-//         Delete
-//       </Typography>
-//     </div>
-//   );
-// };
+  return (
+    <div className='flex gap-2'>
+      <Typography
+        as='button'
+        onClick={() => handleEditRole(row)}
+        variant='small'
+        color='blue'
+        className='font-medium'
+      >
+        Edit
+      </Typography>
+      <Typography
+        as='button'
+        onClick={() => handleDeleteRole(row.id)}
+        variant='small'
+        color='red'
+        className='font-medium'
+      >
+        Delete
+      </Typography>
+    </div>
+  );
+};
 
 const UserRoleManagement = () => {
   const [data, setData] = React.useState();
@@ -206,6 +208,7 @@ const UserRoleManagement = () => {
   return (
     <React.Fragment>
       <div className='my-4 space-y-4'>
+        {/* <AddRole /> */}
         <Card className='h-full w-full'>
           <CardHeader floated={false} shadow={false} className='rounded-none'>
             <div className='mb-8 flex items-center justify-between gap-8'>            
@@ -222,9 +225,7 @@ const UserRoleManagement = () => {
                 <Button variant='outlined' color='blue-gray' size='sm'>
                   View All
                 </Button>
-                <Button className='flex items-center gap-3' color='blue' size='sm'>
-                  <UserPlusIcon strokeWidth={2} className='h-4 w-4'/> Add Role
-                </Button>
+                <AddRole />
               </div>             
             </div>
 
@@ -329,7 +330,7 @@ const UserRoleManagement = () => {
           <DialogHeader>Its a simple dialog.</DialogHeader>
         </Dialog>
 
-        {/* <DataTable
+        <DataTable
           columns={[
             {
               name: 'Role Name',
@@ -368,10 +369,10 @@ const UserRoleManagement = () => {
           ]}
           data={data}
           pagination
-        /> */}
+        />
       </div>
 
-      {/* <Drawer open={open} onClose={handleCloseEditRole} className='p-4'>
+      <Drawer open={open} onClose={handleCloseEditRole} className='p-4'>
         <div className='mb-6 flex items-center justify-between'>
           <Typography variant='h5' color='blue-gray'>
             Edit Role
@@ -426,7 +427,7 @@ const UserRoleManagement = () => {
           </div>
           <Button onClick={handleUpdateRole}>Update Role</Button>
         </div>
-      </Drawer> */}
+      </Drawer>
     </React.Fragment>
   );
 };
