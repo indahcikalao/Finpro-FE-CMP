@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dashboard } from '../../Components/Layout';
-import Tables from './role-management';
+import Tables from './UserRoleManagement';
 
 
 const AdminRoutes = [
