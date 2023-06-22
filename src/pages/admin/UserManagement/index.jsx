@@ -29,7 +29,7 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 		}
 
 		try {
-			const response = await api.delete(`/admin/${id}`);
+			const response = await api.delete(`/admin/user/${id}`);
 
 			if (response.status === 200) {
 				Swal.fire({
@@ -62,7 +62,7 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 				color='blue'
 				className='font-medium'
 			>
-				Edit
+				{row.is_active ? 'Edit' : 'Activate'}
 			</Typography>
 			<Typography
 				as='button'
@@ -85,22 +85,22 @@ const UserManagement = () => {
 
 	const handleEditUser = (row) => {
 		setOpen(true);
-    document.body.style.overflow = 'hidden';
+		document.body.style.overflow = 'hidden';
 		setEditUser(row);
 	};
 
 	const handleCloseEditUser = () => {
 		setOpen(false);
-    document.body.style.overflow = 'unset';
+		document.body.style.overflow = 'unset';
 		setEditUser({});
 	};
 
 	React.useEffect(() => {
 		const getUsers = async () => {
 			try {
-				const { data: response } = await api.get('/user');
+				const { data: response } = await api.get('/admin/users');
 
-				setData(response.data.data);
+				setData(response.data);
 			} catch (error) {
 				console.log('error', error);
 			}
@@ -109,27 +109,43 @@ const UserManagement = () => {
 		getUsers();
 	}, []);
 
-	const handleActivateUser = async (id) => {
+	const handleUpdateUser = async (id) => {
 		try {
-			const { data: response } = await api.patch(
-				`/user/approve/${id}`
-			);
+			if (editUser.role === '') {
+				Swal.fire({
+					icon: 'error',
+					title: 'Failed',
+					text: "Role can't be empty!",
+					timer: 1500,
+					showConfirmButton: false,
+					customClass: {
+						container: 'z-[999999999]',
+					},
+				});
+				return;
+			}
 
-			const activatedUser = response.data;
+			const data = {
+				role: editUser.role,
+			};
 
-			setData((prev) =>
-				prev.map((user) =>
-					user.id === activatedUser.id ? { ...user, ...activatedUser } : user
-				)
-			);
+			if (!editUser.is_active) {
+				await api.patch(`/admin/active/${id}`);
+			}
 
-			Swal.fire({
+			await api.put(`/admin/role/${id}`, data);
+
+			handleCloseEditUser();
+
+			await Swal.fire({
 				icon: 'success',
 				title: 'Success',
 				text: 'User account successfully updated!',
 				timer: 1500,
 				showConfirmButton: false,
 			});
+
+			window.location.reload();
 		} catch (error) {
 			Swal.fire({
 				icon: 'error',
@@ -140,8 +156,6 @@ const UserManagement = () => {
 				timer: 1500,
 				showConfirmButton: false,
 			});
-		} finally {
-			handleCloseEditUser();
 		}
 	};
 
@@ -184,6 +198,7 @@ const UserManagement = () => {
 						{
 							name: 'Role',
 							selector: (row) => row.role,
+              sortable: true,
 						},
 						{
 							name: 'Actions',
@@ -197,7 +212,12 @@ const UserManagement = () => {
 					pagination
 				/>
 			</div>
-			<Drawer overlayProps={{  'className': 'fixed' }} open={open} onClose={handleCloseEditUser} className='p-4'>
+			<Drawer
+				overlayProps={{ className: 'fixed' }}
+				open={open}
+				onClose={handleCloseEditUser}
+				className='p-4'
+			>
 				<div className='mb-6 flex items-center justify-between'>
 					<Typography variant='h5' color='blue-gray'>
 						{editUser.is_active ? 'Edit' : 'Activate'} User
@@ -262,7 +282,10 @@ const UserManagement = () => {
 						</Select>
 					</div>
 					<div className='form-group'>
-						<Button fullWidth onClick={() => handleActivateUser(editUser.id)}>
+						<Button
+							fullWidth
+							onClick={() => handleUpdateUser(editUser.role_id)}
+						>
 							{editUser.is_active ? 'Update' : 'Activate'} User
 						</Button>
 					</div>
