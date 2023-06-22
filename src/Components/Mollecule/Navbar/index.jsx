@@ -41,7 +41,7 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
         </div>
         <div className="flex gap-3">
           <Typography variant="p" className="cursor-pointer py-1.5 lg:ml-2">
-            Hai, Tim FE
+            Hai, Admin
           </Typography>
           <Avatar
             variant="circular"
