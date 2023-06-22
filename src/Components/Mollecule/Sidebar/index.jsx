@@ -15,7 +15,6 @@ import {
 import {
   PresentationChartBarIcon,
   UserCircleIcon,
-  //   Cog6ToothIcon,
   InboxIcon,
   PowerIcon,
   XMarkIcon,
@@ -24,7 +23,7 @@ import {
   ChevronDownIcon,
   UserIcon,
   LockClosedIcon,
-  TableCellsIcon,
+  CurrencyDollarIcon,
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 
@@ -96,7 +95,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
               </ListItem>
               <ListItem>
                 <ListItemPrefix>
-                  <TableCellsIcon strokeWidth={3} className="h-4 w-5" />
+                  <CurrencyDollarIcon strokeWidth={2} className="h-5 w-5" />
                 </ListItemPrefix>
                 Monitoring VA Satker
               </ListItem>
@@ -130,12 +129,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           </ListItemPrefix>
           Profile
         </ListItem>
-        {/* <ListItem>
-          <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Settings
-        </ListItem> */}
         <ListItem>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
