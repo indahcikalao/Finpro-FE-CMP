@@ -5,9 +5,9 @@
 
 ## Progress Pages 
 Sprint 1 
-- ✅ Login 
-- ✅ Register  
-- ✅ Dashboard
+- ✅ Register
+- ✅ Login + Forget Password
+- ✅ Dashboard Homepage
 - ✅ User Management
 - ⏳ Role Management
 
@@ -28,6 +28,9 @@ Sprint 2
 
 ## Layout Login
 ![logins](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/f03bf3aa-8c0d-4b27-b9ad-52b3b71334bc)
+
+## Layout Forget Password
+![forget pass](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/adb996a0-f94c-4579-b0aa-0dbd5f507852)
 
 ## Layout Dashboard
 ![dashboards](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/a6210383-31c3-4143-ac16-868ab1e491a3)
