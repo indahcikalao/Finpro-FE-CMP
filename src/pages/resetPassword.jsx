@@ -21,18 +21,20 @@ export default function ResetPassword() {
   const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
 
   const navigate = useNavigate();
-  const urlMock = process.env.REACT_APP_BASE_URL;
+  const url = process.env.REACT_APP_BASE_URL;
   const bg =
     "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80";
 
   const initialValues = {
     email: "",
+    username: "",
     password: "",
     confirm_password: "",
   };
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is equired"),
+    username: Yup.string().required("Username is required"),
     password: Yup.string()
       .required("Password is required")
       .matches(
@@ -52,13 +54,12 @@ export default function ResetPassword() {
   const handleResetPassword = async (value) => {
     const data = {
       email: value.email,
+      username: value.username,
       password: value.password,
     };
 
-    console.log("==>value sent (later)", data);
     try {
-      const res = await axios.patch(`${urlMock}/user/forgot-password`, data);
-      console.log("==>response", res);
+      const res = await axios.patch(`${url}/user/forgot-password`, data);
 
       if (res.status === 200) {
         Swal.fire({
@@ -70,7 +71,11 @@ export default function ResetPassword() {
         });
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        text: "Please try again!",
+      });
     }
   };
 
@@ -108,6 +113,22 @@ export default function ResetPassword() {
               {formik.touched.email && formik.errors.email && (
                 <Typography variant="small" color="red">
                   {formik.errors.email}
+                </Typography>
+              )}
+            </div>
+            <div className="mb-2">
+              <Input
+                type="text"
+                label="Username"
+                size="lg"
+                name="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.username && formik.errors.username && (
+                <Typography variant="small" color="red">
+                  {formik.errors.username}
                 </Typography>
               )}
             </div>
@@ -179,10 +200,12 @@ export default function ResetPassword() {
               disabled={
                 (!formik.touched.email &&
                   !formik.touched.password &&
-                  !formik.touched.confirm_password) ||
+                  !formik.touched.confirm_password &&
+                  formik.touched.username) ||
                 formik.errors.password ||
                 formik.errors.email ||
-                formik.errors.confirm_password
+                formik.errors.confirm_password ||
+                formik.errors.username
               }
             >
               Reset Password
