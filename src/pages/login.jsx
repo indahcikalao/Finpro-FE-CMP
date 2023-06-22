@@ -20,21 +20,19 @@ export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
 
   const navigate = useNavigate();
-  const urlMock = process.env.REACT_APP_BASE_URL;
+  const url = process.env.REACT_APP_BASE_URL;
   const bg =
     "https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80";
 
   const initialValues = {
-    email: "",
+    username: "",
     password: "",
   };
 
   const token = localStorage.getItem("token");
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
+    username: Yup.string().required("Username is required"),
     password: Yup.string().required("Password is required"),
   });
 
@@ -44,14 +42,8 @@ export default function Login() {
   });
 
   const handleLogin = async (value) => {
-    console.log("==>value sent (later)", value);
     try {
-      const res = await axios.post(`${urlMock}/login`, value, {
-        headers: {
-          "x-mock-response-code": 200,
-        },
-      });
-      console.log("==>response", res.data);
+      const res = await axios.post(`${url}/login`, value);
 
       if (res.status === 200) {
         localStorage.setItem("token", res.data.data.token);
@@ -64,7 +56,11 @@ export default function Login() {
         });
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        text: "Please try again!",
+      });
     }
   };
 
@@ -97,17 +93,17 @@ export default function Login() {
           <CardBody className="flex flex-col gap-4">
             <div className="mb-2">
               <Input
-                type="email"
-                label="Email"
+                type="text"
+                label="Username"
                 size="lg"
-                name="email"
-                value={formik.values.email}
+                name="username"
+                value={formik.values.username}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              {formik.touched.email && formik.errors.email && (
+              {formik.touched.username && formik.errors.username && (
                 <Typography variant="small" color="red">
-                  {formik.errors.email}
+                  {formik.errors.username}
                 </Typography>
               )}
             </div>
@@ -152,9 +148,9 @@ export default function Login() {
               fullWidth
               onClick={() => handleLogin(formik.values)}
               disabled={
-                (!formik.touched.email && !formik.touched.password) ||
+                (!formik.touched.username && !formik.touched.password) ||
                 formik.errors.password ||
-                formik.errors.email
+                formik.errors.username
               }
             >
               Login
