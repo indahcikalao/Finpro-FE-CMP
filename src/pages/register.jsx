@@ -49,15 +49,16 @@ export function Register() {
       fullname: "",
       password: "",
       confirmPassword: "",
-      active: 0,
-      role_id: 0,
+      is_active: false,
+      role: "",
       agreeTerms: false,
     },
     validationSchema,
+
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          "http://localhost:8080/register",
+          "https://cmp-project.up.railway.app/register",
           values,
           {
             headers: {
@@ -121,163 +122,166 @@ export function Register() {
         alt="background"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
-      <div className="container mx-auto p-4">
-        <Card className="absolute top-2/4 left-2/4 w-full max-w-[24rem] -translate-y-2/4 -translate-x-2/4">
-          <CardHeader
-            variant="gradient"
-            color="blue"
-            className="mb-4 grid h-28 place-items-center"
-          >
-            <Typography variant="h3" color="white">
-              Create Account
-            </Typography>
-          </CardHeader>
-          <CardBody className="flex flex-col gap-4">
-            <div className="mb-2">
-              <Input
-                label="Email"
-                size="lg"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <Typography variant="small" color="red">
-                  {formik.errors.email}
-                </Typography>
-              )}
-            </div>
 
-            <div className="mb-2">
-              <Input
-                label="Username"
-                size="lg"
-                name="username"
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.username && formik.errors.username && (
-                <Typography variant="small" color="red">
-                  {formik.errors.username}
-                </Typography>
-              )}
-            </div>
-
-            <div className="mb-2">
-              <Input
-                label="Full Name"
-                size="lg"
-                name="fullname"
-                value={formik.values.fullname}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.fullname && formik.errors.fullname && (
-                <Typography variant="small" color="red">
-                  {formik.errors.fullname}
-                </Typography>
-              )}
-            </div>
-            <div className="mb-2">
-              <div className="relative">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-center h-screen scale-75">
+          <Card className="w-full max-w-[24rem]">
+            <CardHeader
+              variant="gradient"
+              color="blue"
+              className="mb-2 grid h-28 place-items-center"
+            >
+              <Typography variant="h3" color="white">
+                Create Account
+              </Typography>
+            </CardHeader>
+            <CardBody className="flex flex-col gap-4">
+              <div className="mb-2">
                 <Input
-                  type={showPassword ? "text" : "password"}
-                  label="Password"
+                  label="Email"
                   size="lg"
-                  name="password"
-                  value={formik.values.password}
+                  name="email"
+                  value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-                <button
-                  type="button"
-                  className="absolute right-4 top-3 focus:outline-none"
-                  onClick={handleTogglePassword}
-                >
-                  {showPassword ? (
-                    <RiEyeOffLine className="h-6 w-6" />
-                  ) : (
-                    <RiEyeLine className="h-6 w-6" />
-                  )}
-                </button>
-              </div>
-              {formik.touched.password && formik.errors.password && (
-                <Typography variant="small" color="red">
-                  {formik.errors.password}
-                </Typography>
-              )}
-            </div>
-            <div className="mb-0">
-              <div className="relative">
-                <Input
-                  type={showConfirmPassword ? "text" : "password"}
-                  label="Confirm Password"
-                  size="lg"
-                  name="confirmPassword"
-                  value={formik.values.confirmPassword}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                <button
-                  type="button"
-                  className="absolute right-4 top-3 focus:outline-none"
-                  onClick={handleToggleConfirmPassword}
-                >
-                  {showConfirmPassword ? (
-                    <RiEyeOffLine className="h-6 w-6" />
-                  ) : (
-                    <RiEyeLine className="h-6 w-6" />
-                  )}
-                </button>
-              </div>
-              {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword && (
+                {formik.touched.email && formik.errors.email && (
                   <Typography variant="small" color="red">
-                    {formik.errors.confirmPassword}
+                    {formik.errors.email}
                   </Typography>
                 )}
-            </div>
-            <div className="-ml-2.5">
-              <Checkbox
-                label="I agree to the Terms and Conditions"
-                name="agreeTerms"
-                checked={formik.values.agreeTerms}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.agreeTerms && formik.errors.agreeTerms && (
-                <Typography variant="small" color="red">
-                  {formik.errors.agreeTerms}
-                </Typography>
-              )}
-            </div>
-          </CardBody>
-          <CardFooter className="pt-0">
-            <Button
-              variant="gradient"
-              fullWidth
-              type="submit"
-              onClick={formik.handleSubmit}
-            >
-              Register
-            </Button>
-            <Typography variant="small" className="mt-3 flex justify-center">
-              Already have an account?
-              <Link to="/login">
-                <Typography
-                  as="span"
-                  variant="small"
-                  color="blue"
-                  className="ml-1 font-bold"
-                >
-                  Sign in
-                </Typography>
-              </Link>
-            </Typography>
-          </CardFooter>
-        </Card>
+              </div>
+
+              <div className="mb-2">
+                <Input
+                  label="Username"
+                  size="lg"
+                  name="username"
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched.username && formik.errors.username && (
+                  <Typography variant="small" color="red">
+                    {formik.errors.username}
+                  </Typography>
+                )}
+              </div>
+
+              <div className="mb-2">
+                <Input
+                  label="Full Name"
+                  size="lg"
+                  name="fullname"
+                  value={formik.values.fullname}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched.fullname && formik.errors.fullname && (
+                  <Typography variant="small" color="red">
+                    {formik.errors.fullname}
+                  </Typography>
+                )}
+              </div>
+              <div className="mb-2">
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    label="Password"
+                    size="lg"
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-4 top-3 focus:outline-none"
+                    onClick={handleTogglePassword}
+                  >
+                    {showPassword ? (
+                      <RiEyeOffLine className="h-6 w-6" />
+                    ) : (
+                      <RiEyeLine className="h-6 w-6" />
+                    )}
+                  </button>
+                </div>
+                {formik.touched.password && formik.errors.password && (
+                  <Typography variant="small" color="red">
+                    {formik.errors.password}
+                  </Typography>
+                )}
+              </div>
+              <div className="mb-0">
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    label="Confirm Password"
+                    size="lg"
+                    name="confirmPassword"
+                    value={formik.values.confirmPassword}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-4 top-3 focus:outline-none"
+                    onClick={handleToggleConfirmPassword}
+                  >
+                    {showConfirmPassword ? (
+                      <RiEyeOffLine className="h-6 w-6" />
+                    ) : (
+                      <RiEyeLine className="h-6 w-6" />
+                    )}
+                  </button>
+                </div>
+                {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword && (
+                    <Typography variant="small" color="red">
+                      {formik.errors.confirmPassword}
+                    </Typography>
+                  )}
+              </div>
+              <div className="-ml-2.5">
+                <Checkbox
+                  label="I agree to the Terms and Conditions"
+                  name="agreeTerms"
+                  checked={formik.values.agreeTerms}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched.agreeTerms && formik.errors.agreeTerms && (
+                  <Typography variant="small" color="red">
+                    {formik.errors.agreeTerms}
+                  </Typography>
+                )}
+              </div>
+            </CardBody>
+            <CardFooter className="mb-2 pt-0">
+              <Button
+                variant="gradient"
+                fullWidth
+                type="submit"
+                onClick={formik.handleSubmit}
+              >
+                Register
+              </Button>
+              <Typography variant="small" className="mt-3 flex justify-center">
+                Already have an account?
+                <Link to="/login">
+                  <Typography
+                    as="span"
+                    variant="small"
+                    color="blue"
+                    className="ml-1 font-bold"
+                  >
+                    Sign in
+                  </Typography>
+                </Link>
+              </Typography>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </>
   );
