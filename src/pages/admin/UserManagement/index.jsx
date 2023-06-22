@@ -85,11 +85,13 @@ const UserManagement = () => {
 
 	const handleEditUser = (row) => {
 		setOpen(true);
+    document.body.style.overflow = 'hidden';
 		setEditUser(row);
 	};
 
 	const handleCloseEditUser = () => {
 		setOpen(false);
+    document.body.style.overflow = 'unset';
 		setEditUser({});
 	};
 
@@ -195,7 +197,7 @@ const UserManagement = () => {
 					pagination
 				/>
 			</div>
-			<Drawer open={open} onClose={handleCloseEditUser} className='p-4'>
+			<Drawer overlayProps={{  'className': 'fixed' }} open={open} onClose={handleCloseEditUser} className='p-4'>
 				<div className='mb-6 flex items-center justify-between'>
 					<Typography variant='h5' color='blue-gray'>
 						{editUser.is_active ? 'Edit' : 'Activate'} User
