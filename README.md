@@ -6,7 +6,7 @@
 ## Progress Pages 
 Sprint 1 
 - ✅ Login 
-- ✅ Regsiter  
+- ✅ Register  
 - ✅ Dashboard
 - ✅ User Management
 - ⏳ Role Management
@@ -16,11 +16,11 @@ Sprint 2
 - ⏳ Download Report Satker
 
 ## Feature
-- Create New Account
-- Login and Forget Password
-- Manage User (get all user, update activation new user, delete user)
-- Manage Role (get all role, create new role, update access role)
-- Transaction (see the different balance between the VA and Giro account)
+- Create New Account ( status user inactive, input, email, username, password masking validation )
+- Login and Forget Password ( 3 times wrong password user blocked, 30 minutes expired token )
+- Manage User ( get all user, update activation new user, delete user )
+- Manage Role ( get all role, create new role, update access role )
+- Transaction ( see the different balance between the VA and Giro account )
 - Download report VA convert into Spreadsheet, etc <br>
 
 ## Layout Register
