@@ -26,7 +26,7 @@ import { UserRoles, TabsUser, TableHead } from '../../../utils/dummyData';
 import { PencilIcon, UserPlusIcon } from '@heroicons/react/24/solid';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import AddRole from './addRole';
+import AddRole from './Components/addRole';
 
 
 const url = process.env.REACT_APP_BASE_URL;
