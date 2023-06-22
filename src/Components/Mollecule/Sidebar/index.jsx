@@ -20,7 +20,13 @@ import {
   PowerIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  UserIcon,
+  LockClosedIcon,
+  TableCellsIcon,
+  DocumentArrowDownIcon,
+} from "@heroicons/react/24/outline";
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const [open, setOpen] = React.useState(0);
@@ -78,25 +84,25 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
             <List className="p-0 text-white">
               <ListItem>
                 <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  <UserIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 User Management
               </ListItem>
               <ListItem>
                 <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  <LockClosedIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 Role Management
               </ListItem>
               <ListItem>
                 <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  <TableCellsIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 Monitoring VA Satker
               </ListItem>
               <ListItem>
                 <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                  <DocumentArrowDownIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 Download VA Satker
               </ListItem>
