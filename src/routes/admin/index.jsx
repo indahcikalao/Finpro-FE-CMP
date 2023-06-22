@@ -1,15 +1,15 @@
 import React from 'react';
 import { Dashboard } from '../../Components/Layout';
-import Tables from './UserRoleManagement';
-
+import { UserManagement } from '../../pages/admin';
 
 const AdminRoutes = [
 	{
 		path: '/',
 		element: <Dashboard />,
-		children: [{ path: '/', element: <h1>Hello admin</h1> },
-				   { path: 'role-management', element: <Tables />},
-	],
+		children: [
+			{ path: '/user-management', element: <UserManagement /> },
+			{ path: '/', element: <h1>Hello admin</h1> },
+		],
 	},
 ];
 
