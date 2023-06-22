@@ -44,13 +44,13 @@ Footer.defaultProps = {
   brandName: "Cash Management Platform BRI",
   brandLink: "https://github.com/indahcikalao/Finpro-FE-CMP",
   routes: [
-    { name: "Arya", path: "https://www.creative-tim.com" },
-    { name: "Cikal", path: "https://www.creative-tim.com/presentation" },
-    { name: "Renald", path: "https://www.creative-tim.com/blog" },
-    { name: "Aziz", path: "https://www.creative-tim.com/license" },
-    { name: "Roby", path: "https://www.creative-tim.com/license" },
-    { name: "Irfan", path: "https://www.creative-tim.com/license" },
-    { name: "Andre", path: "https://www.creative-tim.com/license" },
+    { name: "Arya", path: "" },
+    { name: "Cikal", path: "" },
+    { name: "Renald", path: "" },
+    { name: "Azis", path: "" },
+    { name: "Roby", path: "" },
+    { name: "Irfan", path: "" },
+    { name: "Andre", path: "" },
   ],
 };
 
