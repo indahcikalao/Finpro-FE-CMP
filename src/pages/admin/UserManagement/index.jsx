@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import {
 	Typography,
@@ -14,8 +13,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 
 import { Badge } from '../../../Components/Atoms';
-
-const url = process.env.REACT_APP_BASE_URL;
+import api from '../../../api/axios';
 
 const ActionsColumn = ({ row, handleEditUser }) => {
 	const handleDeleteUser = async (id) => {
@@ -31,7 +29,7 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 		}
 
 		try {
-			const response = await axios.delete(`${url}/admin/${id}`);
+			const response = await api.delete(`/admin/${id}`);
 
 			if (response.status === 200) {
 				Swal.fire({
@@ -97,16 +95,10 @@ const UserManagement = () => {
 
 	React.useEffect(() => {
 		const getUsers = async () => {
-			const headers = {
-				'x-mock-response-code': '200',
-			};
-
 			try {
-				const { data: response } = await axios.get(`${url}/admin/user/active`, {
-					headers,
-				});
+				const { data: response } = await api.get('/user');
 
-				setData(response.data);
+				setData(response.data.data);
 			} catch (error) {
 				console.log('error', error);
 			}
@@ -116,14 +108,9 @@ const UserManagement = () => {
 	}, []);
 
 	const handleActivateUser = async (id) => {
-		const data = {
-			is_active: true,
-		};
-
 		try {
-			const { data: response } = await axios.put(
-				`${url}/admin/active/${id}`,
-				data
+			const { data: response } = await api.patch(
+				`/user/approve/${id}`
 			);
 
 			const activatedUser = response.data;
