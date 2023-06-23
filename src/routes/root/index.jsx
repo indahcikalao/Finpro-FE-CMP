@@ -1,16 +1,18 @@
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, Navigate } from 'react-router-dom';
 import AdminRoutes from '../admin';
 import UserRoutes from '../user';
 import { useLocalStorage } from '../../hooks/use-local-storage';
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 
 const AppRoutes = () => {
 	const tokenStorage = useLocalStorage('token');
 	const { auth } = useAuth();
 
-	const routes = auth?.role?.toLowerCase() === 'admin' ? AdminRoutes : UserRoutes;
+	const routes =
+		auth?.role?.toLowerCase() === 'admin'
+			? [...AdminRoutes, ...UserRoutes]
+			: UserRoutes;
 
 	const element = useRoutes([...routes]);
 
