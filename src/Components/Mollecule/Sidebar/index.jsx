@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
   Card,
@@ -7,39 +6,44 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
-  Accordion,
-  AccordionHeader,
-  AccordionBody,
 } from "@material-tailwind/react";
 import {
-  PresentationChartBarIcon,
-  UserCircleIcon,
-  InboxIcon,
   PowerIcon,
   XMarkIcon,
+  HomeIcon,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 import {
-  ChevronDownIcon,
-  UserIcon,
-  LockClosedIcon,
   CurrencyDollarIcon,
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
+import { useAuth } from '../../../hooks';
+import { SidebarMenu, SidebarMenuItemIcon } from "./SidebarMenu";
+import { useNavigate } from "react-router-dom";
+
+const adminMenu = [
+  {
+    name: 'Users',
+    icon: UserIcon,
+    menus: [
+      { name: 'User Management', path: '/user-management'},
+      { name: 'Role Management', path: '/role-management'},
+    ]
+  }
+]
+
+const userMenu = [
+  { name: 'Monitoring VA Satker', icon: CurrencyDollarIcon, path: '#'},
+  { name: 'Download VA Satker', icon: DocumentArrowDownIcon, path: '#'},
+]
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
-  const [open, setOpen] = React.useState(0);
   const navigate = useNavigate();
-
-  const handleOpen = (value) => {
-    setOpen(open === value ? 0 : value);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
+  const { auth, logout } = useAuth();
+  const menuList = React.useMemo(() =>
+    auth.role.toLowerCase() === 'admin' ? adminMenu : userMenu,
+    [auth]
+  )
 
   return (
     <Card
@@ -60,82 +64,17 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           Final Project Web TRB 2023
         </Typography>
       </div>
-      {/* TODO: Render menu based on role */}
       <List className="text-white">
-        <Accordion
-          open={open === 1}
-          icon={
-            <ChevronDownIcon
-              strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 transition-transform ${
-                open === 1 ? "rotate-180" : ""
-              }`}
-            />
-          }
-        >
-          <ListItem className="p-0" selected={open === 1}>
-            <AccordionHeader
-              onClick={() => handleOpen(1)}
-              className="border-b-0 p-3 text-white"
-            >
-              <ListItemPrefix>
-                <PresentationChartBarIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              <Typography color="white" className="mr-auto font-normal">
-                Dashboard
-              </Typography>
-            </AccordionHeader>
-          </ListItem>
-          <AccordionBody className="py-1">
-            <List className="p-0 text-white">
-              <ListItem onClick={() => navigate('/user-management')}>
-                <ListItemPrefix>
-                  <UserIcon strokeWidth={3} className="h-4 w-5" />
-                </ListItemPrefix>
-                User Management
-              </ListItem>
-              <ListItem onClick={() => navigate('/role-management')}>
-                <ListItemPrefix>
-                  <LockClosedIcon strokeWidth={3} className="h-4 w-5" />
-                </ListItemPrefix>
-                Role Management
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <CurrencyDollarIcon strokeWidth={2} className="h-5 w-5" />
-                </ListItemPrefix>
-                Monitoring VA Satker
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <DocumentArrowDownIcon strokeWidth={3} className="h-4 w-5" />
-                </ListItemPrefix>
-                Download VA Satker
-              </ListItem>
-            </List>
-          </AccordionBody>
-        </Accordion>
-        <ListItem>
+        <ListItem onClick={() => navigate('/')}>
           <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
+            <SidebarMenuItemIcon Icon={HomeIcon} />
           </ListItemPrefix>
-          Inbox
-          <ListItemSuffix>
-            <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              className="rounded-full text-white"
-            />
-          </ListItemSuffix>
+          Home
         </ListItem>
-        <ListItem>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Profile
-        </ListItem>
-        <ListItem onClick={handleLogout}>
+        {menuList.map(menu => (
+          <SidebarMenu key={menu.name} menu={menu} />
+        ))}
+        <ListItem onClick={logout}>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
