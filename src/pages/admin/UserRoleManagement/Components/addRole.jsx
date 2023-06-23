@@ -59,7 +59,7 @@ const AddRoleManagement = () => {
     setNewRoleData(updatedData);
   };
 
-  const handleResourceChange = (index, value) => {
+  const handleRoleChange = (index, value) => {
     const updatedData = [...newRoleData];
     updatedData[index].resource = value;
     setNewRoleData(updatedData);
@@ -102,7 +102,7 @@ const AddRoleManagement = () => {
                 cell: (row) => (
                   <Input className="px-3"
                     value={row.role}
-                    onChange={(e) => handleResourceChange(row.index, e.target.value)}
+                    onChange={(e) => handleRoleChange(row.index, e.target.value)}
                   />
                 ),
               },
