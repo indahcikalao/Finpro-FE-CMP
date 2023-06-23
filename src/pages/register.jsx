@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const url = process.env.REACT_APP_BASE_URL;
 
   //Yup validation
   const validationSchema = Yup.object().shape({
@@ -57,15 +58,11 @@ export function Register() {
 
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(
-          "https://cmp-project.up.railway.app/register",
-          values,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.post(`${url}/register`, values, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         // Show success popup sweetalert2
         Swal.fire({
