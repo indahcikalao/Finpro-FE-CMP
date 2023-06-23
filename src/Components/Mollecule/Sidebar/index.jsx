@@ -38,7 +38,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -88,25 +88,25 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0 text-white">
-              <ListItem onClick={() => navigate('/user-management')}>
+              <ListItem onClick={() => navigate("/user-management")}>
                 <ListItemPrefix>
                   <UserIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 User Management
               </ListItem>
-              <ListItem onClick={() => navigate('/role-management')}>
+              <ListItem onClick={() => navigate("/role-management")}>
                 <ListItemPrefix>
                   <LockClosedIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 Role Management
               </ListItem>
-              <ListItem>
+              <ListItem onClick={() => navigate("/monitoring-va")}>
                 <ListItemPrefix>
                   <CurrencyDollarIcon strokeWidth={2} className="h-5 w-5" />
                 </ListItemPrefix>
                 Monitoring VA Satker
               </ListItem>
-              <ListItem>
+              <ListItem onClick={() => navigate("/download-va")}>
                 <ListItemPrefix>
                   <DocumentArrowDownIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
