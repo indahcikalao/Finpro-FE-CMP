@@ -125,7 +125,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
               value="14"
               size="sm"
               variant="ghost"
-              color="white"
               className="rounded-full text-white"
             />
           </ListItemSuffix>

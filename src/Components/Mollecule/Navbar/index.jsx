@@ -40,7 +40,7 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
           </Button>
         </div>
         <div className="flex gap-3">
-          <Typography variant="p" className="cursor-pointer py-1.5 lg:ml-2">
+          <Typography variant="paragraph" className="cursor-pointer py-1.5 lg:ml-2">
             Hai, Admin
           </Typography>
           <Avatar
