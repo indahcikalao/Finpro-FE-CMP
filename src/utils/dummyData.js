@@ -5,8 +5,6 @@ export const TabsUser = [
 ];
 
 export const TableHead = [
-  "User",
-  "Email",
   "Roles",
   "Permissions",
   "Action",

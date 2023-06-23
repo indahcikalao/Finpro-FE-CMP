@@ -9,21 +9,12 @@ import { Typography,
          SelectOption, 
          Card, 
          CardBody, 
-         CardFooter, 
          CardHeader, 
-         Tabs, 
-         TabsHeader, 
-         Tab, 
-         Avatar,
-         Tooltip,
-         Dialog,
-         DialogHeader,
-         DialogBody 
 } from '@material-tailwind/react';
 import Swal from 'sweetalert2';
 import DataTable from 'react-data-table-component';
-import { UserRoles, TabsUser, TableHead } from '../../../utils/dummyData';
-import { PencilIcon, UserPlusIcon } from '@heroicons/react/24/solid';
+import { UserRoles, TableHead } from '../../../utils/dummyData';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import AddRole from './Components/addRole';
@@ -190,9 +181,9 @@ const UserRoleManagement = () => {
     }
   };
   // Function Dialog for Edit Role
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
-  const handleDialogOpen = () =>setDialogOpen(!dialogOpen);
+  // const [dialogOpen, setDialogOpen] = useState(false);
+  // const handleOpen = () => setOpen(!open);
+  // const handleDialogOpen = () =>setDialogOpen(!dialogOpen);
 
   // Function for search
   const [searchValue, setSearchValue] = useState("");
@@ -222,24 +213,12 @@ const UserRoleManagement = () => {
               </div>
 
               <div className='flex shrink-0 flex-col gap-2 sm:flex-row'>
-                <Button variant='outlined' color='blue-gray' size='sm'>
-                  View All
-                </Button>
                 <AddRole />
               </div>             
             </div>
 
             <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
-              <Tabs value='all' className='w-full md:w-max'>
-                <TabsHeader>
-                  {TabsUser.map(({ label, value }) => (
-                    <Tab key={value} value={value}>
-                      &nbsp;&nbsp;{label}&nbsp;&nbsp;
-                    </Tab>
-                  ))}
-                </TabsHeader>
-              </Tabs>
-              <div className="w-full md:w-72">
+              <div className="w-full">
                 <form onSubmit={handleSearchSubmit}>
                     <Input 
                       label="Search" 
@@ -253,7 +232,8 @@ const UserRoleManagement = () => {
           </CardHeader>
 
           <CardBody className='overflow-scroll px-0'>
-            <table className='mt-4 w-full min-w-max table-auto text-left'>
+            {/* Backup code for Dummy Table */}
+            {/* <table className='mt-4 w-full min-w-max table-auto text-left'>
               <thead>
                 <tr>
                   {TableHead.map((head, index) => (
@@ -277,19 +257,6 @@ const UserRoleManagement = () => {
                   return (
                     <tr key={id}>
                       <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Avatar src={img} alt={userName} size="sm" />
-                            <Typography variant="small" color="blue-gray" className="font-normal">
-                              {userName}
-                            </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography variant="small" color="blue-gray" className="font-normal">
-                          {email}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
                         <Typography variant="small" color="blue-gray" className="font-normal">
                           {role}
                         </Typography>
@@ -309,28 +276,57 @@ const UserRoleManagement = () => {
                     </tr>
                   )})}
               </tbody>
-            </table>
+            </table> */}
+
+            <DataTable
+              columns={[
+                {
+                  name: 'Role Name',
+                  selector: (row) => row.role,
+                  sortable: true,
+                },
+                {
+                  name: 'Read',
+                  cell: (row) => (
+                    <input
+                      type='checkbox'
+                      checked={row.permissions.read}
+                      onChange={(e) => handlePermissionChange('read', e.target.checked)}
+                    />
+                  ),
+                  sortable: false,
+                  right: true,
+                },
+                {
+                  name: 'Write',
+                  cell: (row) => (
+                    <input
+                      type='checkbox'
+                      checked={row.permissions.write}
+                      onChange={(e) => handlePermissionChange('write', e.target.checked)}
+                    />
+                  ),
+                  sortable: false,
+                  right: true,
+                },
+                {
+                  name: 'Actions',
+                  button: true,
+                  cell: (row) => <ActionsColumn row={row} handleEditRole={handleEditRole} />,
+                },
+              ]}
+              data={data}
+              pagination
+            
+            />
+
+            
           </CardBody>
-          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-            <Typography variant="small" color="blue-gray" className="font-normal">
-              Page 1 of 10
-            </Typography>
-            <div className="flex gap-2">
-              <Button variant="outlined" color="blue-gray" size="sm">
-                Previous
-              </Button>
-              <Button variant="outlined" color="blue-gray" size="sm">
-                Next
-              </Button>
-            </div>
-          </CardFooter>
         </Card>
 
-        <Dialog open={dialogOpen} handler={handleDialogOpen}>
-          <DialogHeader>Its a simple dialog.</DialogHeader>
-        </Dialog>
 
-        <DataTable
+        {/* Backup code DataTable */}
+        {/* <DataTable
           columns={[
             {
               name: 'Role Name',
@@ -369,7 +365,7 @@ const UserRoleManagement = () => {
           ]}
           data={data}
           pagination
-        />
+        /> */}
       </div>
 
       <Drawer open={open} onClose={handleCloseEditRole} className='p-4'>

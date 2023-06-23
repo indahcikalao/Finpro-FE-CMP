@@ -1,12 +1,11 @@
 import React from 'react';
 import { Dashboard } from '../../Components/Layout';
-import Tables from '../admin/UserRoleManagement';
 
 const UserRoutes = [
 	{
 		path: '/',
 		element: <Dashboard />,
-		children: [{ path: '/', element: <Tables /> }],
+		children: [{ path: '/', element: <h1>Hello user</h1> }],
 	},
 ];
 

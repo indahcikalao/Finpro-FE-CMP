@@ -11,7 +11,7 @@ const ROLES = {
 
 const AppRoutes = () => {
 	/* TODO: From context/storage */
-	const auth = ROLES.User;
+	const auth = ROLES.Admin;
 
 	const routes = auth === ROLES.Admin ? AdminRoutes : UserRoutes;
 

@@ -44,6 +44,7 @@ export default function Login() {
   const handleLogin = async (value) => {
     try {
       const res = await axios.post(`${url}/login`, value);
+      console.log(res)
 
       if (res.status === 200) {
         localStorage.setItem("token", res.data.data.token);
