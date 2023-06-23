@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { STORAGE_PREFIX } from '../hooks';
 
 const baseURL = process.env.REACT_APP_BASE_URL
 
@@ -18,7 +19,7 @@ export const publicApi = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'token'));
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

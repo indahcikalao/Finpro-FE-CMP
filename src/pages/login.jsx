@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,9 +15,12 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useAuth, useLocalStorage } from "../hooks";
+import api from "../api/axios";
 
 export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
+  const { setAuth } = useAuth();
 
   const navigate = useNavigate();
   const url = process.env.REACT_APP_BASE_URL;
@@ -29,7 +32,8 @@ export default function Login() {
     password: "",
   };
 
-  const token = localStorage.getItem("token");
+  const tokenStorage = useLocalStorage("token");
+  const token = tokenStorage.get();
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Username is required"),
@@ -41,14 +45,31 @@ export default function Login() {
     validationSchema,
   });
 
+  if (token) {
+    return <Navigate to='/' />
+  }
+
+  const getUserData = async () => {
+    try {
+      await api
+        .get('/user/who-iam')
+        .then((response) => setAuth(response.data.data));
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   const handleLogin = async (value) => {
     try {
       const res = await axios.post(`${url}/login`, value);
       console.log(res)
 
       if (res.status === 200) {
-        localStorage.setItem("token", res.data.data.token);
-        Swal.fire({
+        tokenStorage.set(res.data.data.token);
+
+        getUserData();
+
+        await Swal.fire({
           icon: "success",
           title: "Welcome Back!",
           text: "You are logged in.",
@@ -64,12 +85,6 @@ export default function Login() {
       });
     }
   };
-
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
-  }, [token, navigate]);
 
   return (
     <>
