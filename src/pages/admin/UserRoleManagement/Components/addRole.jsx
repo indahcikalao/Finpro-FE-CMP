@@ -98,10 +98,10 @@ const AddRoleManagement = () => {
           <DataTable
             columns={[
               {
-                name: "Resource",
+                name: "Role",
                 cell: (row) => (
                   <Input className="px-3"
-                    value={row.resource}
+                    value={row.role}
                     onChange={(e) => handleResourceChange(row.index, e.target.value)}
                   />
                 ),
