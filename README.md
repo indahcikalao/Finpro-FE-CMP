@@ -8,8 +8,8 @@ Sprint 1
 - ✅ Register
 - ✅ Login + Forget Password
 - ✅ Dashboard Homepage
-- ✅ User Management
-- ⏳ Role Management
+- ⏳ User Management ( still need integration with BE )
+- ⏳ Role Management ( still need integration with BE )
 
 Sprint 2
 - ⏳ Monitoring Satker
@@ -26,13 +26,34 @@ Sprint 2
 ## Layout Register
 ![register account](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/d48e26d5-828d-46dc-8bfe-1e6b22357e73)
 
+<br>
+
 ## Layout Login
 ![logins](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/f03bf3aa-8c0d-4b27-b9ad-52b3b71334bc)
+
+<br>
 
 ## Layout Forget Password
 ![forget pass](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/adb996a0-f94c-4579-b0aa-0dbd5f507852)
 
+<br>
+
 ## Layout Dashboard
-![dashboards](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/a6210383-31c3-4143-ac16-868ab1e491a3)
+![Dashb](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/0e2f42ff-b465-48a7-8308-7c2a7a1fec8a)
+
+<br>
+
+## Layout User Management
+![User Management](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/9ddba91f-fe4a-44da-96c5-10334c999640)
+
+<br>
+
+## Layout Role Management
+![Role Management](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/0dd89729-dc7c-4755-bd10-06f171d18595)
+
+<br>
+
+## Layout Coming Soon
+![Coming soon](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/726c1f3b-0ae9-4a0d-956e-a1566cb0210b)
 
 ## More detail, layout and feature will update soon ⏰
