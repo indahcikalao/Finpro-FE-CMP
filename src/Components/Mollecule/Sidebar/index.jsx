@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
   Card,
@@ -29,9 +30,15 @@ import {
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
   const [open, setOpen] = React.useState(0);
+  const navigate = useNavigate();
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
   };
 
   return (
@@ -81,13 +88,13 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0 text-white">
-              <ListItem>
+              <ListItem onClick={() => navigate('/user-management')}>
                 <ListItemPrefix>
                   <UserIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
                 User Management
               </ListItem>
-              <ListItem>
+              <ListItem onClick={() => navigate('/role-management')}>
                 <ListItemPrefix>
                   <LockClosedIcon strokeWidth={3} className="h-4 w-5" />
                 </ListItemPrefix>
@@ -118,7 +125,6 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
               value="14"
               size="sm"
               variant="ghost"
-              color="white"
               className="rounded-full text-white"
             />
           </ListItemSuffix>
@@ -129,7 +135,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           </ListItemPrefix>
           Profile
         </ListItem>
-        <ListItem>
+        <ListItem onClick={handleLogout}>
           <ListItemPrefix>
             <PowerIcon className="h-5 w-5" />
           </ListItemPrefix>
