@@ -1,23 +1,24 @@
 import { useRoutes } from 'react-router-dom';
 import AdminRoutes from '../admin';
 import UserRoutes from '../user';
-import { AutoLogout } from '../../Components/Layout';
-
-/* TODO: From backend */
-const ROLES = {
-	User: 2001,
-	Admin: 5150,
-};
+import { useLocalStorage } from '../../hooks/use-local-storage';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../hooks';
 
 const AppRoutes = () => {
-	/* TODO: From context/storage */
-	const auth = ROLES.Admin;
+	const tokenStorage = useLocalStorage('token');
+	const { auth } = useAuth();
 
-	const routes = auth === ROLES.Admin ? AdminRoutes : UserRoutes;
+	const routes = auth?.role?.toLowerCase() === 'admin' ? AdminRoutes : UserRoutes;
 
 	const element = useRoutes([...routes]);
 
-	return <AutoLogout>{element}</AutoLogout>;
+	if (!tokenStorage.get()) {
+		return <Navigate to='/login' />;
+	}
+
+	return <>{element}</>;
 };
 
 export default AppRoutes;
