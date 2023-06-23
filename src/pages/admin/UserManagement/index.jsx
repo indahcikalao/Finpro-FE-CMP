@@ -198,7 +198,7 @@ const UserManagement = () => {
 						{
 							name: 'Role',
 							selector: (row) => row.role,
-              sortable: true,
+              				sortable: true,
 						},
 						{
 							name: 'Actions',
