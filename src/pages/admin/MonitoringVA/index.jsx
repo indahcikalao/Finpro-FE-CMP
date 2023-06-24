@@ -32,8 +32,7 @@ const MonitoringVA = () => {
         const dummyGiroBalance = generateRandomBalance();
         const dummyTotalVANumber = generateRandomNumber(1, 10);
         const dummyVABalance = generateRandomBalance();
-        const dummyDifference = generateRandomDifference();
-        const dummySumDifference = dummyDifference >= 0;
+        const dummyDifference = dummyGiroBalance - dummyVABalance;
 
         const dummyRow = {
           no: i,
@@ -44,7 +43,6 @@ const MonitoringVA = () => {
           total_va_number: dummyTotalVANumber,
           va_balance: formatCurrency(dummyVABalance),
           difference: formatCurrency(dummyDifference),
-          sum_difference: dummySumDifference,
         };
 
         dummyData.push(dummyRow);
@@ -80,10 +78,6 @@ const MonitoringVA = () => {
       return Math.floor(Math.random() * 10000000 + 1000000);
     };
 
-    const generateRandomDifference = () => {
-      return Math.floor(Math.random() * 2000000 - 1000000);
-    };
-
     const generateRandomNumber = (min, max) => {
       return Math.floor(Math.random() * (max - min + 1) + min);
     };
@@ -99,7 +93,7 @@ const MonitoringVA = () => {
 
     const getTransaction = async () => {
       try {
-        const dummyData = generateDummyData(50);
+        const dummyData = generateDummyData(150);
         setData(dummyData);
       } catch (error) {
         console.log("error", error);
@@ -113,7 +107,20 @@ const MonitoringVA = () => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-    XLSX.writeFile(workbook, "transactionVA.xlsx");
+    const excelBuffer = XLSX.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "transactionVA.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -182,24 +189,31 @@ const MonitoringVA = () => {
               name: "Difference",
               selector: (row) => row.difference,
               sortable: true,
-              cell: (row) => (
-                <div
-                  style={{
-                    backgroundColor: row.sum_difference
-                      ? "green"
-                      : row.difference < 0
-                      ? "blue"
-                      : "red",
-                    color: "white",
-                    padding: "8px",
-                    borderRadius: "4px",
-                    width: "100px",
-                    textAlign: "center",
-                  }}
-                >
-                  {row.difference}
-                </div>
-              ),
+              cell: (row) => {
+                let backgroundColor;
+                if (row.giro_balance > row.va_balance) {
+                  backgroundColor = "green";
+                } else if (row.giro_balance < row.va_balance) {
+                  backgroundColor = "red";
+                } else if ((row.giro_balance = row.va_balance)) {
+                  backgroundColor = "blue";
+                }
+
+                return (
+                  <div
+                    style={{
+                      backgroundColor: backgroundColor,
+                      color: "white",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      width: "100px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {row.difference}
+                  </div>
+                );
+              },
             },
           ]}
           data={data}
