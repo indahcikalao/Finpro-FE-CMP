@@ -154,7 +154,7 @@ const MonitoringVA = () => {
               name: <b>No</b>,
               selector: (row) => row.no,
               sortable: true,
-              width: "75px",
+              width: "50px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
@@ -173,6 +173,7 @@ const MonitoringVA = () => {
               selector: (row) => row.currency,
               sortable: true,
               center: true,
+              width: "100px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
@@ -200,6 +201,7 @@ const MonitoringVA = () => {
               selector: (row) => row.total_va_number,
               sortable: true,
               center: true,
+              width: "100px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
@@ -218,6 +220,7 @@ const MonitoringVA = () => {
               selector: (row) => row.difference,
               sortable: true,
               center: true,
+              width: "150px",
               cell: (row) => {
                 let backgroundColor;
                 if (row.giro_balance > row.va_balance) {
