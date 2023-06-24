@@ -46,6 +46,7 @@ Sprint 2
 
 <br>
 
+
 ## Layout User Management
 ![User Management](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/9ddba91f-fe4a-44da-96c5-10334c999640)
 
@@ -57,7 +58,7 @@ Sprint 2
 <br>
 
 ## Layout Monitoring Satker
-![Monitoring Satker](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/5d0deb84-4969-4f6f-9815-4c46611a6c92)
+![Monitoring Satker](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/8de6cc9c-87a8-4c96-bcbc-0d44491b4ed1)
 
 <br>
 
