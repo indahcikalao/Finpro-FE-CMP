@@ -2,6 +2,7 @@ import React from "react";
 import DataTable from "react-data-table-component";
 import { CardHeader, Typography, Button } from "@material-tailwind/react";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import * as XLSX from "xlsx/xlsx.mjs";
 // import api from "../../../api/axios";
 
 const MonitoringVA = () => {
@@ -108,6 +109,13 @@ const MonitoringVA = () => {
     getTransaction();
   }, []);
 
+  const handleDownload = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+    XLSX.writeFile(workbook, "transactions.xlsx");
+  };
+
   return (
     <React.Fragment>
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -121,7 +129,12 @@ const MonitoringVA = () => {
             </Typography>
           </div>
           <div className="flex w-full shrink-0 gap-2 md:w-max">
-            <Button className="flex items-center gap-3" color="blue" size="sm">
+            <Button
+              className="flex items-center gap-3"
+              color="blue"
+              size="sm"
+              onClick={handleDownload}
+            >
               <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" /> Download
             </Button>
           </div>
