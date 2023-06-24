@@ -147,48 +147,77 @@ const MonitoringVA = () => {
           </div>
         </div>
       </CardHeader>
-      <div className="my-4 space-y-4">
+      <div className="my-4 space-y-4 border-2">
         <DataTable
           columns={[
             {
-              name: "No",
+              name: <b>No</b>,
               selector: (row) => row.no,
               sortable: true,
+              width: "75px",
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "Account Number",
+              name: <b>Account Number</b>,
               selector: (row) => row.account_number,
               sortable: true,
+              center: true,
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "Currency",
+              name: <b>Currency</b>,
               selector: (row) => row.currency,
               sortable: true,
+              center: true,
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "Date",
+              name: <b>Date</b>,
               selector: (row) => row.date,
               sortable: true,
+              center: true,
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "Giro Balance",
+              name: <b>Giro Balance</b>,
               selector: (row) => row.giro_balance,
               sortable: true,
+              center: true,
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "Total VA Number",
+              name: <b>Total VA Number</b>,
               selector: (row) => row.total_va_number,
               sortable: true,
+              center: true,
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "VA Balance",
+              name: <b>VA Balance</b>,
               selector: (row) => row.va_balance,
               sortable: true,
+              center: true,
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
             },
             {
-              name: "Difference",
+              name: <b>Difference</b>,
               selector: (row) => row.difference,
               sortable: true,
+              center: true,
               cell: (row) => {
                 let backgroundColor;
                 if (row.giro_balance > row.va_balance) {
@@ -206,7 +235,7 @@ const MonitoringVA = () => {
                       color: "white",
                       padding: "8px",
                       borderRadius: "4px",
-                      width: "100px",
+                      width: "150px",
                       textAlign: "center",
                     }}
                   >
