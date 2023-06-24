@@ -3,6 +3,9 @@
 👨‍💻 Back End Dev : Roby, Irfan, Andre <br>
 📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
 
+## Deployment Link 
+https://finpro-cmp-trb.netlify.app/
+
 ## Progress Pages 
 Sprint 1 
 - ✅ Register
