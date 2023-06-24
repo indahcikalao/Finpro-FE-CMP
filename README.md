@@ -12,8 +12,8 @@ Sprint 1
 - ⏳ Role Management ( still need integration with BE )
 
 Sprint 2
-- ⏳ Monitoring Satker
-- ⏳ Download Report Satker
+- ⏳ Monitoring Satker ( still need integration with BE )
+- ⏳ Download Report Satker ( still need integration with BE )
 
 ## Feature
 - Create New Account ( status user inactive, input, email, username, password masking validation )
@@ -50,6 +50,11 @@ Sprint 2
 
 ## Layout Role Management
 ![Role Management](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/0dd89729-dc7c-4755-bd10-06f171d18595)
+
+<br>
+
+## Layout Monitoring Satker
+![Monitoring Satker](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/5d0deb84-4969-4f6f-9815-4c46611a6c92)
 
 <br>
 
