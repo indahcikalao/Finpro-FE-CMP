@@ -4,30 +4,34 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import dayjs from "dayjs";
 
 export default function DownloadVA() {
-  const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
+  const [date, setDate] = useState({
+    startDate: dayjs().format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
   });
 
-  const handleValueChange = (newValue) => {
-    formik.values.date.startDate = newValue.startDate;
-    formik.values.date.endDate = newValue.endDate;
-    setValue(newValue);
+  const handleDateInput = (newDate) => {
+    formik.values.date.startDate = newDate.startDate;
+    formik.values.date.endDate = newDate.endDate;
+    setDate(newDate);
   };
   const initialValues = {
     giroNumber: "",
-    date: { startDate: "", endDate: "" },
+    date: { startDate: date.startDate, endDate: date.endDate },
     accountType: "Giro Account",
   };
 
   const validationSchema = Yup.object().shape({
     giroNumber: Yup.string()
-      .matches(/^[0-9]+$/, "Giro Account only consist of a serial of numbers")
-      .test("len", "Must be exactly 11 digits", (val) => val.length === 11)
+      .matches(/^[0-9]+$/, "Giro account only consist of a serial of numbers")
+      .test(
+        "len",
+        "Giro account number must be exactly 11 digits",
+        (val) => val.length === 11
+      )
       .required("Giro Number is required"),
-    date: Yup.object().required("ok"),
   });
 
   const formik = useFormik({
@@ -77,9 +81,8 @@ export default function DownloadVA() {
               popoverDirection="down"
               placeholder="Pick Date Range"
               separator="to"
-              value={value}
-              onChange={handleValueChange}
-              onBlur={formik.handleBlur}
+              value={date}
+              onChange={handleDateInput}
               showShortcuts={true}
               maxDate={new Date()}
             />
