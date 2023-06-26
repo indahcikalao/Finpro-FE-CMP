@@ -4,6 +4,7 @@ import { CardHeader, Typography, Button } from "@material-tailwind/react";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import * as XLSX from "xlsx/xlsx.mjs";
 import api from "../../../api/axios";
+import numeral from "numeral";
 
 const MonitoringVA = () => {
   const [data, setData] = React.useState([]);
@@ -43,6 +44,37 @@ const MonitoringVA = () => {
 
   const generateRowNumber = (_, index) => {
     return index + 1;
+  };
+
+  const formatCurrency = (value, currency) => {
+    let formattedValue = numeral(Math.abs(value)).format("0,0");
+    let sign = value < 0 ? "- " : "";
+
+    switch (currency) {
+      case "JPY":
+        sign += "¥";
+        break;
+      case "EUR":
+        sign += "€";
+        break;
+      case "IDR":
+        sign += "Rp";
+        break;
+      case "USD":
+        sign += "$";
+        break;
+      default:
+        break;
+    }
+
+    return `${sign} ${formattedValue}`;
+  };
+
+  const formatCurrencyCell = (row, selector) => {
+    const currency = row.currency;
+    const value = selector(row);
+
+    return formatCurrency(value, currency);
   };
 
   return (
@@ -102,7 +134,8 @@ const MonitoringVA = () => {
             },
             {
               name: <b>Giro Balance</b>,
-              selector: (row) => row.posisi_saldo_giro,
+              selector: (row) =>
+                formatCurrencyCell(row, (row) => row.posisi_saldo_giro),
               sortable: true,
               center: true,
               style: {
@@ -121,7 +154,8 @@ const MonitoringVA = () => {
             },
             {
               name: <b>VA Balance</b>,
-              selector: (row) => row.posisi_saldo_va,
+              selector: (row) =>
+                formatCurrencyCell(row, (row) => row.posisi_saldo_va),
               sortable: true,
               center: true,
               style: {
@@ -130,7 +164,7 @@ const MonitoringVA = () => {
             },
             {
               name: <b>Difference</b>,
-              selector: (row) => row.selisih,
+              selector: (row) => formatCurrencyCell(row, (row) => row.selisih),
               sortable: true,
               center: true,
               width: "150px",
@@ -155,7 +189,7 @@ const MonitoringVA = () => {
                       textAlign: "center",
                     }}
                   >
-                    {row.selisih}
+                    {formatCurrency(row.selisih, row.currency)}
                   </div>
                 );
               },
