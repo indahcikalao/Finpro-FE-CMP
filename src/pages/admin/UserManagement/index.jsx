@@ -79,6 +79,7 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 
 const UserManagement = () => {
   const [data, setData] = React.useState([]);
+  const [roles, setRoles] = React.useState([]);
   const [editUser, setEditUser] = React.useState({});
 
   const [open, setOpen] = React.useState(false);
@@ -106,34 +107,42 @@ const UserManagement = () => {
       }
     };
 
+    const getAllRoles = async () => {
+      try {
+        const { data: response } = await api.get('/admin/roles');
+
+        setRoles(response.data);
+      } catch (err) {
+        console.log('Error fetching all roles:', err)
+      }
+    }
+
     getUsers();
+    getAllRoles();
   }, []);
 
   const handleUpdateUser = async (id) => {
     try {
-      if (editUser.role === "") {
+      if (typeof editUser.role !== 'number') {
         Swal.fire({
           icon: "error",
           title: "Failed",
           text: "Role can't be empty!",
           timer: 1500,
           showConfirmButton: false,
-          customClass: {
-            container: "z-[999999999]",
-          },
         });
         return;
       }
 
       const data = {
-        role: editUser.role,
+        id: editUser.role,
       };
 
       if (!editUser.is_active) {
         await api.patch(`/admin/active/${id}`);
       }
 
-      await api.put(`/admin/role/${id}`, data);
+      await api.put(`/admin/user/role/${id}`, data);
 
       handleCloseEditUser();
 
@@ -199,6 +208,9 @@ const UserManagement = () => {
               name: "Role",
               selector: (row) => row.role,
               sortable: true,
+              style: {
+                textTransform: 'capitalize',
+              }
             },
             {
               name: "Actions",
@@ -273,18 +285,23 @@ const UserManagement = () => {
             <Select
               name="role"
               onChange={(val) => setEditUser({ ...editUser, role: val })}
-              value={editUser.role}
               variant="static"
-              defaultValue=""
             >
-              <Option value="admin">Admin</Option>
-              <Option value="user">User</Option>
+              {roles.map((role) => (
+                <Option
+                  value={role.id}
+                  key={role.id}
+                  className="capitalize"
+                >
+                  {role.name}
+                </Option>
+              ))}
             </Select>
           </div>
           <div className="form-group">
             <Button
               fullWidth
-              onClick={() => handleUpdateUser(editUser.role_id)}
+              onClick={() => handleUpdateUser(editUser.id)}
             >
               {editUser.is_active ? "Update" : "Activate"} User
             </Button>
