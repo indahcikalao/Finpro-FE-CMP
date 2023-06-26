@@ -12,11 +12,6 @@ export default function DownloadVA() {
     endDate: dayjs().format("YYYY-MM-DD"),
   });
 
-  const handleDateInput = (newDate) => {
-    formik.values.date.startDate = newDate.startDate;
-    formik.values.date.endDate = newDate.endDate;
-    setDate(newDate);
-  };
   const initialValues = {
     giroNumber: "",
     date: { startDate: date.startDate, endDate: date.endDate },
@@ -38,6 +33,22 @@ export default function DownloadVA() {
     initialValues,
     validationSchema,
   });
+
+  const handleDateInput = (newDate) => {
+    formik.values.date.startDate = newDate.startDate;
+    formik.values.date.endDate = newDate.endDate;
+    setDate(newDate);
+  };
+  const handleRadioButtonValue = (e) =>
+    (formik.values.accountType = e.target.value);
+
+  const handleSearch = () => {
+    console.log(formik.values);
+  };
+  const handleDownload = () => {
+    console.log(formik.values);
+  };
+
   return (
     <div className="p-5">
       <div className="mb-10">
@@ -104,14 +115,12 @@ export default function DownloadVA() {
                   Giro Account
                 </Typography>
               }
-              onClick={(e) =>
-                console.log((formik.values.accountType = e.target.value))
-              }
+              onClick={(e) => handleRadioButtonValue(e)}
             />
             <Radio
               id="free"
               name="type"
-              value="virtual Account"
+              value="Virtual Account"
               ripple={true}
               icon={<CheckCircleIcon className="w-full h-full scale-105" />}
               className="hover:before:opacity-0 bg-blue-500/25 border-blue-500/50 transition-all p-0"
@@ -120,15 +129,13 @@ export default function DownloadVA() {
                   Virtual Account
                 </Typography>
               }
-              onClick={(e) =>
-                console.log((formik.values.accountType = e.target.value))
-              }
+              onClick={(e) => handleRadioButtonValue(e)}
             />
           </div>
         </div>
         <div className="flex justify-end gap-2">
-          <Button onClick={() => console.log(formik.values)}>Search</Button>
-          <Button>Download</Button>
+          <Button onClick={handleSearch}>Search</Button>
+          <Button onClick={handleDownload}>Download</Button>
         </div>
       </div>
       <div></div>
