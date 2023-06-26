@@ -133,6 +133,16 @@ const MonitoringVA = () => {
               },
             },
             {
+              name: <b>Date</b>,
+              selector: (row) => row.tanggal,
+              sortable: true,
+              center: true,
+              width: "150px",
+              style: {
+                borderRight: "1px solid #dee2e6",
+              },
+            },
+            {
               name: <b>Giro Balance</b>,
               selector: (row) =>
                 formatCurrencyCell(row, (row) => row.posisi_saldo_giro),
@@ -167,7 +177,7 @@ const MonitoringVA = () => {
               selector: (row) => formatCurrencyCell(row, (row) => row.selisih),
               sortable: true,
               center: true,
-              width: "150px",
+
               cell: (row) => {
                 let backgroundColor;
                 if (row.posisi_saldo_giro > row.posisi_saldo_va) {
