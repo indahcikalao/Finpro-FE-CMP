@@ -180,21 +180,25 @@ const UserManagement = () => {
         <DataTable
           columns={[
             {
+              id: 'fullname',
               name: "Fullname",
               selector: (row) => row.fullname,
               sortable: true,
             },
             {
+              id: 'username',
               name: "Username",
               selector: (row) => row.username,
               sortable: true,
             },
             {
+              id: 'email',
               name: "Email",
               selector: (row) => row.email,
               sortable: true,
             },
             {
+              id: 'status',
               name: "Status",
               selector: (row) => row.is_active,
               cell: (row) =>
@@ -203,8 +207,10 @@ const UserManagement = () => {
                 ) : (
                   <Badge type="danger">Inactive</Badge>
                 ),
+              sortable: true,
             },
             {
+              id: 'role',
               name: "Role",
               selector: (row) => row.role,
               sortable: true,
@@ -213,6 +219,7 @@ const UserManagement = () => {
               }
             },
             {
+              id: 'actions',
               name: "Actions",
               button: true,
               cell: (row) => (
@@ -222,6 +229,8 @@ const UserManagement = () => {
           ]}
           data={data}
           pagination
+          defaultSortAsc={true}
+          defaultSortFieldId='status'
         />
       </div>
       <Drawer
