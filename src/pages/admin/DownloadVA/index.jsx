@@ -60,8 +60,8 @@ export default function DownloadVA() {
         </Typography>
       </div>
 
-      <div className="w-11/12 md:w-10/12 mx-auto">
-        <div className="grid md:grid-cols-4 gap-2 md:gap-4 mb-6 md:mb-4 flex items-center">
+      <div className="w-100 sm:w-11/12 md:w-10/12 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-6 md:mb-4 flex items-center">
           <h6 className="font-bold">Giro Account Number</h6>
           <div className="col-span-3">
             <Input
@@ -84,7 +84,7 @@ export default function DownloadVA() {
             )}
           </div>
         </div>
-        <div className="grid md:grid-cols-4 gap-2 md:gap-4 mb-4 flex items-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-4 flex items-center">
           <h6 className="font-bold">Date Range</h6>
           <div className="md:col-span-3">
             <div className="border border-gray-500 focus:!border-black rounded-md shadow-blue-gray-900/5  ">
@@ -106,7 +106,7 @@ export default function DownloadVA() {
             )}
           </div>
         </div>
-        <div className="grid md:grid-cols-4 gap-2 md:gap-4 mb-6 flex items-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-6 flex items-center">
           <h6 className="font-bold">Type of Account</h6>
           <div className="flex gap-10 col-span-3">
             <Radio
@@ -140,7 +140,7 @@ export default function DownloadVA() {
             />
           </div>
         </div>
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end gap-4 mb-6">
           <Button
             onClick={handleSearch}
             disabled={
