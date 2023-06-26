@@ -86,17 +86,20 @@ export default function DownloadVA() {
         </div>
         <div className="grid grid-cols-4 gap-4 mb-4 flex items-center">
           <div>Date Range</div>
-          <div className="border border-gray-500 focus:!border-black rounded-md shadow-blue-gray-900/5  col-span-3">
-            <Datepicker
-              useRange={false}
-              popoverDirection="down"
-              placeholder="Pick Date Range"
-              separator="to"
-              value={date}
-              onChange={handleDateInput}
-              showShortcuts={true}
-              maxDate={new Date()}
-            />
+          <div className="col-span-3">
+            <div className="border border-gray-500 focus:!border-black rounded-md shadow-blue-gray-900/5  ">
+              <Datepicker
+                useRange={false}
+                popoverDirection="down"
+                placeholder="Pick Date Range"
+                separator="to"
+                value={date}
+                onChange={handleDateInput}
+                showShortcuts={true}
+                maxDate={new Date()}
+              />
+            </div>
+            
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4 mb-4 flex items-center">
@@ -133,9 +136,27 @@ export default function DownloadVA() {
             />
           </div>
         </div>
-        <div className="flex justify-end gap-2">
-          <Button onClick={handleSearch}>Search</Button>
-          <Button onClick={handleDownload}>Download</Button>
+        <div className="flex justify-end gap-4">
+          <Button
+            onClick={handleSearch}
+            disabled={
+              (!date.startDate && !date.endDate) ||
+              !formik.touched.giroNumber ||
+              formik.errors.giroNumber
+            }
+          >
+            Search
+          </Button>
+          <Button
+            onClick={handleDownload}
+            disabled={
+              (!date.startDate && !date.endDate) ||
+              !formik.touched.giroNumber ||
+              formik.errors.giroNumber
+            }
+          >
+            Download
+          </Button>
         </div>
       </div>
       <div></div>
