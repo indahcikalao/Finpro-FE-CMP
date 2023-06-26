@@ -99,7 +99,11 @@ export default function DownloadVA() {
                 maxDate={new Date()}
               />
             </div>
-            
+            {!date.startDate && !date.endDate && (
+              <Typography variant="small" color="red">
+                Date is Required
+              </Typography>
+            )}
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4 mb-4 flex items-center">
