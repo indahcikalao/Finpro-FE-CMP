@@ -123,7 +123,7 @@ const UserManagement = () => {
 
   const handleUpdateUser = async (id) => {
     try {
-      if (typeof editUser.role !== 'number') {
+      if (!editUser.role_id) {
         Swal.fire({
           icon: "error",
           title: "Failed",
@@ -135,7 +135,7 @@ const UserManagement = () => {
       }
 
       const data = {
-        id: editUser.role,
+        id: editUser.role_id,
       };
 
       if (!editUser.is_active) {
@@ -254,7 +254,7 @@ const UserManagement = () => {
               type="text"
               name="fullname"
               className="pl-3"
-              value={editUser.fullname}
+              placeholder={editUser.fullname}
               variant="static"
               disabled
             />
@@ -270,7 +270,7 @@ const UserManagement = () => {
               type="email"
               name="email"
               className="pl-3"
-              value={editUser.email}
+              placeholder={editUser.email}
               variant="static"
               disabled
             />
@@ -282,21 +282,26 @@ const UserManagement = () => {
             >
               Role
             </label>
-            <Select
-              name="role"
-              onChange={(val) => setEditUser({ ...editUser, role: val })}
-              variant="static"
-            >
-              {roles.map((role) => (
-                <Option
-                  value={role.id}
-                  key={role.id}
-                  className="capitalize"
-                >
-                  {role.name}
-                </Option>
-              ))}
-            </Select>
+            {roles.length > 0 && (
+              <Select
+                name="role"
+                onChange={(val) => setEditUser({ ...editUser, role_id: Number(val) })}
+                variant="static"
+                defaultValue=''
+                value={editUser.role_id?.toString()}
+                className="capitalize"
+              >
+                {roles.map((role) => (
+                  <Option
+                    value={role.id?.toString()}
+                    key={role.id}
+                    className="capitalize"
+                  >
+                    {role.name}
+                  </Option>
+                ))}
+              </Select>
+            )}
           </div>
           <div className="form-group">
             <Button
