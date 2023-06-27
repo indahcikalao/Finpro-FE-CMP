@@ -238,6 +238,7 @@ const UserManagement = () => {
         open={open}
         onClose={handleCloseEditUser}
         className="p-4"
+        data-testid="drawer"
       >
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">
