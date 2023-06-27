@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Typography, Radio, Button } from "@material-tailwind/react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
@@ -49,10 +49,11 @@ export default function DownloadVA() {
   };
 
   const handlePreview = () => {
-    console.log(formik.values);
     handleGetData();
   };
+
   const [data, setData] = useState(null);
+  const [downloadState, setDownloadState] = useState(false);
 
   const handleGetData = async () => {
     const url = "https://b1c00f56-0319-4468-94c9-0326c3a6d50a.mock.pstmn.io";
@@ -61,14 +62,20 @@ export default function DownloadVA() {
       const { data: response } = await axios.get(
         `${url}/admin/transaction-fillter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
       );
-      console.log(sendData.accountType, response.data);
       setData(response.data);
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  const handleDownload = () => {
+  useEffect(() => {
+    if (data && downloadState) {
+      handleDownload(data);
+      setDownloadState(false);
+    }
+  }, [data]);
+
+  const handleDownload = (data) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
@@ -200,7 +207,10 @@ export default function DownloadVA() {
             Preview
           </Button>
           <Button
-            onClick={handleDownload}
+            onClick={() => {
+              handleGetData();
+              setDownloadState(true);
+            }}
             disabled={
               (!date.startDate && !date.endDate) ||
               !formik.touched.giroNumber ||
@@ -213,201 +223,95 @@ export default function DownloadVA() {
       </div>
       {data && (
         <div className="my-4 space-y-4 border-2 rounded-lg">
-          {formik.values.accountType === "giro" ? (
-            <DataTable
-              columns={[
-                {
-                  name: <b>No</b>,
-                  selector: (row, i) => i + 1,
-                  sortable: true,
-                  width: "50px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+          <DataTable
+            columns={[
+              {
+                name: <b>No</b>,
+                selector: (row, i) => i + 1,
+                sortable: true,
+                width: "50px",
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Account Number</b>,
-                  selector: (row) => row.nomor_rekening_giro,
-                  sortable: true,
-                  center: true,
-                  width: "150px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+              },
+              {
+                name: <b>Account Number</b>,
+                selector: (row) => row.nomor_rekening_giro,
+                sortable: true,
+                center: true,
+                width: "150px",
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Currency</b>,
-                  selector: (row) => row.currency,
-                  sortable: true,
-                  center: true,
-                  width: "100px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+              },
+              {
+                name: <b>Currency</b>,
+                selector: (row) => row.currency,
+                sortable: true,
+                center: true,
+                width: "100px",
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Date</b>,
-                  selector: (row) => row.tanggal_transaksi,
-                  sortable: true,
-                  center: true,
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+              },
+              {
+                name: <b>Date</b>,
+                selector: (row) => row.tanggal_transaksi,
+                sortable: true,
+                center: true,
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Time</b>,
-                  selector: (row) => row.jam,
-                  sortable: true,
-                  center: true,
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+              },
+              {
+                name: <b>Time</b>,
+                selector: (row) => row.jam,
+                sortable: true,
+                center: true,
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Remark</b>,
-                  selector: (row) => row.remark,
-                  sortable: true,
-                  center: true,
-                  width: "100px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+              },
+              {
+                name: <b>Remark</b>,
+                selector: (row) => row.remark,
+                sortable: true,
+                center: true,
+                width: "100px",
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Teller</b>,
-                  selector: (row) => row.teller,
-                  sortable: true,
-                  center: true,
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+              },
+              {
+                name: <b>Teller</b>,
+                selector: (row) => row.teller,
+                sortable: true,
+                center: true,
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Category</b>,
-                  selector: (row) => row.category,
-                  sortable: true,
-                  center: true,
+              },
+              {
+                name: <b>Category</b>,
+                selector: (row) => row.category,
+                sortable: true,
+                center: true,
 
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
+                style: {
+                  borderRight: "1px solid #dee2e6",
                 },
-                {
-                  name: <b>Amount</b>,
-                  selector: (row) => formatCurrency(row.amount),
-                  sortable: true,
-                  center: true,
-                  width: "100px",
-                },
-              ]}
-              data={data}
-              pagination
-            />
-          ) : (
-            <DataTable
-              columns={[
-                {
-                  name: <b>No</b>,
-                  selector: (row, i) => i + 1,
-                  sortable: true,
-                  width: "50px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Account Number</b>,
-                  selector: (row) => row.nomor_rekening_giro,
-                  sortable: true,
-                  center: true,
-                  width: "150px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: (
-                    <b style={{ textAlign: "center" }}>
-                      Virtual Account Number
-                    </b>
-                  ),
-                  selector: (row) => row.nomor_virtual_account,
-                  sortable: true,
-                  center: true,
-                  width: "150px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Currency</b>,
-                  selector: (row) => row.currency,
-                  sortable: true,
-                  center: true,
-                  width: "100px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Date</b>,
-                  selector: (row) => row.tanggal_transaksi,
-                  sortable: true,
-                  center: true,
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Time</b>,
-                  selector: (row) => row.jam,
-                  sortable: true,
-                  center: true,
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Remark</b>,
-                  selector: (row) => row.remark,
-                  sortable: true,
-                  center: true,
-                  width: "100px",
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Teller</b>,
-                  selector: (row) => row.teller,
-                  sortable: true,
-                  center: true,
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Category</b>,
-                  selector: (row) => row.category,
-                  sortable: true,
-                  center: true,
-
-                  style: {
-                    borderRight: "1px solid #dee2e6",
-                  },
-                },
-                {
-                  name: <b>Credit</b>,
-                  selector: (row) => formatCurrency(row.credit),
-                  sortable: true,
-                  center: true,
-                  width: "100px",
-                },
-              ]}
-              data={data}
-              pagination
-            />
-          )}
+              },
+              {
+                name: <b>Amount</b>,
+                selector: (row) => formatCurrency(row.amount),
+                sortable: true,
+                center: true,
+                width: "100px",
+              },
+            ]}
+            data={data}
+            pagination
+          />
         </div>
       )}
     </div>
