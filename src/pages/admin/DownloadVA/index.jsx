@@ -19,7 +19,7 @@ export default function DownloadVA() {
     giroNumber: "",
     startDate: date.startDate,
     endDate: date.endDate,
-    accountType: "Giro Account",
+    accountType: "giro",
   };
 
   const validationSchema = Yup.object().shape({
@@ -86,6 +86,15 @@ export default function DownloadVA() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
   };
 
   return (
@@ -285,7 +294,7 @@ export default function DownloadVA() {
                 },
                 {
                   name: <b>Amount</b>,
-                  selector: (row) => row.amount,
+                  selector: (row) => formatCurrency(row.amount),
                   sortable: true,
                   center: true,
                   width: "100px",
@@ -317,7 +326,11 @@ export default function DownloadVA() {
                   },
                 },
                 {
-                  name: <b>Virtual Account Number</b>,
+                  name: (
+                    <b style={{ textAlign: "center" }}>
+                      Virtual Account Number
+                    </b>
+                  ),
                   selector: (row) => row.nomor_virtual_account,
                   sortable: true,
                   center: true,
@@ -385,7 +398,7 @@ export default function DownloadVA() {
                 },
                 {
                   name: <b>Credit</b>,
-                  selector: (row) => row.credit,
+                  selector: (row) => formatCurrency(row.credit),
                   sortable: true,
                   center: true,
                   width: "100px",
