@@ -14,6 +14,7 @@
     "clsx": "^1.2.1",
     "dayjs": "^1.11.8",
     "formik": "^2.4.1",
+    "numeral": "^2.0.6",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-data-table-component": "^7.5.3",
@@ -33,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
