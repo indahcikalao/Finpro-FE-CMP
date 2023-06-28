@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Input, Typography, Radio, Button } from "@material-tailwind/react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
+import { giroHistoryColumn } from "../../../utils/giroHistoryColumn";
+import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
@@ -14,6 +16,8 @@ export default function DownloadVA() {
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
   });
+  const [data, setData] = useState(null);
+  const [downloadState, setDownloadState] = useState(false);
 
   const initialValues = {
     giroNumber: "",
@@ -39,21 +43,14 @@ export default function DownloadVA() {
   });
 
   const handleDateInput = (newDate) => {
-    formik.values.date.startDate = newDate.startDate;
-    formik.values.date.endDate = newDate.endDate;
+    formik.values.startDate = newDate.startDate;
+    formik.values.endDate = newDate.endDate;
     setDate(newDate);
   };
 
   const handleRadioButtonValue = (e) => {
     formik.values.accountType = e.target.value;
   };
-
-  const handlePreview = () => {
-    handleGetData();
-  };
-
-  const [data, setData] = useState(null);
-  const [downloadState, setDownloadState] = useState(false);
 
   const handleGetData = async () => {
     const url = "https://b1c00f56-0319-4468-94c9-0326c3a6d50a.mock.pstmn.io";
@@ -70,39 +67,33 @@ export default function DownloadVA() {
 
   useEffect(() => {
     if (data && downloadState) {
+      const handleDownload = (data) => {
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+        const excelBuffer = XLSX.write(workbook, {
+          type: "buffer",
+          bookType: "xlsx",
+        });
+        const blob = new Blob([excelBuffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+          "download",
+          `${formik.values.accountType}-TransactionHistory.xlsx`
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
       handleDownload(data);
       setDownloadState(false);
     }
-  }, [data]);
-
-  const handleDownload = (data) => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-    const excelBuffer = XLSX.write(workbook, {
-      type: "buffer",
-      bookType: "xlsx",
-    });
-    const blob = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "TransactionHistory.xlsx");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
+  }, [data, downloadState, formik.values]);
 
   return (
     <div className="p-5">
@@ -197,7 +188,7 @@ export default function DownloadVA() {
         </div>
         <div className="flex justify-end gap-4 mb-6">
           <Button
-            onClick={handlePreview}
+            onClick={handleGetData}
             disabled={
               (!date.startDate && !date.endDate) ||
               !formik.touched.giroNumber ||
@@ -224,91 +215,11 @@ export default function DownloadVA() {
       {data && (
         <div className="my-4 space-y-4 border-2 rounded-lg">
           <DataTable
-            columns={[
-              {
-                name: <b>No</b>,
-                selector: (row, i) => i + 1,
-                sortable: true,
-                width: "50px",
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Account Number</b>,
-                selector: (row) => row.nomor_rekening_giro,
-                sortable: true,
-                center: true,
-                width: "150px",
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Currency</b>,
-                selector: (row) => row.currency,
-                sortable: true,
-                center: true,
-                width: "100px",
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Date</b>,
-                selector: (row) => row.tanggal_transaksi,
-                sortable: true,
-                center: true,
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Time</b>,
-                selector: (row) => row.jam,
-                sortable: true,
-                center: true,
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Remark</b>,
-                selector: (row) => row.remark,
-                sortable: true,
-                center: true,
-                width: "100px",
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Teller</b>,
-                selector: (row) => row.teller,
-                sortable: true,
-                center: true,
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Category</b>,
-                selector: (row) => row.category,
-                sortable: true,
-                center: true,
-
-                style: {
-                  borderRight: "1px solid #dee2e6",
-                },
-              },
-              {
-                name: <b>Amount</b>,
-                selector: (row) => formatCurrency(row.amount),
-                sortable: true,
-                center: true,
-                width: "100px",
-              },
-            ]}
+            columns={
+              formik.values.accountType === "giro"
+                ? giroHistoryColumn
+                : vaHistoryColumn
+            }
             data={data}
             pagination
           />
