@@ -1,4 +1,4 @@
-import { formatCurrency } from "../Components/Atoms";
+import { FormatCurrency } from "../Components/Atoms";
 
 export const vaHistoryColumn = [
   {
@@ -89,7 +89,9 @@ export const vaHistoryColumn = [
   },
   {
     name: <b>Credit</b>,
-    selector: (row) => formatCurrency(row.credit),
+    selector: (row) => (
+      <FormatCurrency currency={row.currency} value={row.credit} />
+    ),
     sortable: true,
     center: true,
     width: "100px",

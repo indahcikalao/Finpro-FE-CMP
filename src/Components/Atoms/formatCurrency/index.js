@@ -1,13 +1,26 @@
-const formatCurrency = (child) => {
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-  return formatCurrency(child);
+import numeral from "numeral";
+const FormatCurrency = ({value, currency}) => {
+  let formattedValue = numeral(Math.abs(value)).format("0,0");
+  let sign = value < 0 ? "- " : "";
+
+  switch (currency) {
+    case "JPY":
+      sign += "¥";
+      break;
+    case "EUR":
+      sign += "€";
+      break;
+    case "IDR":
+      sign += "Rp";
+      break;
+    case "USD":
+      sign += "$";
+      break;
+    default:
+      break;
+  }
+
+  return `${sign} ${formattedValue}`;
 };
 
-export default formatCurrency;
+export default FormatCurrency;

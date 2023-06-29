@@ -1,4 +1,4 @@
-import { formatCurrency } from "../Components/Atoms";
+import { FormatCurrency } from "../Components/Atoms";
 
 export const giroHistoryColumn = [
   {
@@ -79,9 +79,11 @@ export const giroHistoryColumn = [
   },
   {
     name: <b>Amount</b>,
-    selector: (row) => formatCurrency(row.amount),
+    selector: (row) => (
+      <FormatCurrency currency={row.currency} value={row.amount} />
+    ),
     sortable: true,
     center: true,
-    width: "100px",
+    width: "175px",
   },
 ];
