@@ -15,17 +15,17 @@ export const vaHistoryColumn = [
     selector: (row) => row.nomor_rekening_giro,
     sortable: true,
     center: true,
-    width: "150px",
+    width: "175px",
     style: {
       borderRight: "1px solid #dee2e6",
     },
   },
   {
-    name: <b>Virtual Account Number</b>,
+    name: <b style={{ textAlign: "center" }}>Virtual Account Number</b>,
     selector: (row) => row.nomor_virtual_account,
     sortable: true,
     center: true,
-    width: "150px",
+    width: "175px",
     style: {
       borderRight: "1px solid #dee2e6",
     },
@@ -73,6 +73,7 @@ export const vaHistoryColumn = [
     selector: (row) => row.teller,
     sortable: true,
     center: true,
+    width: "100px",
     style: {
       borderRight: "1px solid #dee2e6",
     },
@@ -94,6 +95,6 @@ export const vaHistoryColumn = [
     ),
     sortable: true,
     center: true,
-    width: "100px",
+    width: "175px",
   },
 ];

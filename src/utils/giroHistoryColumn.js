@@ -44,6 +44,7 @@ export const giroHistoryColumn = [
     selector: (row) => row.jam,
     sortable: true,
     center: true,
+
     style: {
       borderRight: "1px solid #dee2e6",
     },
@@ -53,7 +54,6 @@ export const giroHistoryColumn = [
     selector: (row) => row.remark,
     sortable: true,
     center: true,
-    width: "100px",
     style: {
       borderRight: "1px solid #dee2e6",
     },
@@ -72,7 +72,7 @@ export const giroHistoryColumn = [
     selector: (row) => row.category,
     sortable: true,
     center: true,
-
+    width: "100px",
     style: {
       borderRight: "1px solid #dee2e6",
     },
