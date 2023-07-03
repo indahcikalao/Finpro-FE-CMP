@@ -254,10 +254,28 @@ describe('Fetching inside User Management Page', () => {
 
     const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
 
-    await fireEvent.click(btnActivateEdit[0]);
+    fireEvent.click(btnActivateEdit[0]);
 
     await waitFor(() => {
       expect(drawer).toHaveStyle('transform: none');
+    })
+  })
+
+  it('shows confirmation dialog when deleting user', async () => {
+    await act(async => {
+      view();
+    });
+
+    const btnDelete = await screen.findAllByText(/delete/i);
+
+    fireEvent.click(btnDelete[0])
+
+    await waitFor(async () => {
+      const confirmationAlert = await screen.findByRole('dialog', {
+        name: /delete user/i
+      });
+
+      expect(confirmationAlert).toBeInTheDocument();
     })
   })
 });
