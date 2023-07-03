@@ -60,7 +60,6 @@ export default function DownloadVA() {
         `/admin/transactions-filter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
       );
       setData(response.data);
-      console.log(response.data);
     } catch (error) {
       console.log("error", error);
     }
