@@ -49,7 +49,7 @@ describe('User Management Page', () => {
 describe('Fetching inside User Management Page', () => {
 	const view = () => render(<UserManagement />);
 
-	const apiMock = jest.spyOn(api, 'get');
+	const getApiMock = jest.spyOn(api, 'get');
 
 	const mockUsersResponse = {
 		status: 'Success',
@@ -204,7 +204,7 @@ describe('Fetching inside User Management Page', () => {
 	};
 
 	beforeEach(() => {
-		apiMock.mockImplementation((url) => {
+		getApiMock.mockImplementation((url) => {
 			switch (url) {
 				case '/admin/users':
 					return Promise.resolve({ data: mockUsersResponse });
@@ -215,20 +215,18 @@ describe('Fetching inside User Management Page', () => {
 			}
 		});
 
-		apiMock.mockResolvedValueOnce({ data: mockUsersResponse });
-		apiMock.mockResolvedValueOnce({ data: mockRolesResponse });
+		getApiMock.mockResolvedValueOnce({ data: mockUsersResponse });
+		getApiMock.mockResolvedValueOnce({ data: mockRolesResponse });
 	});
 	afterEach(cleanup);
 	afterAll(() => {
-		apiMock.mockRestore();
+		getApiMock.mockRestore();
 	});
 
 	it('fetched users successfully', async () => {
-		await act(async () => {
-			view();
-		});
+		await act(() => view());
 
-		expect(apiMock).toHaveBeenCalledWith('/admin/users');
+		expect(getApiMock).toHaveBeenCalledWith('/admin/users');
 
 		expect(await screen.findByText(/renald@gmail.com/i)).toBeInTheDocument();
 		/* Plus one because of the datatable's heading row counted */
@@ -238,17 +236,13 @@ describe('Fetching inside User Management Page', () => {
 	});
 
 	it('fetched roles successfully', async () => {
-		await act(async () => {
-			view();
-		});
+		await act(() => view());
 
-		expect(apiMock).toHaveBeenCalledWith('/admin/roles');
+		expect(getApiMock).toHaveBeenCalledWith('/admin/roles');
 	});
 
   it('user able to open the drawer after users fetched', async () => {
-    await act(async () => {
-      view();
-    })
+    await act(() => view())
 
     const drawer = screen.getByTestId('drawer');
 
@@ -262,9 +256,8 @@ describe('Fetching inside User Management Page', () => {
   })
 
   it('shows confirmation dialog when deleting user', async () => {
-    await act(async => {
-      view();
-    });
+    await act(() =>
+      view());
 
     const btnDelete = await screen.findAllByText(/delete/i);
 
