@@ -1,4 +1,10 @@
-import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import {
+	render,
+	screen,
+	cleanup,
+	fireEvent,
+	waitFor,
+} from '@testing-library/react';
 import UserManagement from '../../../pages/admin/UserManagement';
 import api from '../../../api/axios';
 import { act } from 'react-dom/test-utils';
@@ -241,42 +247,41 @@ describe('Fetching inside User Management Page', () => {
 		expect(getApiMock).toHaveBeenCalledWith('/admin/roles');
 	});
 
-  it('user able to open the drawer after users fetched', async () => {
-    await act(() => view())
+	it('user able to open the drawer after users fetched', async () => {
+		await act(() => view());
 
-    const drawer = screen.getByTestId('drawer');
+		const drawer = screen.getByTestId('drawer');
 
-    const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
+		const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
 
-    fireEvent.click(btnActivateEdit[0]);
+		fireEvent.click(btnActivateEdit[0]);
 
-    await waitFor(() => {
-      expect(drawer).toHaveStyle('transform: none');
-    })
-  })
+		await waitFor(() => {
+			expect(drawer).toHaveStyle('transform: none');
+		});
+	});
 
-  it('shows confirmation dialog when deleting user', async () => {
-    await act(() =>
-      view());
+	it('shows confirmation dialog when deleting user', async () => {
+		await act(() => view());
 
-    const btnDelete = await screen.findAllByText(/delete/i);
+		const btnDelete = await screen.findAllByText(/delete/i);
 
-    fireEvent.click(btnDelete[0])
+		fireEvent.click(btnDelete[0]);
 
-    await waitFor(async () => {
-      const confirmationAlert = await screen.findByRole('dialog', {
-        name: /delete user/i
-      });
+		await waitFor(async () => {
+			const confirmationAlert = await screen.findByRole('dialog', {
+				name: /delete user/i,
+			});
 
-      expect(confirmationAlert).toBeInTheDocument();
-    })
-  })
+			expect(confirmationAlert).toBeInTheDocument();
+		});
+	});
 });
 
 describe('API-related event handler on User Management page', () => {
-  const view = () => render(<UserManagement />);
+	const view = () => render(<UserManagement />);
 
-  const getApiMock = jest.spyOn(api, 'get');
+	const getApiMock = jest.spyOn(api, 'get');
 
 	const mockUsersResponse = {
 		status: 'Success',
@@ -450,20 +455,22 @@ describe('API-related event handler on User Management page', () => {
 		getApiMock.mockRestore();
 	});
 
-  it('call the delete API', async () => {
-    const deleteApiMock = jest.spyOn(api, 'delete');
+	it('call the delete API', async () => {
+		const deleteApiMock = jest.spyOn(api, 'delete');
 
-    await act(() => view());
+		await act(() => view());
 
-    const btnDelete = await screen.findAllByText(/delete/i);
+		const btnDelete = await screen.findAllByText(/delete/i);
 
-    fireEvent.click(btnDelete[0])
+		fireEvent.click(btnDelete[0]);
 
-    const btnOK = await screen.findByText(/ok/i);
+		const btnOK = await screen.findByText(/ok/i);
 
-    fireEvent.click(btnOK);
+		fireEvent.click(btnOK);
 
-    await waitFor(() => expect(deleteApiMock).toHaveBeenCalledTimes(1));
-    expect(deleteApiMock).toHaveBeenLastCalledWith(expect.stringMatching(/^\/admin\/user\b/))
-  })
-})
+		await waitFor(() => expect(deleteApiMock).toHaveBeenCalledTimes(1));
+		expect(deleteApiMock).toHaveBeenLastCalledWith(
+			expect.stringMatching(/^\/admin\/user\b/)
+		);
+	});
+});
