@@ -16,8 +16,9 @@ export default function DownloadVA() {
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
   });
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [downloadState, setDownloadState] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   const initialValues = {
     giroNumber: "",
@@ -59,6 +60,7 @@ export default function DownloadVA() {
         `/admin/transactions-filter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
       );
       setData(response.data);
+      console.log(response.data);
     } catch (error) {
       console.log("error", error);
     }
@@ -211,8 +213,12 @@ export default function DownloadVA() {
           </Button>
         </div>
       </div>
-      {data && (
-        <div className="my-4 space-y-4 border-2 rounded-lg">
+      <div
+        className={`my-4 space-y-4 rounded-lg ${
+          data && data.length !== 0 && "border-2"
+        }`}
+      >
+        {data ? (
           <DataTable
             columns={
               formik.values.accountType === "giro"
@@ -221,9 +227,16 @@ export default function DownloadVA() {
             }
             data={data}
             pagination
+            noDataComponent={
+              <h4 className="p-5">
+                To see the preview, please fill out the form.
+              </h4>
+            }
           />
-        </div>
-      )}
+        ) : (
+          <h4 className="p-5 text-center">No data available.</h4>
+        )}
+      </div>
     </div>
   );
 }
