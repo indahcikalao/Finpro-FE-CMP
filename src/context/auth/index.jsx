@@ -10,6 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { useLocalStorage } from '../../hooks';
+import api from '../../api/axios';
 
 export const AuthContext = createContext({});
 
@@ -29,10 +30,10 @@ export const AuthProvider = ({ children }) => {
 	const navigate = useNavigate();
 	const timerRef = useRef();
 	const [auth, setAuth] = useState(userDataStorage.get() ?? {});
-  const token = tokenStorage.get();
+	const token = tokenStorage.get();
 
 	const logout = useCallback(() => {
-    setAuth(null)
+		setAuth(null);
 		localStorage.clear();
 		navigate('/login');
 	}, [navigate]);
@@ -40,6 +41,16 @@ export const AuthProvider = ({ children }) => {
 	const resetTimer = useCallback(() => {
 		if (timerRef.current) clearTimeout(timerRef.current);
 	}, []);
+
+	const getUserData = useCallback(async () => {
+		try {
+			await api
+				.get('/user/who-iam')
+				.then((response) => setAuth(response.data.data));
+		} catch (error) {
+			console.log('error', error);
+		}
+	}, [token]);
 
 	const handleLogoutTimer = useCallback(() => {
 		timerRef.current = setTimeout(() => {
@@ -60,14 +71,17 @@ export const AuthProvider = ({ children }) => {
 					handleLogoutTimer();
 				});
 			});
-		};
+		}
 	}, [navigate, resetTimer, handleLogoutTimer]);
 
 	useEffect(() => {
 		userDataStorage.set(auth);
 	}, [auth]);
 
-	const memoizedValue = useMemo(() => ({ logout, auth, setAuth }), [logout, auth]);
+	const memoizedValue = useMemo(
+		() => ({ logout, auth, getUserData }),
+		[logout, auth, getUserData]
+	);
 
 	return (
 		<AuthContext.Provider value={memoizedValue}>

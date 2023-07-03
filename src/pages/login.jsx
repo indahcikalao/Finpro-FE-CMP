@@ -16,11 +16,10 @@ import {
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useAuth, useLocalStorage } from "../hooks";
-import api from "../api/axios";
 
 export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
-  const { setAuth } = useAuth();
+  const { getUserData } = useAuth();
 
   const navigate = useNavigate();
   const url = process.env.REACT_APP_BASE_URL;
@@ -48,16 +47,6 @@ export default function Login() {
   if (token) {
     return <Navigate to='/' />
   }
-
-  const getUserData = async () => {
-    try {
-      await api
-        .get('/user/who-iam')
-        .then((response) => setAuth(response.data.data));
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
 
   const handleLogin = async (value) => {
     try {
