@@ -114,7 +114,7 @@ export default function DownloadVA() {
               type="text"
               size="lg"
               name="giroNumber"
-              placeholder="11 Digits Giro Number"
+              placeholder="15 Digits Giro Number"
               className="focus:!border-black border shadow-sm !border-gray-500 shadow-blue-gray-900/5 "
               labelProps={{
                 className: "hidden",
