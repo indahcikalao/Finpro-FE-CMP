@@ -12,7 +12,7 @@ export const giroHistoryColumn = [
   },
   {
     name: <b>Account Number</b>,
-    selector: (row) => row.nomor_rekening_giro,
+    selector: (row) => row.nomor_virtual_giro,
     sortable: true,
     center: true,
     width: "150px",

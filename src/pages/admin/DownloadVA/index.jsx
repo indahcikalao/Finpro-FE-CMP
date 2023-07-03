@@ -7,7 +7,7 @@ import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
-import axios from "axios";
+import api from "../../../api/axios";
 import * as XLSX from "xlsx/xlsx.mjs";
 import * as Yup from "yup";
 
@@ -31,8 +31,8 @@ export default function DownloadVA() {
       .matches(/^[0-9]+$/, "Giro account only consist of a serial of numbers")
       .test(
         "len",
-        "Giro account number must be exactly 11 digits",
-        (val) => val.length === 11
+        "Giro account number must be exactly 15 digits",
+        (val) => val.length === 15
       )
       .required("Giro Number is required"),
   });
@@ -53,11 +53,10 @@ export default function DownloadVA() {
   };
 
   const handleGetData = async () => {
-    const url = "https://b1c00f56-0319-4468-94c9-0326c3a6d50a.mock.pstmn.io";
     const sendData = formik.values;
     try {
-      const { data: response } = await axios.get(
-        `${url}/admin/transaction-fillter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
+      const { data: response } = await api.get(
+        `/admin/transactions-filter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
       );
       setData(response.data);
     } catch (error) {
