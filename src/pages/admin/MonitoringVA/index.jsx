@@ -3,98 +3,17 @@ import DataTable from "react-data-table-component";
 import { CardHeader, Typography, Button } from "@material-tailwind/react";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import * as XLSX from "xlsx/xlsx.mjs";
-// import api from "../../../api/axios";
+import api from "../../../api/axios";
+import numeral from "numeral";
 
 const MonitoringVA = () => {
   const [data, setData] = React.useState([]);
 
-  // React.useEffect(() => {
-  //   const getTransaction = async () => {
-  //     try {
-  //       const { data: response } = await api.get("/admin/users");
-
-  //       setData(response.data);
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   };
-
-  //   getTransaction();
-  // }, []);
-
   React.useEffect(() => {
-    const generateDummyData = (count) => {
-      const dummyData = [];
-
-      for (let i = 1; i <= count; i++) {
-        const dummyAccountNumber = generateRandomAccountNumber(10);
-        const dummyDate = generateRandomDate();
-        const dummyGiroBalance = generateRandomBalance();
-        const dummyTotalVANumber = generateRandomNumber(1, 10);
-        const dummyVABalance = generateRandomBalance();
-        const dummyDifference = dummyGiroBalance - dummyVABalance;
-
-        const dummyRow = {
-          no: i,
-          account_number: dummyAccountNumber,
-          currency: "IDR",
-          date: dummyDate,
-          giro_balance: formatCurrency(dummyGiroBalance),
-          total_va_number: dummyTotalVANumber,
-          va_balance: formatCurrency(dummyVABalance),
-          difference: formatCurrency(dummyDifference),
-        };
-
-        dummyData.push(dummyRow);
-      }
-
-      return dummyData;
-    };
-
-    const generateRandomAccountNumber = (length) => {
-      let result = "";
-      const characters = "0123456789";
-      const charactersLength = characters.length;
-
-      for (let i = 0; i < length; i++) {
-        result += characters.charAt(
-          Math.floor(Math.random() * charactersLength)
-        );
-      }
-
-      return result;
-    };
-
-    const generateRandomDate = () => {
-      const startDate = new Date(2023, 0, 1).getTime();
-      const endDate = new Date().getTime();
-      const randomDate = new Date(
-        startDate + Math.random() * (endDate - startDate)
-      );
-      return randomDate.toISOString().split("T")[0];
-    };
-
-    const generateRandomBalance = () => {
-      return Math.floor(Math.random() * 10000000 + 1000000);
-    };
-
-    const generateRandomNumber = (min, max) => {
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    };
-
-    const formatCurrency = (value) => {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(value);
-    };
-
     const getTransaction = async () => {
       try {
-        const dummyData = generateDummyData(150);
-        setData(dummyData);
+        const response = await api.get("/admin/transactions");
+        setData(response.data.data);
       } catch (error) {
         console.log("error", error);
       }
@@ -121,6 +40,41 @@ const MonitoringVA = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const generateRowNumber = (_, index) => {
+    return index + 1;
+  };
+
+  const formatCurrency = (value, currency) => {
+    let formattedValue = numeral(Math.abs(value)).format("0,0");
+    let sign = value < 0 ? "- " : "";
+
+    switch (currency) {
+      case "JPY":
+        sign += "¥";
+        break;
+      case "EUR":
+        sign += "€";
+        break;
+      case "IDR":
+        sign += "Rp";
+        break;
+      case "USD":
+        sign += "$";
+        break;
+      default:
+        break;
+    }
+
+    return `${sign} ${formattedValue}`;
+  };
+
+  const formatCurrencyCell = (row, selector) => {
+    const currency = row.currency;
+    const value = selector(row);
+
+    return formatCurrency(value, currency);
   };
 
   return (
@@ -152,7 +106,7 @@ const MonitoringVA = () => {
           columns={[
             {
               name: <b>No</b>,
-              selector: (row) => row.no,
+              selector: generateRowNumber,
               sortable: true,
               width: "50px",
               style: {
@@ -161,9 +115,10 @@ const MonitoringVA = () => {
             },
             {
               name: <b>Account Number</b>,
-              selector: (row) => row.account_number,
+              selector: (row) => row.no_rekening_giro,
               sortable: true,
               center: true,
+              width: "150px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
@@ -180,16 +135,18 @@ const MonitoringVA = () => {
             },
             {
               name: <b>Date</b>,
-              selector: (row) => row.date,
+              selector: (row) => row.tanggal,
               sortable: true,
               center: true,
+              width: "100px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
             },
             {
               name: <b>Giro Balance</b>,
-              selector: (row) => row.giro_balance,
+              selector: (row) =>
+                formatCurrencyCell(row, (row) => row.posisi_saldo_giro),
               sortable: true,
               center: true,
               style: {
@@ -198,7 +155,7 @@ const MonitoringVA = () => {
             },
             {
               name: <b>Total VA Number</b>,
-              selector: (row) => row.total_va_number,
+              selector: (row) => row.jumlah_no_va,
               sortable: true,
               center: true,
               width: "100px",
@@ -208,7 +165,8 @@ const MonitoringVA = () => {
             },
             {
               name: <b>VA Balance</b>,
-              selector: (row) => row.va_balance,
+              selector: (row) =>
+                formatCurrencyCell(row, (row) => row.posisi_saldo_va),
               sortable: true,
               center: true,
               style: {
@@ -217,17 +175,17 @@ const MonitoringVA = () => {
             },
             {
               name: <b>Difference</b>,
-              selector: (row) => row.difference,
+              selector: (row) => formatCurrencyCell(row, (row) => row.selisih),
               sortable: true,
               center: true,
-              width: "150px",
+
               cell: (row) => {
                 let backgroundColor;
-                if (row.giro_balance > row.va_balance) {
+                if (row.posisi_saldo_giro > row.posisi_saldo_va) {
                   backgroundColor = "green";
-                } else if (row.giro_balance < row.va_balance) {
+                } else if (row.posisi_saldo_giro < row.posisi_saldo_va) {
                   backgroundColor = "red";
-                } else if ((row.giro_balance = row.va_balance)) {
+                } else if (row.posisi_saldo_giro === row.posisi_saldo_va) {
                   backgroundColor = "blue";
                 }
 
@@ -242,7 +200,7 @@ const MonitoringVA = () => {
                       textAlign: "center",
                     }}
                   >
-                    {row.difference}
+                    {formatCurrency(row.selisih, row.currency)}
                   </div>
                 );
               },
