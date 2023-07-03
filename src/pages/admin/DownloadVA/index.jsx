@@ -227,11 +227,7 @@ export default function DownloadVA() {
             }
             data={data}
             pagination
-            noDataComponent={
-              <h4 className="p-5">
-                To see the preview, please fill out the form.
-              </h4>
-            }
+            noDataComponent={null}
           />
         ) : (
           <h4 className="p-5 text-center">No data available.</h4>
