@@ -292,7 +292,7 @@ const UserManagement = () => {
             >
               Role
             </label>
-            {roles.length > 0 && (
+            {roles?.length > 0 && (
               <Select
                 name="role"
                 onChange={(val) => setEditUser({ ...editUser, role_id: Number(val) })}

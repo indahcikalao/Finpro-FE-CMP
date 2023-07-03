@@ -118,6 +118,7 @@ const MonitoringVA = () => {
               selector: (row) => row.no_rekening_giro,
               sortable: true,
               center: true,
+              width: "150px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
@@ -137,7 +138,7 @@ const MonitoringVA = () => {
               selector: (row) => row.tanggal,
               sortable: true,
               center: true,
-              width: "150px",
+              width: "100px",
               style: {
                 borderRight: "1px solid #dee2e6",
               },
