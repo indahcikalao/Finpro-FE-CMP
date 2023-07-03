@@ -104,7 +104,7 @@ const EditRole = ({ role, onSave }) => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                    Monitoring
+                    Monitoring VA
                   </Typography>
                 </th>
                 <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
@@ -113,7 +113,7 @@ const EditRole = ({ role, onSave }) => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                    Download
+                    Download VA
                   </Typography>
                 </th>
               </tr>
@@ -168,6 +168,7 @@ const EditRole = ({ role, onSave }) => {
             color="red"
             onClick={handleClose}
             ripple="dark"
+            className="mr-1"
           >
             Cancel
           </Button>
