@@ -1,4 +1,4 @@
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import UserManagement from '../../../pages/admin/UserManagement';
 import api from '../../../api/axios';
 import { act } from 'react-dom/test-utils';
@@ -244,4 +244,20 @@ describe('Fetching inside User Management Page', () => {
 
 		expect(apiMock).toHaveBeenCalledWith('/admin/roles');
 	});
+
+  it('user able to open the drawer after users fetched', async () => {
+    await act(async () => {
+      view();
+    })
+
+    const drawer = screen.getByTestId('drawer');
+
+    const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
+
+    await fireEvent.click(btnActivateEdit[0]);
+
+    await waitFor(() => {
+      expect(drawer).toHaveStyle('transform: none');
+    })
+  })
 });
