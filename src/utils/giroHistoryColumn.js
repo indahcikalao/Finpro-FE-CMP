@@ -54,6 +54,7 @@ export const giroHistoryColumn = [
     selector: (row) => row.remark,
     sortable: true,
     center: true,
+    width: "200px",
     style: {
       borderRight: "1px solid #dee2e6",
     },
