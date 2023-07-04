@@ -7,10 +7,10 @@ import {
   CardHeader,
 } from "@material-tailwind/react";
 import DataTable from "react-data-table-component";
-import Swal from "sweetalert2";
 import AddRole from "./Components/addRole";
 import EditRole from "./Components/editRole";
 import api from "../../../api/axios";
+import DeleteRole from "./Components/deleteRole";
 
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -37,36 +37,8 @@ const UserRoleManagement = () => {
     setData(updatedData);
   };
 
-  const handleDelete = (row) => {
-    Swal.fire({
-      title: "Delete Role",
-      text: `Are you sure you want to delete the role ${row.name}?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await api.delete(`${url}/admin/role/${row.id}`);
-          setData(data.filter((item) => item.id !== row.id));
-          Swal.fire(
-            "Deleted!",
-            `The role ${row.name} has been deleted.`,
-            "success"
-          );
-        } catch (error) {
-          console.error("Error deleting role:", error);
-          Swal.fire(
-            "Error",
-            "Failed to delete the role. Please try again.",
-            "error"
-          );
-        }
-      }
-    });
+  const handleDelete = (role) => {
+    setData(data.filter((item) => item.id !== role.id));
   };
 
   const columns = [
@@ -118,15 +90,7 @@ const UserRoleManagement = () => {
       cell: (row) => (
         <>
           <EditRole role={row} onSave={handleEdit} />
-          <Typography
-            onClick={() => handleDelete(row)}
-            variant="small"
-            color="red"
-            as="button"
-            className="font-medium"
-          >
-            Delete
-          </Typography>
+          <DeleteRole role={row} onDelete={handleDelete} />
         </>
       ),
     },
