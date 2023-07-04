@@ -6,13 +6,11 @@ import {
   Drawer,
   IconButton,
   Input,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 
-import { Badge } from "../../../Components/Atoms";
+import { Badge, SearchableSelect } from "../../../Components/Atoms";
 import api from "../../../api/axios";
 
 const ActionsColumn = ({ row, handleEditUser }) => {
@@ -80,7 +78,10 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 const UserManagement = () => {
   const [data, setData] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
+
   const [editUser, setEditUser] = React.useState({});
+  const [selectedRole, setSelectedRole] = React.useState({});
+  const [query, setQuery] = React.useState('');
 
   const [open, setOpen] = React.useState(false);
 
@@ -88,12 +89,14 @@ const UserManagement = () => {
     setOpen(true);
     document.body.style.overflow = "hidden";
     setEditUser(row);
+    setSelectedRole(roles.find(role => role.id === row.role_id));
   };
 
   const handleCloseEditUser = () => {
     setOpen(false);
     document.body.style.overflow = "unset";
     setEditUser({});
+    setSelectedRole({})
   };
 
   React.useEffect(() => {
@@ -120,6 +123,14 @@ const UserManagement = () => {
     getUsers();
     getAllRoles();
   }, []);
+
+  React.useEffect(() => {
+    setEditUser({
+      ...editUser,
+      role_id: selectedRole?.id,
+      role: selectedRole?.name,
+    })
+  }, [selectedRole]);
 
   const handleUpdateUser = async (id) => {
     try {
@@ -285,32 +296,15 @@ const UserManagement = () => {
             />
           </div>
           <div className="form-group">
-            <label
-              htmlFor="role"
-              className="block text-sm font-medium text-gray-900"
-            >
-              Role
-            </label>
-            {roles?.length > 0 && (
-              <Select
-                name="role"
-                onChange={(val) => setEditUser({ ...editUser, role_id: Number(val) })}
-                variant="static"
-                defaultValue=''
-                value={editUser.role_id?.toString()}
-                className="capitalize"
-              >
-                {roles.map((role) => (
-                  <Option
-                    value={role.id?.toString()}
-                    key={role.id}
-                    className="capitalize"
-                  >
-                    {role.name}
-                  </Option>
-                ))}
-              </Select>
-            )}
+            <SearchableSelect
+              selected={selectedRole}
+              setSelected={setSelectedRole}
+              data={roles}
+              query={query}
+              setQuery={setQuery}
+              label='Role'
+              filterProperty='name'
+            />
           </div>
           <div className="form-group">
             <Button
