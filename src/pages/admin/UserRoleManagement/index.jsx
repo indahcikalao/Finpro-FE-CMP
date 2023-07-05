@@ -16,12 +16,14 @@ const url = process.env.REACT_APP_BASE_URL;
 
 const UserRoleManagement = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     const getAllRoles = async () => {
       try {
         const response = await api.get(`${url}/admin/roles`);
         setData(response.data.data);
+        setFilteredData(response.data.data);
       } catch (error) {
         console.log("error", error);
       }
@@ -96,6 +98,14 @@ const UserRoleManagement = () => {
     },
   ];
 
+  const handleSearch = (event) => {
+    const keyword = event.target.value.toLowerCase();
+    const filteredResults = data.filter((item) =>
+      item.name.toLowerCase().includes(keyword)
+    );
+    setFilteredData(filteredResults);
+  };
+
   return (
     <React.Fragment>
       <div className="my-4 space-y-4">
@@ -127,14 +137,14 @@ const UserRoleManagement = () => {
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div className="w-full">
                 <form>
-                  <Input label="Search" />
+                  <Input label="Search" onChange={handleSearch} />
                 </form>
               </div>
             </div>
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-            <DataTable columns={columns} data={data} pagination />
+            <DataTable columns={columns} data={filteredData} pagination />
           </CardBody>
         </Card>
       </div>
