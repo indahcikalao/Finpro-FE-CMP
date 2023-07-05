@@ -83,9 +83,9 @@ describe('API integration inside User Management Page', () => {
 				username: 'janedoe',
 				fullname: 'Jane Doe',
 				email: 'janedoe@gmail.com',
-				is_active: true,
-				role: 'admin',
-				role_id: 1,
+				is_active: false,
+				role: '',
+				role_id: 0,
 			},
 			{
 				id: 9,
@@ -342,4 +342,20 @@ describe('API integration inside User Management Page', () => {
 
 		putApiMock.mockRestore();
 	});
+
+  it('able to close drawer on cancel', async () => {
+    await act(() => view());
+
+    const btnEdit = await screen.findAllByText(/edit/i);
+
+		fireEvent.click(btnEdit[0]);
+
+		const btnCloseDrawer = await screen.findByRole('button', {
+			name: /close drawer/i,
+		});
+
+		fireEvent.click(btnCloseDrawer);
+
+    expect(document.body).toHaveStyle('overflow: unset')
+  })
 });
