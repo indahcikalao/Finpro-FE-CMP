@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { TogglePassword } from "../Components/Atoms";
+import { Link } from "react-router-dom";
+import * as Yup from "yup";
 import {
   Card,
   CardHeader,
@@ -210,6 +211,19 @@ export default function ResetPassword() {
             >
               Reset Password
             </Button>
+            <Typography variant="small" className="mt-3 flex justify-center">
+              Remember your password?
+              <Link to="/login">
+                <Typography
+                  as="span"
+                  variant="small"
+                  color="blue"
+                  className="ml-1 font-bold"
+                >
+                  Log In
+                </Typography>
+              </Link>
+            </Typography>
           </CardFooter>
         </Card>
       </div>
