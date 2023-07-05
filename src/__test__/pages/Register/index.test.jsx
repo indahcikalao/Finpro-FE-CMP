@@ -126,4 +126,16 @@ describe("Register Page", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("redirects to the login page when clicking on the 'Sign in' link", () => {
+    render(
+      <BrowserRouter>
+        <Register />
+      </BrowserRouter>
+    );
+
+    fireEvent.click(screen.getByText("Sign in"));
+
+    expect(window.location.pathname).toBe("/login");
+  });
 });
