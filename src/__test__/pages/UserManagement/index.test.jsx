@@ -261,6 +261,26 @@ describe('API integration inside User Management Page', () => {
 		});
 	});
 
+	it('prevent assign role when the field is empty', async () => {
+		await act(() => view());
+
+		const btnActivate = await screen.findAllByText(/(activate)/i);
+
+		fireEvent.click(btnActivate[0]);
+
+		const btnActivateUser = await screen.findByRole('button', {
+			name: /activate user/i,
+		});
+
+		fireEvent.click(btnActivateUser);
+
+		const failedAlert = await screen.findByRole('dialog', {
+			name: /failed/i,
+		});
+
+		expect(failedAlert).toBeInTheDocument();
+	});
+
 	it('shows confirmation dialog when deleting user', async () => {
 		await act(() => view());
 
