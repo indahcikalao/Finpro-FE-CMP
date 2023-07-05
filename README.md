@@ -1,4 +1,5 @@
 # Final Project CMP BRI 2023
+🧑‍🏫 Mentors : Mas Agung, Mas Bayu, Mas Andi, Mas Ifan
 👩‍💻 Front End Dev : Arya, Cikal, Rhenald, Aziz <br>
 👨‍💻 Back End Dev : Roby, Irfan, Andre <br>
 📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
