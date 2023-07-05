@@ -88,4 +88,42 @@ describe("Register Page", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("displays an error message for existing username", async () => {
+    axios.post.mockRejectedValueOnce({
+      response: {
+        data: { message: "Username already registered" },
+      },
+    });
+
+    render(
+      <BrowserRouter>
+        <Register />
+      </BrowserRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Username"), {
+      target: { value: "existinguser" },
+    });
+    fireEvent.change(screen.getByLabelText("Full Name"), {
+      target: { value: "Test User" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "Password123!" },
+    });
+    fireEvent.change(screen.getByLabelText("Confirm Password"), {
+      target: { value: "Password123!" },
+    });
+
+    fireEvent.click(screen.getByText("Register"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Username already taken. Choose another one")
+      ).toBeInTheDocument();
+    });
+  });
 });
