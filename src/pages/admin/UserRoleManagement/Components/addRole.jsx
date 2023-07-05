@@ -15,7 +15,7 @@ import api from "../../../../api/axios";
 
 const url = process.env.REACT_APP_BASE_URL;
 
-const role_table_head = ["Role name", "Monitoring VA", "Download VA"];
+const role_table_head = ["Resource", "Access"];
 
 const AddRoleManagement = () => {
   const [newRoleName, setNewRoleName] = useState("");
@@ -110,9 +110,19 @@ const AddRoleManagement = () => {
       >
         <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Role
       </Button>
-      <Dialog open={open} handler={handleClose} size="lg">
+      <Dialog open={open} handler={handleClose} size="sm">
         <DialogHeader>Add New Role</DialogHeader>
         <DialogBody>
+          <div className="mb-5">
+            <Input
+              variant="outlined"
+              label="Role Name"
+              type="text"
+              value={newRoleName}
+              onChange={handleRoleNameChange}
+              className="mb-4"
+            />
+          </div>
           <table className="w-full table-auto text-center">
             <thead>
               <tr>
@@ -133,50 +143,27 @@ const AddRoleManagement = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="p-4">
-                  <Input
-                    variant="outlined"
-                    label="Role Name"
-                    type="text"
-                    value={newRoleName}
-                    onChange={handleRoleNameChange}
-                    className="mb-4"
-                  />
-                </td>
-                <td className="p-4">
-                  <div>
-                    {renderCheckboxes(
-                      0,
-                      "Read",
-                      newRoleData[0].can_read,
-                      (e) => handleCanReadChange(0, e.target.checked)
-                    )}
-                    {renderCheckboxes(
-                      0,
-                      "Write",
-                      newRoleData[0].can_write,
-                      (e) => handleCanWriteChange(0, e.target.checked)
-                    )}
-                  </div>
-                </td>
-                <td className="p-4">
-                  <div>
-                    {renderCheckboxes(
-                      1,
-                      "Read",
-                      newRoleData[1].can_read,
-                      (e) => handleCanReadChange(1, e.target.checked)
-                    )}
-                    {renderCheckboxes(
-                      1,
-                      "Write",
-                      newRoleData[1].can_write,
-                      (e) => handleCanWriteChange(1, e.target.checked)
-                    )}
-                  </div>
-                </td>
-              </tr>
+              {newRoleData.map((data, index) => (
+                <tr key={index}>
+                  <td>{data.resource}</td>
+                  <td>
+                    <div>
+                      {renderCheckboxes(
+                        index,
+                        "Read",
+                        data.can_read,
+                        (e) => handleCanReadChange(index, e.target.checked)
+                      )}
+                      {renderCheckboxes(
+                        index,
+                        "Write",
+                        data.can_write,
+                        (e) => handleCanWriteChange(index, e.target.checked)
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </DialogBody>
