@@ -288,8 +288,8 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnDelete[0]);
 
-		await waitFor(async () => {
-			const confirmationAlert = await screen.findByRole('dialog', {
+		await waitFor( () => {
+			const confirmationAlert = screen.getByRole('dialog', {
 				name: /delete user/i,
 			});
 
