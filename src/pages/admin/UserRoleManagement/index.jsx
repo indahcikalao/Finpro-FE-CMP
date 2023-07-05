@@ -7,9 +7,9 @@ import {
   CardHeader,
 } from "@material-tailwind/react";
 import DataTable from "react-data-table-component";
+import api from "../../../api/axios";
 import AddRole from "./Components/addRole";
 import EditRole from "./Components/editRole";
-import api from "../../../api/axios";
 import DeleteRole from "./Components/deleteRole";
 
 const url = process.env.REACT_APP_BASE_URL;
