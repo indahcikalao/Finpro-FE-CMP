@@ -259,6 +259,7 @@ const UserManagement = () => {
             variant="text"
             color="blue-gray"
             onClick={handleCloseEditUser}
+            title="Close drawer"
           >
             <XMarkIcon strokeWidth={2} className="h-5 w-5" />
           </IconButton>
