@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
@@ -18,6 +18,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const url = process.env.REACT_APP_BASE_URL;
+  const navigate = useNavigate();
 
   // Yup validation
   const validationSchema = Yup.object().shape({
@@ -63,7 +64,7 @@ const Register = () => {
           text: "Please wait for admin to verify your Account",
         }).then(() => {
           // Redirect to login page
-          window.location.href = "/login";
+          navigate("/login");
         });
 
         console.log(response);
@@ -86,8 +87,6 @@ const Register = () => {
             "username",
             "Username already taken. Choose another one"
           );
-        } else {
-          formik.setFieldError("email", "Error happened. Please try again.");
         }
       }
     },
@@ -207,10 +206,12 @@ const Register = () => {
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  data-testid="password-input"
                 />
                 <button
                   type="button"
                   className="absolute right-4 top-8 focus:outline-none"
+                  aria-label="Toggle Password Visibility"
                   onClick={handleTogglePassword}
                 >
                   {showPassword ? (
@@ -242,10 +243,12 @@ const Register = () => {
                   value={formik.values.confirmPassword}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  data-testid="confirmPassword-input"
                 />
                 <button
                   type="button"
                   className="absolute right-4 top-8 focus:outline-none"
+                  aria-label="Toggle Confirm Password Visibility"
                   onClick={handleToggleConfirmPassword}
                 >
                   {showConfirmPassword ? (
