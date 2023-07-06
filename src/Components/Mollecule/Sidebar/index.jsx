@@ -17,39 +17,46 @@ import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../../../hooks";
 import { SidebarMenu, SidebarMenuItemIcon } from "./SidebarMenu";
 import { useNavigate } from "react-router-dom";
+import { PERMISSIONS_CONFIG } from "../../../config";
 
-const adminMenu = [
-	{
+const menuList = [
+  {
 		name: 'Users',
 		icon: UserIcon,
 		menus: [
-			{ name: 'User Management', path: '/user-management' },
-			{ name: 'Role Management', path: '/role-management' },
+			{
+        name: 'User Management',
+        path: '/user-management',
+        resourceName: PERMISSIONS_CONFIG.resources.user
+      },
+			{
+        name: 'Role Management',
+        path: '/role-management',
+        resourceName: PERMISSIONS_CONFIG.resources.role
+      },
 		],
 	},
-];
-
-const userMenu = [
 	{
 		name: 'Satker',
 		icon: CurrencyDollarIcon,
 		menus: [
-			{ name: 'Monitoring VA Satker', path: '/monitoring-va' },
-			{ name: 'Download VA Satker', path: '/download-va' },
+			{
+        name: 'Monitoring VA Satker',
+        path: '/monitoring-va',
+        resourceName: PERMISSIONS_CONFIG.resources.monitoring
+      },
+			{
+        name: 'Download VA Satker',
+        path: '/download-va',
+        resourceName: PERMISSIONS_CONFIG.resources.download
+      },
 		],
 	},
 ];
 
 const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 	const navigate = useNavigate();
-	const { auth, logout } = useAuth();
-	const menuList = React.useMemo(
-		() =>
-			auth.role.toLowerCase() === 'admin'
-				? [...adminMenu, ...userMenu]
-				: userMenu,
-		[auth]
-	);
+	const { logout } = useAuth();
 
 	return (
 		<Card

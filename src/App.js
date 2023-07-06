@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './pages/register';
 import Login from './pages/login';
-import AppRoutes from './routes/root';
+import AppRoutes from './routes';
 import ResetPassword from "./pages/resetPassword";
 import { AuthProvider } from './context';
 import Forbidden from './pages/Forbidden';
