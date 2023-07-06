@@ -4,6 +4,7 @@ import Login from './pages/login';
 import AppRoutes from './routes/root';
 import ResetPassword from "./pages/resetPassword";
 import { AuthProvider } from './context';
+import Forbidden from './pages/Forbidden';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forbidden" element={<Forbidden />} />
           <Route path="/*" element={<Navigate to="." />} />
         </Routes>
       </AuthProvider>
