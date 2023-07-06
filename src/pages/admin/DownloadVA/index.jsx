@@ -20,7 +20,6 @@ function DownloadVA() {
   });
   const [data, setData] = useState([]);
   const [downloadState, setDownloadState] = useState(false);
-  const [clicked, setClicked] = useState(false);
 
   const initialValues = {
     giroNumber: "",
