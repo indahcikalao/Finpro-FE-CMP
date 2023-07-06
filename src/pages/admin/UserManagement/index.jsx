@@ -7,11 +7,14 @@ import {
   IconButton,
   Input,
 } from "@material-tailwind/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 
 import { Badge, SearchableSelect } from "../../../Components/Atoms";
 import api from "../../../api/axios";
+import { usePermission } from "../../../hooks";
+import { PERMISSIONS_CONFIG } from "../../../config";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 
 const ActionsColumn = ({ row, handleEditUser }) => {
   const handleDeleteUser = async (id) => {
@@ -76,6 +79,8 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 };
 
 const UserManagement = () => {
+  const { config, hasWritePermission } = usePermission();
+
   const [data, setData] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
 
@@ -234,7 +239,13 @@ const UserManagement = () => {
               name: "Actions",
               button: true,
               cell: (row) => (
-                <ActionsColumn row={row} handleEditUser={handleEditUser} />
+                hasWritePermission(config.resources.user) ? (
+                  <ActionsColumn row={row} handleEditUser={handleEditUser} />
+                ) : (
+                  <p className="text-red-400 flex whitespace-nowrap">
+                    <NoSymbolIcon width={16} /> Forbidden
+                  </p>
+                )
               ),
             },
           ]}
@@ -322,4 +333,7 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default withReadPermission(
+  UserManagement,
+  PERMISSIONS_CONFIG.resources.user
+);

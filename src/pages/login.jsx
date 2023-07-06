@@ -56,7 +56,7 @@ export default function Login() {
       if (res.status === 200) {
         tokenStorage.set(res.data.data.token);
 
-        getUserData();
+        await getUserData();
 
         await Swal.fire({
           icon: "success",
