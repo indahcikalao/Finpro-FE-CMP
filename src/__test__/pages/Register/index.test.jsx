@@ -127,6 +127,39 @@ describe("Register Page", () => {
     });
   });
 
+  it("toggles password visibility", () => {
+    render(
+      <BrowserRouter>
+        <Register />
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+
+    expect(passwordInput.type).toBe("password");
+    expect(confirmPasswordInput.type).toBe("password");
+
+    const passwordToggleBtn = screen.getByLabelText(
+      "Toggle Password Visibility"
+    );
+    const confirmPasswordToggleBtn = screen.getByLabelText(
+      "Toggle Confirm Password Visibility"
+    );
+
+    fireEvent.click(passwordToggleBtn);
+    fireEvent.click(confirmPasswordToggleBtn);
+
+    expect(passwordInput.type).toBe("text");
+    expect(confirmPasswordInput.type).toBe("text");
+
+    fireEvent.click(passwordToggleBtn);
+    fireEvent.click(confirmPasswordToggleBtn);
+
+    expect(passwordInput.type).toBe("password");
+    expect(confirmPasswordInput.type).toBe("password");
+  });
+
   it("redirects to the login page when clicking on the 'Sign in' link", () => {
     render(
       <BrowserRouter>
