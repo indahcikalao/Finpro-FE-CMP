@@ -13,6 +13,10 @@ export const usePermission = () => {
 			p.resource.toLowerCase().includes(resource)
 		);
 
+    if (!permission) {
+      return false;
+    }
+
 		return permission[access];
 	};
 
