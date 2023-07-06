@@ -9,8 +9,9 @@ import {
 	AccordionBody,
 	Typography,
 	ListItem,
-  List
+	List,
 } from '@material-tailwind/react';
+import { usePermission } from '../../../../hooks';
 
 export const SidebarMenuItemIcon = ({ Icon = TbPointFilled }) => {
 	return <Icon className='h-5 w-5 text-white' />;
@@ -18,6 +19,12 @@ export const SidebarMenuItemIcon = ({ Icon = TbPointFilled }) => {
 
 const SidebarMenuItem = ({ menu }) => {
 	const navigate = useNavigate();
+
+	const { hasReadPermission } = usePermission();
+
+	if (!hasReadPermission(menu.resourceName)) {
+		return <></>;
+	}
 
 	return (
 		<ListItem onClick={() => navigate(menu.path)}>
@@ -30,7 +37,16 @@ const SidebarMenuItem = ({ menu }) => {
 };
 
 const SidebarMultilevelMenuItem = ({ menu }) => {
+	const { hasReadPermission } = usePermission();
 	const [open, setOpen] = React.useState(0);
+
+  const hasOneCanRead = menu.menus.some((menu) =>
+    hasReadPermission(menu.resourceName)
+  );
+
+  if (!hasOneCanRead) {
+    return <></>;
+  }
 
 	const handleOpen = (value) => {
 		setOpen(open === value ? 0 : value);

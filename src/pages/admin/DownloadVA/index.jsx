@@ -10,8 +10,10 @@ import DataTable from "react-data-table-component";
 import api from "../../../api/axios";
 import * as XLSX from "xlsx/xlsx.mjs";
 import * as Yup from "yup";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { PERMISSIONS_CONFIG } from "../../../config";
 
-export default function DownloadVA() {
+function DownloadVA() {
   const [date, setDate] = useState({
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
@@ -235,3 +237,8 @@ export default function DownloadVA() {
     </div>
   );
 }
+
+export default withReadPermission(
+  DownloadVA,
+  PERMISSIONS_CONFIG.resources.download
+);

@@ -5,6 +5,8 @@ import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import * as XLSX from "xlsx/xlsx.mjs";
 import api from "../../../api/axios";
 import numeral from "numeral";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { PERMISSIONS_CONFIG } from "../../../config";
 
 const MonitoringVA = () => {
   const [data, setData] = React.useState([]);
@@ -214,4 +216,7 @@ const MonitoringVA = () => {
   );
 };
 
-export default MonitoringVA;
+export default withReadPermission(
+  MonitoringVA,
+  PERMISSIONS_CONFIG.resources.monitoring
+);
