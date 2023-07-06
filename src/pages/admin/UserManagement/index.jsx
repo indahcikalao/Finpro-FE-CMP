@@ -79,7 +79,7 @@ const ActionsColumn = ({ row, handleEditUser }) => {
 };
 
 const UserManagement = () => {
-  const { config, hasPermission } = usePermission();
+  const { config, hasWritePermission } = usePermission();
 
   const [data, setData] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
@@ -239,7 +239,7 @@ const UserManagement = () => {
               name: "Actions",
               button: true,
               cell: (row) => (
-                hasPermission(config.resources.user, config.access.canWrite) ? (
+                hasWritePermission(config.resources.user) ? (
                   <ActionsColumn row={row} handleEditUser={handleEditUser} />
                 ) : (
                   <p className="text-red-400 flex whitespace-nowrap">

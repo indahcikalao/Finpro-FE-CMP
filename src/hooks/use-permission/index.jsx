@@ -16,5 +16,13 @@ export const usePermission = () => {
 		return permission[access];
 	};
 
-	return { config, hasPermission };
+	const hasWritePermission = (resource) => {
+		return hasPermission(resource, config.access.canWrite);
+	};
+
+	const hasReadPermission = (resource) => {
+		return hasPermission(resource, config.access.canRead);
+	};
+
+	return { config, hasPermission, hasWritePermission, hasReadPermission };
 };

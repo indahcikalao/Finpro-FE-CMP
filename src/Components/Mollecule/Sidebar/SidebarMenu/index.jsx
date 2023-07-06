@@ -20,9 +20,9 @@ export const SidebarMenuItemIcon = ({ Icon = TbPointFilled }) => {
 const SidebarMenuItem = ({ menu }) => {
 	const navigate = useNavigate();
 
-	const { config, hasPermission } = usePermission();
+	const { hasReadPermission } = usePermission();
 
-	if (!hasPermission(menu.resourceName, config.access.canRead)) {
+	if (!hasReadPermission(menu.resourceName)) {
 		return <></>;
 	}
 
@@ -37,11 +37,11 @@ const SidebarMenuItem = ({ menu }) => {
 };
 
 const SidebarMultilevelMenuItem = ({ menu }) => {
-	const { config, hasPermission } = usePermission();
+	const { hasReadPermission } = usePermission();
 	const [open, setOpen] = React.useState(0);
 
   const hasOneCanRead = menu.menus.some((menu) =>
-    hasPermission(menu.resourceName, config.access.canRead)
+    hasReadPermission(menu.resourceName)
   );
 
   if (!hasOneCanRead) {
