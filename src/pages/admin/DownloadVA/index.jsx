@@ -6,6 +6,7 @@ import { giroHistoryColumn } from "../../../utils/giroHistoryColumn";
 import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
+import { Spinner } from "../../../Components/Atoms";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
@@ -19,8 +20,10 @@ function DownloadVA() {
   });
 
   const [data, setData] = useState([]);
+
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
 
   const initialValues = {
     giroNumber: "",
@@ -56,6 +59,7 @@ function DownloadVA() {
   };
 
   const handleGetData = async (page, limit) => {
+    setLoading(true);
     try {
       const sendData = formik.values;
       const { data: response } = await api.get(
@@ -77,6 +81,8 @@ function DownloadVA() {
       setPerPage(limit);
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,15 +97,18 @@ function DownloadVA() {
   const handleDownload = async () => {
     try {
       const sendData = formik.values;
-      const {data:response} = await api.get(`/admin/transactions-filter-by-date/download`, {
-        params: {
-          type_account: sendData.accountType,
-          giro_number: sendData.giroNumber,
-          start_date: sendData.startDate,
-          end_date: sendData.endDate,
-        },
-        responseType: "arraybuffer",
-      });
+      const { data: response } = await api.get(
+        `/admin/transactions-filter-by-date/download`,
+        {
+          params: {
+            type_account: sendData.accountType,
+            giro_number: sendData.giroNumber,
+            start_date: sendData.startDate,
+            end_date: sendData.endDate,
+          },
+          responseType: "arraybuffer",
+        }
+      );
 
       const url = URL.createObjectURL(new Blob([response]));
       const link = document.createElement("a");
@@ -228,7 +237,7 @@ function DownloadVA() {
       </div>
       <div
         className={`my-4 space-y-4 rounded-lg ${
-          data && data.length !== 0 && "border-2"
+          data && data.length !== 0 && !loading && "border-2"
         }`}
       >
         {data ? (
@@ -245,6 +254,10 @@ function DownloadVA() {
             paginationTotalRows={totalRows}
             onChangePage={handlePageChange}
             onChangeRowsPerPage={handlePerRowsChange}
+            progressPending={loading}
+            progressComponent={
+              <Spinner message="Please wait for a moment..." size="lg" />
+            }
           />
         ) : (
           <h4 className="p-5 text-center">No data available.</h4>
