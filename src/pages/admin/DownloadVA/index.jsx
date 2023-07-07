@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input, Typography, Radio, Button } from "@material-tailwind/react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useFormik } from "formik";
 import { giroHistoryColumn } from "../../../utils/giroHistoryColumn";
 import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { PERMISSIONS_CONFIG } from "../../../config";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
 import api from "../../../api/axios";
 import * as Yup from "yup";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
-import { PERMISSIONS_CONFIG } from "../../../config";
 
 function DownloadVA() {
   const [date, setDate] = useState({
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
   });
+
   const [data, setData] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
@@ -57,38 +58,40 @@ function DownloadVA() {
   const handleGetData = async (page, limit) => {
     try {
       const sendData = formik.values;
-      if (typeof page === "number") {
-        const { data: response } = await api.get(
-          `/admin/transactions-filter-by-date`,
-          {
-            params: {
-              type_account: sendData.accountType,
-              giro_number: sendData.giroNumber,
-              start_date: sendData.startDate,
-              end_date: sendData.endDate,
-              page,
-              limit,
-            },
-          }
-        );
-        setData(response.data);
-        setTotalRows(response.total);
-        setPerPage(limit);
-      } else console.log(typeof page);
+      const { data: response } = await api.get(
+        `/admin/transactions-filter-by-date`,
+        {
+          params: {
+            type_account: sendData.accountType,
+            giro_number: sendData.giroNumber,
+            start_date: sendData.startDate,
+            end_date: sendData.endDate,
+            page,
+            limit,
+          },
+        }
+      );
+
+      setData(response.data);
+      setTotalRows(response.total);
+      setPerPage(limit);
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  const handlePerRowsChange = async (newPerPage, page) =>
-    handleGetData(page, newPerPage);
+  const handlePerRowsChange = async (newPerPage, page) => {
+    await handleGetData(page, newPerPage);
+  };
 
-  const handlePageChange = async (page) => handleGetData(page);
+  const handlePageChange = async (page) => {
+    await handleGetData(page);
+  };
 
   const handleDownload = async () => {
     try {
       const sendData = formik.values;
-      const res = await api.get(`/admin/transactions-filter-by-date/download`, {
+      const {data:response} = await api.get(`/admin/transactions-filter-by-date/download`, {
         params: {
           type_account: sendData.accountType,
           giro_number: sendData.giroNumber,
@@ -98,7 +101,7 @@ function DownloadVA() {
         responseType: "arraybuffer",
       });
 
-      const url = URL.createObjectURL(new Blob([res.data]));
+      const url = URL.createObjectURL(new Blob([response]));
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", "Transaction-history.xlsx");
