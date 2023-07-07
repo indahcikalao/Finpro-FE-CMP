@@ -65,48 +65,55 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 	};
 
 	return (
-		<Card
-			className={clsx(
-				"bg-blue-gray-900 z-10 fixed top-4 xl:left-4 h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform",
-				{ "-translate-x-full left-0": !openSidebar }
-			)}
-		>
-			<button
-				className="xl:hidden w-6 absolute top-0 right-0 hover:bg-gray-100 mt-2 mr-2"
-				onClick={() => setOpenSidebar(false)}
-			>
-				<XMarkIcon />
-			</button>
-			<div className="flex items-center gap-4 py-6 px-8">
-				<img src="/logo-bri.png" alt="ini gambar" className="w-16 rounded-lg" />
-				<Typography variant="h5" color="white">
-					Final Project Web TRB 2023
-				</Typography>
-			</div>
-			<List className="text-white overflow-auto">
-				<ListItem onClick={() => navigate('/')}>
-					<ListItemPrefix>
-						<SidebarMenuItemIcon Icon={HomeIcon} />
-					</ListItemPrefix>
-					Home
-				</ListItem>
-				{menuList.map((menu, idx) => (
-					<SidebarMenu
-            key={menu.name}
-            menu={menu}
-            handleOpen={handleOpen}
-            open={open}
-            index={idx}
-          />
-				))}
-				<ListItem onClick={logout}>
-					<ListItemPrefix>
-						<SidebarMenuItemIcon Icon={PowerIcon} />
-					</ListItemPrefix>
-					Log Out
-				</ListItem>
-			</List>
-		</Card>
+		<React.Fragment>
+      <Card
+        className={clsx(
+          "bg-blue-gray-900 z-10 fixed top-4 xl:left-4 h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform",
+          { "-translate-x-full left-0": !openSidebar }
+        )}
+      >
+        <button
+          className="xl:hidden w-6 absolute top-0 right-0 hover:bg-gray-100 mt-2 mr-2"
+          onClick={() => setOpenSidebar(false)}
+        >
+          <XMarkIcon />
+        </button>
+        <div className="flex items-center gap-4 py-6 px-8">
+          <img src="/logo-bri.png" alt="ini gambar" className="w-16 rounded-lg" />
+          <Typography variant="h5" color="white">
+            Final Project Web TRB 2023
+          </Typography>
+        </div>
+        <List className="text-white overflow-auto">
+          <ListItem onClick={() => navigate('/')}>
+            <ListItemPrefix>
+              <SidebarMenuItemIcon Icon={HomeIcon} />
+            </ListItemPrefix>
+            Home
+          </ListItem>
+          {menuList.map((menu, idx) => (
+            <SidebarMenu
+              key={menu.name}
+              menu={menu}
+              handleOpen={handleOpen}
+              open={open}
+              index={idx}
+            />
+          ))}
+          <ListItem onClick={logout}>
+            <ListItemPrefix>
+              <SidebarMenuItemIcon Icon={PowerIcon} />
+            </ListItemPrefix>
+            Log Out
+          </ListItem>
+        </List>
+      </Card>
+      <div className={clsx(
+          "fixed bg-black inset-0 z-[1] opacity-50 transition-opacity",
+          !openSidebar && "hidden",
+        )}
+      />
+    </React.Fragment>
 	);
 };
 
