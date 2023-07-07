@@ -5,41 +5,83 @@ import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import * as XLSX from "xlsx/xlsx.mjs";
 import api from "../../../api/axios";
 import numeral from "numeral";
+import { Spinner } from "../../../Components/Atoms";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { PERMISSIONS_CONFIG } from "../../../config";
 
 const MonitoringVA = () => {
   const [data, setData] = React.useState([]);
+  const [totalRows, setTotalRows] = React.useState(0);
+  const [perPage, setPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
+
+  const fetchTransaction = async (page = 1, limit = perPage) => {
+    setLoading(true);
+
+    try {
+      const { data: response } = await api.get("/admin/transactions", {
+        params: {
+          Page: page,
+          Limit: limit,
+        },
+      });
+
+      setData(response.data);
+      setTotalRows(response.total);
+      setPerPage(limit);
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) =>
+    await fetchTransaction(page, newPerPage);
+
+  const handlePageChange = async (page) => await fetchTransaction(page);
 
   React.useEffect(() => {
     const getTransaction = async () => {
       try {
-        const response = await api.get("/admin/transactions");
-        setData(response.data.data);
+        await fetchTransaction();
       } catch (error) {
-        console.log("error", error);
+        console.log("Error fetching transactions:", error);
       }
     };
 
     getTransaction();
   }, []);
 
-  const handleDownload = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-    const excelBuffer = XLSX.write(workbook, {
-      type: "buffer",
-      bookType: "xlsx",
-    });
-    const blob = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "transactionVA.xlsx");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async () => {
+    try {
+      await api.get("/admin/transactions/download", {
+        responseType: "blob",
+      });
+
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+
+      const excelBuffer = await XLSX.write(workbook, {
+        type: "array",
+        bookType: "xlsx",
+      });
+
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.setAttribute("download", "monitoringVA.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.log("Error downloading file:", error);
+    }
   };
 
   const generateRowNumber = (_, index) => {
@@ -207,11 +249,24 @@ const MonitoringVA = () => {
             },
           ]}
           data={data}
+          progressPending={loading}
+          progressComponent={
+            <Spinner message="Please wait for a moment..." size="lg" />
+          }
           pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
+          defaultSortAsc={true}
+          defaultSortFieldId="status"
         />
       </div>
     </React.Fragment>
   );
 };
 
-export default MonitoringVA;
+export default withReadPermission(
+  MonitoringVA,
+  PERMISSIONS_CONFIG.resources.monitoring
+);

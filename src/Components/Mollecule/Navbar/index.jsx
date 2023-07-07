@@ -41,7 +41,7 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
         </div>
         <div className="flex gap-3 justify-between sm:justify-end w-full lg:w-auto">
           <Typography variant="paragraph" className="cursor-pointer py-1.5 lg:ml-2">
-            Hai, <span className="font-semibold capitalize">{auth.fullname}</span>!
+            Hai, <span className="font-semibold">{auth.username}</span>!
           </Typography>
           <div>
             <Avatar
