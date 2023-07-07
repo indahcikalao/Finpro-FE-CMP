@@ -68,7 +68,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 		<React.Fragment>
       <Card
         className={clsx(
-          "bg-blue-gray-900 z-10 fixed top-4 xl:left-4 h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform",
+          "bg-blue-gray-900 z-10 rounded-none xl:rounded-xl fixed h-full xl:top-4 xl:left-4 xl:h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform",
           { "-translate-x-full left-0": !openSidebar }
         )}
       >
