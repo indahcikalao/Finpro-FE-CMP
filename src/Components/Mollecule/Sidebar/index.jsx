@@ -108,10 +108,12 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           </ListItem>
         </List>
       </Card>
-      <div className={clsx(
+      <div
+        className={clsx(
           "fixed bg-black inset-0 z-[1] opacity-50 transition-opacity",
           !openSidebar && "hidden",
         )}
+        onClick={() => setOpenSidebar(false)}
       />
     </React.Fragment>
 	);
