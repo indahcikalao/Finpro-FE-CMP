@@ -11,8 +11,6 @@ import api from "../../../api/axios";
 import AddRole from "./Components/addRole";
 import EditRole from "./Components/editRole";
 import DeleteRole from "./Components/deleteRole";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
-import { PERMISSIONS_CONFIG } from "../../../config";
 
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -154,7 +152,4 @@ const UserRoleManagement = () => {
   );
 };
 
-export default withReadPermission(
-  UserRoleManagement,
-  PERMISSIONS_CONFIG.resources.role
-);
+export default UserRoleManagement;
