@@ -18,9 +18,8 @@ function DownloadVA() {
     endDate: dayjs().format("YYYY-MM-DD"),
   });
   const [data, setData] = useState([]);
-  // const [downloadState, setDownloadState] = useState(false);
-  // const [totalRows, setTotalRows] = useState(0);
-  // const [perPage, setPerPage] = useState(10);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
 
   const initialValues = {
     giroNumber: "",
@@ -55,25 +54,36 @@ function DownloadVA() {
     formik.values.accountType = e.target.value;
   };
 
-  const handleGetData = async () => {
-    const sendData = formik.values;
+  const handleGetData = async (page, limit) => {
     try {
-      const { data: response } = await api.get(
-        `/admin/transactions-filter-by-date`,
-        {
-          params: {
-            type_account: sendData.accountType,
-            giro_number: sendData.giroNumber,
-            start_date: sendData.startDate,
-            end_date: sendData.endDate,
-          },
-        }
-      );
-      setData(response.data);
+      const sendData = formik.values;
+      if (typeof page === "number") {
+        const { data: response } = await api.get(
+          `/admin/transactions-filter-by-date`,
+          {
+            params: {
+              type_account: sendData.accountType,
+              giro_number: sendData.giroNumber,
+              start_date: sendData.startDate,
+              end_date: sendData.endDate,
+              page,
+              limit,
+            },
+          }
+        );
+        setData(response.data);
+        setTotalRows(response.total);
+        setPerPage(limit);
+      } else console.log(typeof page);
     } catch (error) {
       console.log("error", error);
     }
   };
+
+  const handlePerRowsChange = async (newPerPage, page) =>
+    handleGetData(page, newPerPage);
+
+  const handlePageChange = async (page) => handleGetData(page);
 
   const handleDownload = async () => {
     try {
@@ -192,7 +202,7 @@ function DownloadVA() {
         </div>
         <div className="flex justify-end gap-4 mb-6">
           <Button
-            onClick={handleGetData}
+            onClick={() => handleGetData(1, perPage)}
             disabled={
               (!date.startDate && !date.endDate) ||
               !formik.touched.giroNumber ||
@@ -202,9 +212,7 @@ function DownloadVA() {
             Preview
           </Button>
           <Button
-            onClick={() => {
-              handleDownload();
-            }}
+            onClick={handleDownload}
             disabled={
               (!date.startDate && !date.endDate) ||
               !formik.touched.giroNumber ||
@@ -230,10 +238,10 @@ function DownloadVA() {
             data={data}
             noDataComponent={null}
             pagination
-            // paginationServer
-            // paginationTotalRows={totalRows}
-            // onChangeRowsPerPage={handlePerRowsChange}
-            // onChangePage={handlePageChange}
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
           />
         ) : (
           <h4 className="p-5 text-center">No data available.</h4>
