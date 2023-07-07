@@ -58,6 +58,12 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 	const navigate = useNavigate();
 	const { logout } = useAuth();
 
+	const [open, setOpen] = React.useState(null);
+
+	const handleOpen = (index) => {
+		setOpen(open === index ? null : index);
+	};
+
 	return (
 		<Card
 			className={clsx(
@@ -77,15 +83,21 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
 					Final Project Web TRB 2023
 				</Typography>
 			</div>
-			<List className="text-white">
+			<List className="text-white overflow-auto">
 				<ListItem onClick={() => navigate('/')}>
 					<ListItemPrefix>
 						<SidebarMenuItemIcon Icon={HomeIcon} />
 					</ListItemPrefix>
 					Home
 				</ListItem>
-				{menuList.map((menu) => (
-					<SidebarMenu key={menu.name} menu={menu} />
+				{menuList.map((menu, idx) => (
+					<SidebarMenu
+            key={menu.name}
+            menu={menu}
+            handleOpen={handleOpen}
+            open={open}
+            index={idx}
+          />
 				))}
 				<ListItem onClick={logout}>
 					<ListItemPrefix>
