@@ -36,9 +36,8 @@ const SidebarMenuItem = ({ menu }) => {
 	);
 };
 
-const SidebarMultilevelMenuItem = ({ menu }) => {
+const SidebarMultilevelMenuItem = ({ menu, open, handleOpen, index }) => {
 	const { hasReadPermission } = usePermission();
-	const [open, setOpen] = React.useState(0);
 
   const hasOneCanRead = menu.menus.some((menu) =>
     hasReadPermission(menu.resourceName)
@@ -48,25 +47,21 @@ const SidebarMultilevelMenuItem = ({ menu }) => {
     return <></>;
   }
 
-	const handleOpen = (value) => {
-		setOpen(open === value ? 0 : value);
-	};
-
 	return (
 		<Accordion
-			open={open === 1}
+			open={open === index}
 			icon={
 				<ChevronDownIcon
 					strokeWidth={2.5}
 					className={`mx-auto h-4 w-4 transition-transform text-white ${
-						open === 1 ? 'rotate-180' : ''
+						open === index ? 'rotate-180' : ''
 					}`}
 				/>
 			}
 		>
-			<ListItem className='p-0' selected={open === 1}>
+			<ListItem className='p-0' selected={open === index}>
 				<AccordionHeader
-					onClick={() => handleOpen(1)}
+					onClick={() => handleOpen(index)}
 					className='border-b-0 p-3'
 				>
 					<ListItemPrefix>
@@ -88,9 +83,16 @@ const SidebarMultilevelMenuItem = ({ menu }) => {
 	);
 };
 
-export const SidebarMenu = ({ menu }) => {
+export const SidebarMenu = ({ menu, open, handleOpen, index }) => {
 	if (menu.hasOwnProperty('menus')) {
-		return <SidebarMultilevelMenuItem menu={menu} />;
+		return (
+      <SidebarMultilevelMenuItem
+        menu={menu}
+        open={open}
+        handleOpen={handleOpen}
+        index={index}
+      />
+    );
 	}
 
 	return <SidebarMenuItem menu={menu} />;
