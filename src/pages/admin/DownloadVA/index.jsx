@@ -19,7 +19,9 @@ function DownloadVA() {
     endDate: dayjs().format("YYYY-MM-DD"),
   });
   const [data, setData] = useState([]);
-  const [downloadState, setDownloadState] = useState(false);
+  // const [downloadState, setDownloadState] = useState(false);
+  // const [totalRows, setTotalRows] = useState(0);
+  // const [perPage, setPerPage] = useState(10);
 
   const initialValues = {
     giroNumber: "",
@@ -66,35 +68,26 @@ function DownloadVA() {
     }
   };
 
-  useEffect(() => {
-    if (data && downloadState) {
-      const handleDownload = (data) => {
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-        const excelBuffer = XLSX.write(workbook, {
-          type: "buffer",
-          bookType: "xlsx",
-        });
-        const blob = new Blob([excelBuffer], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute(
-          "download",
-          `${formik.values.accountType}-TransactionHistory.xlsx`
-        );
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      };
+  const handleDownload = async () => {
+    try {
+      const sendData = formik.values;
+      const res = await api.get(
+        `/admin/transactions-filter-by-date/download?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`,
+        {
+          responseType: "arraybuffer",
+        }
+      );
 
-      handleDownload(data);
-      setDownloadState(false);
+      const url = URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "Transaction-history.xlsx");
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.log("error", error);
     }
-  }, [data, downloadState, formik.values]);
+  };
 
   return (
     <div className="p-5">
@@ -200,8 +193,7 @@ function DownloadVA() {
           </Button>
           <Button
             onClick={() => {
-              handleGetData();
-              setDownloadState(true);
+              handleDownload();
             }}
             disabled={
               (!date.startDate && !date.endDate) ||
@@ -226,8 +218,12 @@ function DownloadVA() {
                 : vaHistoryColumn
             }
             data={data}
-            pagination
             noDataComponent={null}
+            pagination
+            // paginationServer
+            // paginationTotalRows={totalRows}
+            // onChangeRowsPerPage={handlePerRowsChange}
+            // onChangePage={handlePageChange}
           />
         ) : (
           <h4 className="p-5 text-center">No data available.</h4>
