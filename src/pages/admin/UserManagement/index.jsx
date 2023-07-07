@@ -10,7 +10,7 @@ import {
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 
-import { Badge, SearchableSelect } from "../../../Components/Atoms";
+import { Badge, SearchableSelect, Spinner } from "../../../Components/Atoms";
 import api from "../../../api/axios";
 import { usePermission } from "../../../hooks";
 import { PERMISSIONS_CONFIG } from "../../../config";
@@ -90,6 +90,10 @@ const UserManagement = () => {
 
   const [open, setOpen] = React.useState(false);
 
+  const [totalRows, setTotalRows] = React.useState(0);
+	const [perPage, setPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
+
   const handleEditUser = (row) => {
     setOpen(true);
     document.body.style.overflow = "hidden";
@@ -104,14 +108,37 @@ const UserManagement = () => {
     setSelectedRole({})
   };
 
+  const fetchUsers = async (page = 1, limit = perPage) => {
+    setLoading(true);
+
+    try {
+      const { data: response } = await api.get("/admin/users", {
+        params: {
+          Page: page,
+          Limit: limit
+        }
+      });
+
+      setData(response.data);
+      setTotalRows(response.total);
+      setPerPage(limit);
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => await fetchUsers(page, newPerPage);
+
+  const handlePageChange = async (page) => await fetchUsers(page);
+
   React.useEffect(() => {
     const getUsers = async () => {
       try {
-        const { data: response } = await api.get("/admin/users");
-
-        setData(response.data);
+        await fetchUsers();
       } catch (error) {
-        console.log("error", error);
+        console.log("Error fetching users:", error);
       }
     };
 
@@ -250,7 +277,13 @@ const UserManagement = () => {
             },
           ]}
           data={data}
+          progressPending={loading}
+          progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
           pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
           defaultSortAsc={true}
           defaultSortFieldId='status'
         />
