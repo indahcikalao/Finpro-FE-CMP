@@ -16,44 +16,7 @@ import { usePermission } from "../../../hooks";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 
-const ActionsColumn = ({ row, handleEditUser }) => {
-  const handleDeleteUser = async (id) => {
-    const confirm = await Swal.fire({
-      icon: "warning",
-      title: "Delete User",
-      text: "Are you sure want to delete this user?",
-      showCancelButton: true,
-    });
-
-    if (confirm.isDismissed) {
-      return;
-    }
-
-    try {
-      const response = await api.delete(`/admin/user/${id}`);
-
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Deleted",
-          text: "User has been deleted!",
-          timer: 1500,
-          showConfirmButton: false,
-        }).then(() => window.location.reload());
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Failed",
-        text:
-          "Unable to delete user: " + error?.response?.data?.message ||
-          error.message,
-        timer: 1500,
-        showConfirmButton: false,
-      });
-    }
-  };
-
+const ActionsColumn = ({ row, handleEditUser, handleDeleteUser }) => {
   return (
     <div className="flex gap-2">
       <Typography
@@ -211,6 +174,43 @@ const UserManagement = () => {
     }
   };
 
+  const handleDeleteUser = async (id) => {
+    const confirm = await Swal.fire({
+      icon: "warning",
+      title: "Delete User",
+      text: "Are you sure want to delete this user?",
+      showCancelButton: true,
+    });
+
+    if (confirm.isDismissed) {
+      return;
+    }
+
+    try {
+      const response = await api.delete(`/admin/user/${id}`);
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted",
+          text: "User has been deleted!",
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => window.location.reload());
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text:
+          "Unable to delete user: " + error?.response?.data?.message ||
+          error.message,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="my-4 space-y-4">
@@ -267,7 +267,11 @@ const UserManagement = () => {
               button: true,
               cell: (row) => (
                 hasWritePermission(config.resources.user) ? (
-                  <ActionsColumn row={row} handleEditUser={handleEditUser} />
+                  <ActionsColumn
+                    row={row}
+                    handleEditUser={handleEditUser}
+                    handleDeleteUser={handleDeleteUser}
+                  />
                 ) : (
                   <p className="text-red-400 flex whitespace-nowrap">
                     <NoSymbolIcon width={16} /> Forbidden
