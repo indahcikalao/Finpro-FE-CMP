@@ -41,7 +41,7 @@ const ActionsColumn = ({ row, handleEditUser, handleDeleteUser }) => {
   );
 };
 
-const UserManagement = () => {
+export const UserManagement = () => {
   const { config, hasWritePermission } = usePermission();
 
   const [data, setData] = React.useState([]);
