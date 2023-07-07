@@ -5,7 +5,8 @@
 📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
 
 ## Deployment Link 
-https://finpro-cmp-trb.netlify.app/
+https://finpro-cmp-trb.netlify.app/ (v1) <br>
+https://new-cmp-trb.netlify.app/ (v2)
 
 ## Progress Pages 
 Sprint 1 
