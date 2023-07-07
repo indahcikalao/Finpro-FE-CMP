@@ -213,12 +213,12 @@ export const UserManagement = () => {
 
   return (
     <React.Fragment>
-      <div className="my-4 space-y-4">
-        <Typography
-          variant="h1"
-          className="font-bold capitalize text-lg md:text-2xl"
-        >
-          user management
+      <div className="my-4 mx-4">
+        <Typography variant="h5" color="blue-gray">
+          User Management
+        </Typography>
+        <Typography color="gray" className="mt-1 font-normal">
+          Activate user and assign/update user's role
         </Typography>
         <DataTable
           columns={[
