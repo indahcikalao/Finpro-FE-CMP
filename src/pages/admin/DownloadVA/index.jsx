@@ -8,7 +8,6 @@ import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
 import api from "../../../api/axios";
-import * as XLSX from "xlsx/xlsx.mjs";
 import * as Yup from "yup";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
@@ -60,7 +59,15 @@ function DownloadVA() {
     const sendData = formik.values;
     try {
       const { data: response } = await api.get(
-        `/admin/transactions-filter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
+        `/admin/transactions-filter-by-date`,
+        {
+          params: {
+            type_account: sendData.accountType,
+            giro_number: sendData.giroNumber,
+            start_date: sendData.startDate,
+            end_date: sendData.endDate,
+          },
+        }
       );
       setData(response.data);
     } catch (error) {
@@ -71,12 +78,15 @@ function DownloadVA() {
   const handleDownload = async () => {
     try {
       const sendData = formik.values;
-      const res = await api.get(
-        `/admin/transactions-filter-by-date/download?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`,
-        {
-          responseType: "arraybuffer",
-        }
-      );
+      const res = await api.get(`/admin/transactions-filter-by-date/download`, {
+        params: {
+          type_account: sendData.accountType,
+          giro_number: sendData.giroNumber,
+          start_date: sendData.startDate,
+          end_date: sendData.endDate,
+        },
+        responseType: "arraybuffer",
+      });
 
       const url = URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
