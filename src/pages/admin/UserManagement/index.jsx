@@ -105,7 +105,7 @@ const UserManagement = () => {
     setOpen(false);
     document.body.style.overflow = "unset";
     setEditUser({});
-    setSelectedRole({})
+    setSelectedRole(null)
   };
 
   const fetchUsers = async (page = 1, limit = perPage) => {
