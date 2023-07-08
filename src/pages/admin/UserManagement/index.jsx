@@ -7,7 +7,7 @@ import {
   IconButton,
   Input,
 } from "@material-tailwind/react";
-import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 
 import { Badge, SearchableSelect, Spinner } from "../../../Components/Atoms";
@@ -15,6 +15,48 @@ import api from "../../../api/axios";
 import { usePermission } from "../../../hooks";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+
+const initialColumn = [
+  {
+    id: 'fullname',
+    name: "Fullname",
+    selector: (row) => row.fullname,
+    sortable: true,
+  },
+  {
+    id: 'username',
+    name: "Username",
+    selector: (row) => row.username,
+    sortable: true,
+  },
+  {
+    id: 'email',
+    name: "Email",
+    selector: (row) => row.email,
+    sortable: true,
+  },
+  {
+    id: 'status',
+    name: "Status",
+    selector: (row) => row.is_active,
+    cell: (row) =>
+      row.is_active ? (
+        <Badge type="success">Active</Badge>
+      ) : (
+        <Badge type="danger">Inactive</Badge>
+      ),
+    sortable: true,
+  },
+  {
+    id: 'role',
+    name: "Role",
+    selector: (row) => row.role,
+    sortable: true,
+    style: {
+      textTransform: 'capitalize',
+    }
+  },
+]
 
 const ActionsColumn = ({ row, handleEditUser, handleDeleteUser }) => {
   return (
@@ -56,6 +98,22 @@ export const UserManagement = () => {
   const [totalRows, setTotalRows] = React.useState(0);
 	const [perPage, setPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
+
+  const columns = hasWritePermission(config.resources.user) ? [
+    ...initialColumn,
+    {
+      id: 'actions',
+      name: "Actions",
+      button: true,
+      cell: (row) => (
+        <ActionsColumn
+          row={row}
+          handleEditUser={handleEditUser}
+          handleDeleteUser={handleDeleteUser}
+        />
+      ),
+    },
+  ] : initialColumn;
 
   const handleEditUser = (row) => {
     setOpen(true);
@@ -221,65 +279,7 @@ export const UserManagement = () => {
           Activate user and assign/update user's role
         </Typography>
         <DataTable
-          columns={[
-            {
-              id: 'fullname',
-              name: "Fullname",
-              selector: (row) => row.fullname,
-              sortable: true,
-            },
-            {
-              id: 'username',
-              name: "Username",
-              selector: (row) => row.username,
-              sortable: true,
-            },
-            {
-              id: 'email',
-              name: "Email",
-              selector: (row) => row.email,
-              sortable: true,
-            },
-            {
-              id: 'status',
-              name: "Status",
-              selector: (row) => row.is_active,
-              cell: (row) =>
-                row.is_active ? (
-                  <Badge type="success">Active</Badge>
-                ) : (
-                  <Badge type="danger">Inactive</Badge>
-                ),
-              sortable: true,
-            },
-            {
-              id: 'role',
-              name: "Role",
-              selector: (row) => row.role,
-              sortable: true,
-              style: {
-                textTransform: 'capitalize',
-              }
-            },
-            {
-              id: 'actions',
-              name: "Actions",
-              button: true,
-              cell: (row) => (
-                hasWritePermission(config.resources.user) ? (
-                  <ActionsColumn
-                    row={row}
-                    handleEditUser={handleEditUser}
-                    handleDeleteUser={handleDeleteUser}
-                  />
-                ) : (
-                  <p className="text-red-400 flex whitespace-nowrap">
-                    <NoSymbolIcon width={16} /> Forbidden
-                  </p>
-                )
-              ),
-            },
-          ]}
+          columns={columns}
           data={data}
           progressPending={loading}
           progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
