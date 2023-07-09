@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -17,47 +17,55 @@ const url = process.env.REACT_APP_BASE_URL;
 
 const role_table_head = ["Resource", "Access"];
 
-const AddRoleManagement = () => {
+const AddRole = () => {
   const [newRoleName, setNewRoleName] = useState("");
-  const [newRoleData, setNewRoleData] = useState([
-    {
-      resource: "Monitoring",
-      can_read: false,
-      can_write: false,
-    },
-    {
-      resource: "Download",
-      can_read: false,
-      can_write: false,
-    },
-  ]);
+  const [newRoleData, setNewRoleData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false); // Tambahkan state untuk menandai perubahan pada form
+
+  useEffect(() => {
+    const fetchRoleData = async () => {
+      try {
+        const response = await api.get(`${url}/admin/accesses`);
+        const roles = response.data.data;
+
+        const mappedRoleData = roles.map((role) => ({
+          resource: role.name,
+          can_read: false,
+          can_write: false,
+        }));
+
+        setNewRoleData(mappedRoleData);
+      } catch (error) {
+        console.error("Error fetching role data:", error);
+      }
+    };
+
+    fetchRoleData();
+  }, []);
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => {
     setOpen(false);
-    setNewRoleName("");
-    setNewRoleData([
-      {
-        resource: "Monitoring",
-        can_read: false,
-        can_write: false,
-      },
-      {
-        resource: "Download",
-        can_read: false,
-        can_write: false,
-      },
-    ]);
+    if (hasChanges) { // Reset nilai form hanya ketika ada perubahan yang dilakukan
+      setNewRoleName("");
+      setNewRoleData([]);
+    }
   };
 
   const handleRoleNameChange = (e) => {
     setNewRoleName(e.target.value);
+    setHasChanges(true); // Set hasChanges menjadi true ketika ada perubahan pada form
   };
 
   const addRole = async () => {
     try {
+      if (!newRoleName) {
+        Swal.fire("Error", "Please enter a role name.", "error");
+        return;
+      }
+
       const roleData = {
         role: newRoleName,
         data: newRoleData,
@@ -92,12 +100,14 @@ const AddRoleManagement = () => {
     const updatedData = [...newRoleData];
     updatedData[index].can_read = checked;
     setNewRoleData(updatedData);
+    setHasChanges(true); // Set hasChanges menjadi true ketika ada perubahan pada form
   };
 
-  const handleCanWriteChange = (index, checked) => {
+  const handleCanWriteChange = (index,checked) => {
     const updatedData = [...newRoleData];
     updatedData[index].can_write = checked;
     setNewRoleData(updatedData);
+    setHasChanges(true); // Set hasChanges menjadi true ketika ada perubahan pada form
   };
 
   return (
@@ -185,4 +195,4 @@ const AddRoleManagement = () => {
   );
 };
 
-export default AddRoleManagement;
+export default AddRole;

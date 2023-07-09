@@ -7,9 +7,9 @@ import {
   CardHeader,
 } from "@material-tailwind/react";
 import DataTable from "react-data-table-component";
+import api from "../../../api/axios";
 import AddRole from "./Components/addRole";
 import EditRole from "./Components/editRole";
-import api from "../../../api/axios";
 import DeleteRole from "./Components/deleteRole";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
@@ -69,20 +69,39 @@ const UserRoleManagement = () => {
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [headers, setHeaders] = useState([]);
 
   useEffect(() => {
-    const getAllRoles = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get(`${url}/admin/roles`);
+        const response = await api.get(
+          `${url}/admin/roles?page=${currentPage}&limit=10`
+        );
         setData(response.data.data);
         setFilteredData(response.data.data);
+        setTotalPages(response.data.total_pages);
+        setLoading(false);
       } catch (error) {
         console.log("error", error);
       }
     };
 
-    getAllRoles();
-  }, []);
+    fetchData();
+
+    const fetchHeaders = async () => {
+      try {
+        const response = await api.get(`${url}/admin/accesses`);
+        setHeaders(response.data.data);
+      } catch (error) {
+        console.error("Error fetching headers:", error);
+      }
+    };
+
+    fetchHeaders();
+  }, [currentPage]);
 
   const handleEdit = (updatedRole) => {
     const updatedData = data.map((item) =>
@@ -95,6 +114,46 @@ const UserRoleManagement = () => {
     setData(data.filter((item) => item.id !== role.id));
   };
 
+  const columns = [
+    {
+      name: <b>Role Name</b>,
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    ...headers.map((header) => ({
+      name: <b>{header.name}</b>,
+      sortable: false,
+      cell: (row) => (
+        <>
+          <div className="mr-10">
+            {row.access &&
+              row.access.find((access) => access.resource === header.name) &&
+              (row.access.find((access) => access.resource === header.name)
+                .can_read &&
+              row.access.find((access) => access.resource === header.name)
+                .can_write
+                ? "Read | Write"
+                : row.access.find((access) => access.resource === header.name)
+                    .can_read
+                ? "Read"
+                : row.access.find((access) => access.resource === header.name)
+                    .can_write
+                ? "Write"
+                : "")}
+          </div>
+        </>
+      ),
+    })),
+    {
+      name: <b>Actions</b>,
+      cell: (row) => (
+        <>
+          <EditRole role={row} onSave={handleEdit} />
+          <DeleteRole role={row} onDelete={handleDelete} />
+        </>
+      ),
+    },
+  ];
   const columns = hasWritePermission(resourceRole)
     ? [
         ...initialColumns,
@@ -110,6 +169,7 @@ const UserRoleManagement = () => {
       ]
     : initialColumns;
 
+
   const handleSearch = (event) => {
     const keyword = event.target.value.toLowerCase();
     const filteredResults = data.filter((item) =>
@@ -118,21 +178,21 @@ const UserRoleManagement = () => {
     setFilteredData(filteredResults);
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page.selected + 1);
+  };
+
   return (
     <React.Fragment>
       <div className="my-4 space-y-4">
         <Card className="h-full w-full">
-          <CardHeader
-            floated={false}
-            shadow={false}
-            className="rounded-none"
-          >
+          <CardHeader floated={false} shadow={false} className="rounded-none">
             <div className="mb-8 flex items-center justify-between gap-8">
               <div>
                 <Typography
                   variant="h5"
                   color="blue-gray"
-                  className="mb-2 text-xl font-bold "
+                  className="mb-2 text-xl font-bold"
                 >
                   Roles List
                 </Typography>
@@ -158,7 +218,20 @@ const UserRoleManagement = () => {
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-            <DataTable columns={columns} data={filteredData} pagination />
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={filteredData}
+                pagination
+                paginationServer
+                paginationTotalRows={totalPages * 10}
+                paginationPerPage={10}
+                paginationDefaultPage={currentPage - 1}
+                onChangePage={handlePageChange}
+              />
+            )}
           </CardBody>
         </Card>
       </div>
@@ -166,7 +239,4 @@ const UserRoleManagement = () => {
   );
 };
 
-export default withReadPermission(
-  UserRoleManagement,
-  PERMISSIONS_CONFIG.resources.role
-);
+export default UserRoleManagement;
