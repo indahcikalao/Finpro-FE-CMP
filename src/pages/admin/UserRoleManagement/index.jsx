@@ -17,52 +17,6 @@ import { usePermission } from "../../../hooks";
 
 const url = process.env.REACT_APP_BASE_URL;
 
-const initialColumns = [
-  {
-    name: <b>Role Name</b>,
-    selector: (row) => row.name,
-    sortable: true,
-  },
-  {
-    name: <b>Monitoring</b>,
-    sortable: false,
-    cell: (row) => (
-      <>
-        <div className="mr-10">
-          {row.access &&
-            row.access[0] &&
-            (row.access[0].can_read && row.access[0].can_write
-              ? "Read | Write"
-              : row.access[0].can_read
-              ? "Read"
-              : row.access[0].can_write
-              ? "Write"
-              : "")}
-        </div>
-      </>
-    ),
-  },
-  {
-    name: <b>Download</b>,
-    sortable: false,
-    cell: (row) => (
-      <>
-        <div className="mr-10">
-          {row.access &&
-            row.access[1] &&
-            (row.access[1].can_read && row.access[1].can_write
-              ? "Read | Write"
-              : row.access[1].can_read
-              ? "Read"
-              : row.access[1].can_write
-              ? "Write"
-              : "")}
-        </div>
-      </>
-    ),
-  },
-];
-
 const UserRoleManagement = () => {
   const { config, hasWritePermission } = usePermission();
   const resourceRole = config.resources.role;
@@ -144,7 +98,10 @@ const UserRoleManagement = () => {
         </>
       ),
     })),
-    {
+  ];
+
+  if (hasWritePermission(resourceRole)) {
+    columns.push({
       name: <b>Actions</b>,
       cell: (row) => (
         <>
@@ -152,23 +109,8 @@ const UserRoleManagement = () => {
           <DeleteRole role={row} onDelete={handleDelete} />
         </>
       ),
-    },
-  ];
-  const columns = hasWritePermission(resourceRole)
-    ? [
-        ...initialColumns,
-        {
-          name: <b>Actions</b>,
-          cell: (row) => (
-            <>
-              <EditRole role={row} onSave={handleEdit} />
-              <DeleteRole role={row} onDelete={handleDelete} />
-            </>
-          ),
-        },
-      ]
-    : initialColumns;
-
+    });
+  }
 
   const handleSearch = (event) => {
     const keyword = event.target.value.toLowerCase();
