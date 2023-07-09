@@ -11,10 +11,62 @@ import api from "../../../api/axios";
 import AddRole from "./Components/addRole";
 import EditRole from "./Components/editRole";
 import DeleteRole from "./Components/deleteRole";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { PERMISSIONS_CONFIG } from "../../../config";
+import { usePermission } from "../../../hooks";
 
 const url = process.env.REACT_APP_BASE_URL;
 
+const initialColumns = [
+  {
+    name: <b>Role Name</b>,
+    selector: (row) => row.name,
+    sortable: true,
+  },
+  {
+    name: <b>Monitoring</b>,
+    sortable: false,
+    cell: (row) => (
+      <>
+        <div className="mr-10">
+          {row.access &&
+            row.access[0] &&
+            (row.access[0].can_read && row.access[0].can_write
+              ? "Read | Write"
+              : row.access[0].can_read
+              ? "Read"
+              : row.access[0].can_write
+              ? "Write"
+              : "")}
+        </div>
+      </>
+    ),
+  },
+  {
+    name: <b>Download</b>,
+    sortable: false,
+    cell: (row) => (
+      <>
+        <div className="mr-10">
+          {row.access &&
+            row.access[1] &&
+            (row.access[1].can_read && row.access[1].can_write
+              ? "Read | Write"
+              : row.access[1].can_read
+              ? "Read"
+              : row.access[1].can_write
+              ? "Write"
+              : "")}
+        </div>
+      </>
+    ),
+  },
+];
+
 const UserRoleManagement = () => {
+  const { config, hasWritePermission } = usePermission();
+  const resourceRole = config.resources.role;
+
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,6 +154,21 @@ const UserRoleManagement = () => {
       ),
     },
   ];
+  const columns = hasWritePermission(resourceRole)
+    ? [
+        ...initialColumns,
+        {
+          name: <b>Actions</b>,
+          cell: (row) => (
+            <>
+              <EditRole role={row} onSave={handleEdit} />
+              <DeleteRole role={row} onDelete={handleDelete} />
+            </>
+          ),
+        },
+      ]
+    : initialColumns;
+
 
   const handleSearch = (event) => {
     const keyword = event.target.value.toLowerCase();
@@ -134,9 +201,11 @@ const UserRoleManagement = () => {
                 </Typography>
               </div>
 
-              <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                <AddRole />
-              </div>
+              {hasWritePermission(resourceRole) && (
+                <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+                  <AddRole />
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

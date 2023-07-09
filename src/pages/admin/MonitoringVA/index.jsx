@@ -8,8 +8,11 @@ import numeral from "numeral";
 import { Spinner } from "../../../Components/Atoms";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
+import { usePermission } from "../../../hooks";
 
 const MonitoringVA = () => {
+  const { config, hasWritePermission } = usePermission();
+
   const [data, setData] = React.useState([]);
   const [totalRows, setTotalRows] = React.useState(0);
   const [perPage, setPerPage] = React.useState(10);
@@ -131,16 +134,18 @@ const MonitoringVA = () => {
               Displays a list of real account data and virtual accounts
             </Typography>
           </div>
-          <div className="flex w-full shrink-0 gap-2 md:w-max">
-            <Button
-              className="flex items-center gap-3"
-              color="blue"
-              size="sm"
-              onClick={handleDownload}
-            >
-              <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" /> Download
-            </Button>
-          </div>
+          {hasWritePermission(config.resources.monitoring) && (
+            <div className="flex w-full shrink-0 gap-2 md:w-max">
+              <Button
+                className="flex items-center gap-3"
+                color="blue"
+                size="sm"
+                onClick={handleDownload}
+              >
+                <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" /> Download
+              </Button>
+            </div>
+          )}
         </div>
       </CardHeader>
       <div className="my-4 space-y-4 border-2">

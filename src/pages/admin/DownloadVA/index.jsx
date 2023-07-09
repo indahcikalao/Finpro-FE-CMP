@@ -12,8 +12,11 @@ import * as XLSX from "xlsx/xlsx.mjs";
 import * as Yup from "yup";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
+import { usePermission } from "../../../hooks";
 
 function DownloadVA() {
+  const { config, hasWritePermission } = usePermission();
+
   const [date, setDate] = useState({
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
@@ -199,19 +202,21 @@ function DownloadVA() {
           >
             Preview
           </Button>
-          <Button
-            onClick={() => {
-              handleGetData();
-              setDownloadState(true);
-            }}
-            disabled={
-              (!date.startDate && !date.endDate) ||
-              !formik.touched.giroNumber ||
-              formik.errors.giroNumber
-            }
-          >
-            Download
-          </Button>
+          {hasWritePermission(config.resources.download) && (
+            <Button
+              onClick={() => {
+                handleGetData();
+                setDownloadState(true);
+              }}
+              disabled={
+                (!date.startDate && !date.endDate) ||
+                !formik.touched.giroNumber ||
+                formik.errors.giroNumber
+              }
+            >
+              Download
+            </Button>
+          )}
         </div>
       </div>
       <div
