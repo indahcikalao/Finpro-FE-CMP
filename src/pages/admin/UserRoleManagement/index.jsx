@@ -17,20 +17,39 @@ const url = process.env.REACT_APP_BASE_URL;
 const UserRoleManagement = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [headers, setHeaders] = useState([]);
 
   useEffect(() => {
-    const getAllRoles = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get(`${url}/admin/roles`);
+        const response = await api.get(
+          `${url}/admin/roles?page=${currentPage}&limit=10`
+        );
         setData(response.data.data);
         setFilteredData(response.data.data);
+        setTotalPages(response.data.total_pages);
+        setLoading(false);
       } catch (error) {
         console.log("error", error);
       }
     };
 
-    getAllRoles();
-  }, []);
+    fetchData();
+
+    const fetchHeaders = async () => {
+      try {
+        const response = await api.get(`${url}/admin/accesses`);
+        setHeaders(response.data.data);
+      } catch (error) {
+        console.error("Error fetching headers:", error);
+      }
+    };
+
+    fetchHeaders();
+  }, [currentPage]);
 
   const handleEdit = (updatedRole) => {
     const updatedData = data.map((item) =>
@@ -49,44 +68,30 @@ const UserRoleManagement = () => {
       selector: (row) => row.name,
       sortable: true,
     },
-    {
-      name: <b>Monitoring</b>,
+    ...headers.map((header) => ({
+      name: <b>{header.name}</b>,
       sortable: false,
       cell: (row) => (
         <>
           <div className="mr-10">
             {row.access &&
-              row.access[0] &&
-              (row.access[0].can_read && row.access[0].can_write
+              row.access.find((access) => access.resource === header.name) &&
+              (row.access.find((access) => access.resource === header.name)
+                .can_read &&
+              row.access.find((access) => access.resource === header.name)
+                .can_write
                 ? "Read | Write"
-                : row.access[0].can_read
+                : row.access.find((access) => access.resource === header.name)
+                    .can_read
                 ? "Read"
-                : row.access[0].can_write
+                : row.access.find((access) => access.resource === header.name)
+                    .can_write
                 ? "Write"
                 : "")}
           </div>
         </>
       ),
-    },
-    {
-      name: <b>Download</b>,
-      sortable: false,
-      cell: (row) => (
-        <>
-          <div className="mr-10">
-            {row.access &&
-              row.access[1] &&
-              (row.access[1].can_read && row.access[1].can_write
-                ? "Read | Write"
-                : row.access[1].can_read
-                ? "Read"
-                : row.access[1].can_write
-                ? "Write"
-                : "")}
-          </div>
-        </>
-      ),
-    },
+    })),
     {
       name: <b>Actions</b>,
       cell: (row) => (
@@ -106,21 +111,21 @@ const UserRoleManagement = () => {
     setFilteredData(filteredResults);
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page.selected + 1);
+  };
+
   return (
     <React.Fragment>
       <div className="my-4 space-y-4">
         <Card className="h-full w-full">
-          <CardHeader
-            floated={false}
-            shadow={false}
-            className="rounded-none"
-          >
+          <CardHeader floated={false} shadow={false} className="rounded-none">
             <div className="mb-8 flex items-center justify-between gap-8">
               <div>
                 <Typography
                   variant="h5"
                   color="blue-gray"
-                  className="mb-2 text-xl font-bold "
+                  className="mb-2 text-xl font-bold"
                 >
                   Roles List
                 </Typography>
@@ -144,7 +149,20 @@ const UserRoleManagement = () => {
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-            <DataTable columns={columns} data={filteredData} pagination />
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={filteredData}
+                pagination
+                paginationServer
+                paginationTotalRows={totalPages * 10}
+                paginationPerPage={10}
+                paginationDefaultPage={currentPage - 1}
+                onChangePage={handlePageChange}
+              />
+            )}
           </CardBody>
         </Card>
       </div>
