@@ -142,7 +142,8 @@ const MonitoringVA = () => {
                 size="sm"
                 onClick={handleDownload}
               >
-                <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" /> Download
+                <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" />{" "}
+                Download
               </Button>
             </div>
           )}
@@ -259,6 +260,7 @@ const MonitoringVA = () => {
             <Spinner message="Please wait for a moment..." size="lg" />
           }
           pagination
+          paginationRowsPerPageOptions={[10, 30, 50, 100]}
           paginationServer
           paginationTotalRows={totalRows}
           onChangePage={handlePageChange}
