@@ -8,6 +8,8 @@ import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { usePermission } from "../../../hooks";
 import { Spinner } from "../../../Components/Atoms";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { LuFileSearch } from "react-icons/lu";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
@@ -219,6 +221,7 @@ function DownloadVA() {
         </div>
         <div className="flex justify-end gap-4 mb-6">
           <Button
+            className="flex items-center gap-3"
             onClick={() => handleGetData(1, perPage)}
             disabled={
               (!date.startDate && !date.endDate) ||
@@ -226,10 +229,12 @@ function DownloadVA() {
               formik.errors.giroNumber
             }
           >
+            <LuFileSearch className="h-4 w-4" />
             Preview
           </Button>
           {hasWritePermission(config.resources.download) && (
             <Button
+              className="flex items-center gap-3"
               onClick={handleDownload}
               disabled={
                 (!date.startDate && !date.endDate) ||
@@ -237,6 +242,7 @@ function DownloadVA() {
                 formik.errors.giroNumber
               }
             >
+              <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" />
               Download
             </Button>
           )}
