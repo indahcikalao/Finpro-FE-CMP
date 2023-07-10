@@ -59,30 +59,32 @@ function DownloadVA() {
   };
 
   const handleGetData = async (page, limit) => {
-    setLoading(true);
-    try {
-      const sendData = formik.values;
-      const { data: response } = await api.get(
-        `/admin/transactions-filter-by-date`,
-        {
-          params: {
-            type_account: sendData.accountType,
-            giro_number: sendData.giroNumber,
-            start_date: sendData.startDate,
-            end_date: sendData.endDate,
-            page,
-            limit,
-          },
-        }
-      );
+    const sendData = formik.values;
+    if (sendData.giroNumber) {
+      setLoading(true);
+      try {
+        const { data: response } = await api.get(
+          `/admin/transactions-filter-by-date`,
+          {
+            params: {
+              type_account: sendData.accountType,
+              giro_number: sendData.giroNumber,
+              start_date: sendData.startDate,
+              end_date: sendData.endDate,
+              page,
+              limit,
+            },
+          }
+        );
 
-      setData(response.data);
-      setTotalRows(response.total);
-      setPerPage(limit);
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-      setLoading(false);
+        setData(response.data);
+        setTotalRows(response.total);
+        setPerPage(limit);
+      } catch (error) {
+        console.log("error", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
