@@ -117,10 +117,19 @@ function DownloadVA() {
         }
       );
 
+      const accountType = formik.values.accountType;
+      const arr = accountType.split("_");
+
+      for (var i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+      }
+
+      const fileName = `Transaction History - ${arr.join(" ")}.xlsx`;
+
       const url = URL.createObjectURL(new Blob([response]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "Transaction-history.xlsx");
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
