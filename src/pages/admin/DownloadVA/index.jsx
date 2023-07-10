@@ -6,15 +6,13 @@ import { giroHistoryColumn } from "../../../utils/giroHistoryColumn";
 import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
+import { usePermission } from "../../../hooks";
 import { Spinner } from "../../../Components/Atoms";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
 import api from "../../../api/axios";
 import * as Yup from "yup";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
-import { PERMISSIONS_CONFIG } from "../../../config";
-import { usePermission } from "../../../hooks";
 
 function DownloadVA() {
   const { config, hasWritePermission } = usePermission();
