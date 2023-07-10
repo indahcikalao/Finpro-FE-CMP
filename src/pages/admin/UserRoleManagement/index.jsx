@@ -181,4 +181,7 @@ const UserRoleManagement = () => {
   );
 };
 
-export default UserRoleManagement;
+export default withReadPermission(
+  UserRoleManagement,
+  PERMISSIONS_CONFIG.resources.role,
+);
