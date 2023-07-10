@@ -14,6 +14,7 @@ import DeleteRole from "./Components/deleteRole";
 import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { usePermission } from "../../../hooks";
+import { Spinner } from "../../../Components/Atoms";
 
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -24,25 +25,31 @@ const UserRoleManagement = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [headers, setHeaders] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get(
-          `${url}/admin/roles?page=${currentPage}&limit=10`
-        );
-        setData(response.data.data);
-        setFilteredData(response.data.data);
-        setTotalPages(response.data.total_pages);
-        setLoading(false);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
+  const fetchData = async (page = 1, limit = perPage) => {
+    try {
+      setLoading(true);
+      const response = await api.get(`${url}/admin/roles`, {
+        params: {
+          Page: page,
+          Limit: limit,
+        },
+      });
+      setData(response.data.data);
+      setFilteredData(response.data.data);
+      setPerPage(limit);
+      setTotalRows(response.data.total);
+      setLoading(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
 
     const fetchHeaders = async () => {
@@ -55,7 +62,7 @@ const UserRoleManagement = () => {
     };
 
     fetchHeaders();
-  }, [currentPage]);
+  }, []);
 
   const handleEdit = (updatedRole) => {
     const updatedData = data.map((item) =>
@@ -120,8 +127,12 @@ const UserRoleManagement = () => {
     setFilteredData(filteredResults);
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page.selected + 1);
+  const handlePageChange = async (page) => {
+    await fetchData(page);
+  };
+
+  const handlePerPageChange = async (newPerPage, page) => {
+    await fetchData(page, newPerPage)
   };
 
   return (
@@ -160,20 +171,17 @@ const UserRoleManagement = () => {
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-            {loading ? (
-              <div>Loading...</div>
-            ) : (
               <DataTable
                 columns={columns}
                 data={filteredData}
+                progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
+                progressPending={loading}
                 pagination
                 paginationServer
-                paginationTotalRows={totalPages * 10}
-                paginationPerPage={10}
-                paginationDefaultPage={currentPage - 1}
+                paginationTotalRows={totalRows}
                 onChangePage={handlePageChange}
+                onChangeRowsPerPage={handlePerPageChange}
               />
-            )}
           </CardBody>
         </Card>
       </div>
@@ -183,5 +191,5 @@ const UserRoleManagement = () => {
 
 export default withReadPermission(
   UserRoleManagement,
-  PERMISSIONS_CONFIG.resources.role,
+  PERMISSIONS_CONFIG.resources.role
 );
