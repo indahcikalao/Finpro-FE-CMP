@@ -261,7 +261,7 @@ const MonitoringVA = () => {
             <Spinner message="Please wait for a moment..." size="lg" />
           }
           pagination
-          paginationRowsPerPageOptions={[10, 50, 100, 200]}
+          paginationRowsPerPageOptions={[10, 50, 100, 200, 500]}
           paginationServer
           paginationTotalRows={totalRows}
           onChangePage={handlePageChange}
