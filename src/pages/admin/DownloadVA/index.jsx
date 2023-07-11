@@ -1,24 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input, Typography, Radio, Button } from "@material-tailwind/react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useFormik } from "formik";
 import { giroHistoryColumn } from "../../../utils/giroHistoryColumn";
 import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { PERMISSIONS_CONFIG } from "../../../config";
+import { usePermission } from "../../../hooks";
+import { Spinner } from "../../../Components/Atoms";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { LuFileSearch } from "react-icons/lu";
 import Datepicker from "react-tailwindcss-datepicker";
 import dayjs from "dayjs";
 import DataTable from "react-data-table-component";
 import api from "../../../api/axios";
-import * as XLSX from "xlsx/xlsx.mjs";
 import * as Yup from "yup";
 
-export default function DownloadVA() {
+function DownloadVA() {
+  const { config, hasWritePermission } = usePermission();
+
   const [date, setDate] = useState({
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
   });
+
   const [data, setData] = useState([]);
-  const [downloadState, setDownloadState] = useState(false);
-  const [clicked, setClicked] = useState(false);
+
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
 
   const initialValues = {
     giroNumber: "",
@@ -53,47 +63,79 @@ export default function DownloadVA() {
     formik.values.accountType = e.target.value;
   };
 
-  const handleGetData = async () => {
+  const handleGetData = async (page, limit) => {
     const sendData = formik.values;
+    if (sendData.giroNumber) {
+      setLoading(true);
+      try {
+        const { data: response } = await api.get(
+          `/admin/transactions-filter-by-date`,
+          {
+            params: {
+              type_account: sendData.accountType,
+              giro_number: sendData.giroNumber,
+              start_date: sendData.startDate,
+              end_date: sendData.endDate,
+              page,
+              limit,
+            },
+          }
+        );
+
+        setData(response.data);
+        setTotalRows(response.total);
+        setPerPage(limit);
+      } catch (error) {
+        console.log("error", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) => {
+    await handleGetData(page, newPerPage);
+  };
+
+  const handlePageChange = async (page) => {
+    await handleGetData(page);
+  };
+
+  const handleDownload = async () => {
     try {
+      const sendData = formik.values;
       const { data: response } = await api.get(
-        `/admin/transactions-filter-by-date?type_account=${sendData.accountType}&giro_number=${sendData.giroNumber}&start_date=${sendData.startDate}&end_date=${sendData.endDate}`
+        `/admin/transactions-filter-by-date/download`,
+        {
+          params: {
+            type_account: sendData.accountType,
+            giro_number: sendData.giroNumber,
+            start_date: sendData.startDate,
+            end_date: sendData.endDate,
+          },
+          responseType: "arraybuffer",
+        }
       );
-      setData(response.data);
+
+      const accountType = formik.values.accountType;
+      const arr = accountType.split("_");
+
+      for (var i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+      }
+
+      const fileName = `Transaction History - ${arr.join(" ")}.xlsx`;
+
+      const url = URL.createObjectURL(new Blob([response]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
     } catch (error) {
       console.log("error", error);
     }
   };
-
-  useEffect(() => {
-    if (data && downloadState) {
-      const handleDownload = (data) => {
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-        const excelBuffer = XLSX.write(workbook, {
-          type: "buffer",
-          bookType: "xlsx",
-        });
-        const blob = new Blob([excelBuffer], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute(
-          "download",
-          `${formik.values.accountType}-TransactionHistory.xlsx`
-        );
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      };
-
-      handleDownload(data);
-      setDownloadState(false);
-    }
-  }, [data, downloadState, formik.values]);
 
   return (
     <div className="p-5">
@@ -188,33 +230,36 @@ export default function DownloadVA() {
         </div>
         <div className="flex justify-end gap-4 mb-6">
           <Button
-            onClick={handleGetData}
+            className="flex items-center gap-3"
+            onClick={() => handleGetData(1, perPage)}
             disabled={
               (!date.startDate && !date.endDate) ||
               !formik.touched.giroNumber ||
               formik.errors.giroNumber
             }
           >
+            <LuFileSearch className="h-4 w-4" />
             Preview
           </Button>
-          <Button
-            onClick={() => {
-              handleGetData();
-              setDownloadState(true);
-            }}
-            disabled={
-              (!date.startDate && !date.endDate) ||
-              !formik.touched.giroNumber ||
-              formik.errors.giroNumber
-            }
-          >
-            Download
-          </Button>
+          {hasWritePermission(config.resources.download) && (
+            <Button
+              className="flex items-center gap-3"
+              onClick={handleDownload}
+              disabled={
+                (!date.startDate && !date.endDate) ||
+                !formik.touched.giroNumber ||
+                formik.errors.giroNumber
+              }
+            >
+              <ArrowDownTrayIcon strokeWidth={2} className="h-4 w-4" />
+              Download
+            </Button>
+          )}
         </div>
       </div>
       <div
         className={`my-4 space-y-4 rounded-lg ${
-          data && data.length !== 0 && "border-2"
+          data && data.length !== 0 && !loading && "border-2"
         }`}
       >
         {data ? (
@@ -225,8 +270,16 @@ export default function DownloadVA() {
                 : vaHistoryColumn
             }
             data={data}
-            pagination
             noDataComponent={null}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            progressPending={loading}
+            progressComponent={
+              <Spinner message="Please wait for a moment..." size="lg" />
+            }
           />
         ) : (
           <h4 className="p-5 text-center">No data available.</h4>
@@ -235,3 +288,8 @@ export default function DownloadVA() {
     </div>
   );
 }
+
+export default withReadPermission(
+  DownloadVA,
+  PERMISSIONS_CONFIG.resources.download
+);

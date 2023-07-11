@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { TogglePassword } from "../Components/Atoms";
 import {
   Card,
@@ -13,9 +12,10 @@ import {
   Input,
   Button,
 } from "@material-tailwind/react";
+import { useAuth, useLocalStorage } from "../hooks";
+import * as Yup from "yup";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useAuth, useLocalStorage } from "../hooks";
 
 export default function Login() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -45,18 +45,18 @@ export default function Login() {
   });
 
   if (token) {
-    return <Navigate to='/' />
+    return <Navigate to="/" />;
   }
 
   const handleLogin = async (value) => {
     try {
       const res = await axios.post(`${url}/login`, value);
-      console.log(res)
+      console.log(res);
 
       if (res.status === 200) {
         tokenStorage.set(res.data.data.token);
 
-        getUserData();
+        await getUserData();
 
         await Swal.fire({
           icon: "success",
@@ -66,11 +66,20 @@ export default function Login() {
           navigate("/");
         });
       }
-    } catch (error) {
+    } catch ({ response: error }) {
       Swal.fire({
         icon: "error",
-        title: error.response.data.message,
-        text: "Please try again!",
+        title: error.data.message,
+        text:
+          error.data.message === "The account is not yet activated"
+            ? "Please contact Admin to activate your account!"
+            : error.data.input_false === 1
+            ? `You have 2 more attempts. Please try again!`
+            : error.data.input_false === 2
+            ? `You have 1 more attempt. Please try again!`
+            : error.data.input_false === 3
+            ? `Your Account is unactivated. Please contact Admin to reactivate your account!`
+            : "please try again!",
       });
     }
   };

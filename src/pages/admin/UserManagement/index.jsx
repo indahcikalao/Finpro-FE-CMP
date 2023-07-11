@@ -10,47 +10,55 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 
-import { Badge, SearchableSelect } from "../../../Components/Atoms";
+import { Badge, SearchableSelect, Spinner } from "../../../Components/Atoms";
 import api from "../../../api/axios";
+import { usePermission } from "../../../hooks";
+import { PERMISSIONS_CONFIG } from "../../../config";
+import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 
-const ActionsColumn = ({ row, handleEditUser }) => {
-  const handleDeleteUser = async (id) => {
-    const confirm = await Swal.fire({
-      icon: "warning",
-      title: "Delete User",
-      text: "Are you sure want to delete this user?",
-      showCancelButton: true,
-    });
-
-    if (confirm.isDismissed) {
-      return;
+const initialColumn = [
+  {
+    id: 'fullname',
+    name: "Fullname",
+    selector: (row) => row.fullname,
+    sortable: true,
+  },
+  {
+    id: 'username',
+    name: "Username",
+    selector: (row) => row.username,
+    sortable: true,
+  },
+  {
+    id: 'email',
+    name: "Email",
+    selector: (row) => row.email,
+    sortable: true,
+  },
+  {
+    id: 'status',
+    name: "Status",
+    selector: (row) => row.is_active,
+    cell: (row) =>
+      row.is_active ? (
+        <Badge type="success">Active</Badge>
+      ) : (
+        <Badge type="danger">Inactive</Badge>
+      ),
+    sortable: true,
+  },
+  {
+    id: 'role',
+    name: "Role",
+    selector: (row) => row.role,
+    sortable: true,
+    style: {
+      textTransform: 'capitalize',
     }
+  },
+]
 
-    try {
-      const response = await api.delete(`/admin/user/${id}`);
-
-      if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Deleted",
-          text: "User has been deleted!",
-          timer: 1500,
-          showConfirmButton: false,
-        }).then(() => window.location.reload());
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Failed",
-        text:
-          "Unable to delete user: " + error?.response?.data?.message ||
-          error.message,
-        timer: 1500,
-        showConfirmButton: false,
-      });
-    }
-  };
-
+const ActionsColumn = ({ row, handleEditUser, handleDeleteUser }) => {
   return (
     <div className="flex gap-2">
       <Typography
@@ -75,7 +83,9 @@ const ActionsColumn = ({ row, handleEditUser }) => {
   );
 };
 
-const UserManagement = () => {
+export const UserManagement = () => {
+  const { config, hasWritePermission } = usePermission();
+
   const [data, setData] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
 
@@ -84,6 +94,26 @@ const UserManagement = () => {
   const [query, setQuery] = React.useState('');
 
   const [open, setOpen] = React.useState(false);
+
+  const [totalRows, setTotalRows] = React.useState(0);
+	const [perPage, setPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
+
+  const columns = hasWritePermission(config.resources.user) ? [
+    ...initialColumn,
+    {
+      id: 'actions',
+      name: "Actions",
+      button: true,
+      cell: (row) => (
+        <ActionsColumn
+          row={row}
+          handleEditUser={handleEditUser}
+          handleDeleteUser={handleDeleteUser}
+        />
+      ),
+    },
+  ] : initialColumn;
 
   const handleEditUser = (row) => {
     setOpen(true);
@@ -96,17 +126,40 @@ const UserManagement = () => {
     setOpen(false);
     document.body.style.overflow = "unset";
     setEditUser({});
-    setSelectedRole({})
+    setSelectedRole(null)
   };
+
+  const fetchUsers = async (page = 1, limit = perPage) => {
+    setLoading(true);
+
+    try {
+      const { data: response } = await api.get("/admin/users", {
+        params: {
+          Page: page,
+          Limit: limit
+        }
+      });
+
+      setData(response.data);
+      setTotalRows(response.total);
+      setPerPage(limit);
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handlePerRowsChange = async (newPerPage, page) => await fetchUsers(page, newPerPage);
+
+  const handlePageChange = async (page) => await fetchUsers(page);
 
   React.useEffect(() => {
     const getUsers = async () => {
       try {
-        const { data: response } = await api.get("/admin/users");
-
-        setData(response.data);
+        await fetchUsers();
       } catch (error) {
-        console.log("error", error);
+        console.log("Error fetching users:", error);
       }
     };
 
@@ -179,67 +232,62 @@ const UserManagement = () => {
     }
   };
 
+  const handleDeleteUser = async (id) => {
+    const confirm = await Swal.fire({
+      icon: "warning",
+      title: "Delete User",
+      text: "Are you sure want to delete this user?",
+      showCancelButton: true,
+    });
+
+    if (confirm.isDismissed) {
+      return;
+    }
+
+    try {
+      const response = await api.delete(`/admin/user/${id}`);
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted",
+          text: "User has been deleted!",
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => window.location.reload());
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text:
+          "Unable to delete user: " + error?.response?.data?.message ||
+          error.message,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    }
+  };
+
   return (
     <React.Fragment>
-      <div className="my-4 space-y-4">
-        <Typography
-          variant="h1"
-          className="font-bold capitalize text-lg md:text-2xl"
-        >
-          user management
+      <div className="my-4 mx-4">
+        <Typography variant="h5" color="blue-gray">
+          User Management
+        </Typography>
+        <Typography color="gray" className="mt-1 font-normal">
+          Activate user and assign/update user's role
         </Typography>
         <DataTable
-          columns={[
-            {
-              id: 'fullname',
-              name: "Fullname",
-              selector: (row) => row.fullname,
-              sortable: true,
-            },
-            {
-              id: 'username',
-              name: "Username",
-              selector: (row) => row.username,
-              sortable: true,
-            },
-            {
-              id: 'email',
-              name: "Email",
-              selector: (row) => row.email,
-              sortable: true,
-            },
-            {
-              id: 'status',
-              name: "Status",
-              selector: (row) => row.is_active,
-              cell: (row) =>
-                row.is_active ? (
-                  <Badge type="success">Active</Badge>
-                ) : (
-                  <Badge type="danger">Inactive</Badge>
-                ),
-              sortable: true,
-            },
-            {
-              id: 'role',
-              name: "Role",
-              selector: (row) => row.role,
-              sortable: true,
-              style: {
-                textTransform: 'capitalize',
-              }
-            },
-            {
-              id: 'actions',
-              name: "Actions",
-              button: true,
-              cell: (row) => (
-                <ActionsColumn row={row} handleEditUser={handleEditUser} />
-              ),
-            },
-          ]}
+          columns={columns}
           data={data}
+          progressPending={loading}
+          progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
           pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
           defaultSortAsc={true}
           defaultSortFieldId='status'
         />
@@ -249,6 +297,7 @@ const UserManagement = () => {
         open={open}
         onClose={handleCloseEditUser}
         className="p-4"
+        data-testid="drawer"
       >
         <div className="mb-6 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">
@@ -258,6 +307,7 @@ const UserManagement = () => {
             variant="text"
             color="blue-gray"
             onClick={handleCloseEditUser}
+            title="Close drawer"
           >
             <XMarkIcon strokeWidth={2} className="h-5 w-5" />
           </IconButton>
@@ -320,4 +370,7 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default withReadPermission(
+  UserManagement,
+  PERMISSIONS_CONFIG.resources.user
+);
