@@ -280,6 +280,8 @@ function DownloadVA() {
             progressComponent={
               <Spinner message="Please wait for a moment..." size="lg" />
             }
+            fixedHeader
+            fixedHeaderScrollHeight="600px"
           />
         ) : (
           <h4 className="p-5 text-center">No data available.</h4>
