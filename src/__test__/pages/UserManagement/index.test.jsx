@@ -271,7 +271,9 @@ describe('API integration inside User Management Page', () => {
 
 		const drawer = screen.getByTestId('drawer');
 
-		const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
+		const btnActivateEdit = await screen.findAllByRole('button', {
+      name: /(activate|edit)/i,
+    });
 
 		fireEvent.click(btnActivateEdit[0]);
 
@@ -346,7 +348,9 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnEdit[0]);
 
-		const btnUpdateUser = await screen.findByText(/update user/i);
+		const btnUpdateUser = await screen.findByRole('button', {
+			name: /update user/i,
+		});
 
 		fireEvent.click(btnUpdateUser);
 
