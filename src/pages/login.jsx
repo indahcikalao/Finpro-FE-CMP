@@ -3,6 +3,7 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import { TogglePassword } from "../Components/Atoms";
+import { useAuth, useLocalStorage } from "../hooks";
 import {
   Card,
   CardHeader,
@@ -12,7 +13,6 @@ import {
   Input,
   Button,
 } from "@material-tailwind/react";
-import { useAuth, useLocalStorage } from "../hooks";
 import * as Yup from "yup";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -106,10 +106,16 @@ export default function Login() {
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
             <div className="mb-2">
-              <Input
+              <label
+                htmlFor="username"
+                className="block text-gray-700 text-sm font-bold mb-1"
+              >
+                Username
+              </label>
+              <input
+                id="username"
                 type="text"
-                label="Username"
-                size="lg"
+                className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="username"
                 value={formik.values.username}
                 onChange={formik.handleChange}
@@ -123,23 +129,31 @@ export default function Login() {
             </div>
             <div className="mb-2">
               <div className="relative">
-                <Input
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 text-sm font-bold mb-1"
+                >
+                  Password
+                </label>
+                <input
                   type={passwordShown ? "text" : "password"}
-                  label="Password"
-                  size="lg"
+                  id="password"
+                  className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  data-testid="password-input"
                 />
                 <TogglePassword
                   type="button"
+                  ariaLabel="Toggle Password Visibility"
                   onClick={() => setPasswordShown(!passwordShown)}
                   children={
                     passwordShown ? (
-                      <RiEyeOffLine className="w-5 h-5" />
+                      <RiEyeOffLine className="w-6 h-6" />
                     ) : (
-                      <RiEyeLine className="w-5 h-5" />
+                      <RiEyeLine className="w-6 h-6" />
                     )
                   }
                 />
