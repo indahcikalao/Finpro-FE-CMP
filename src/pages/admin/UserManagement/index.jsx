@@ -98,6 +98,7 @@ export const UserManagement = () => {
   const [totalRows, setTotalRows] = React.useState(0);
 	const [perPage, setPerPage] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
+  const [formError, setFormError] = React.useState('');
 
   const columns = hasWritePermission(config.resources.user) ? [
     ...initialColumn,
@@ -127,6 +128,7 @@ export const UserManagement = () => {
     document.body.style.overflow = "unset";
     setEditUser({});
     setSelectedRole(null)
+    setFormError('');
   };
 
   const fetchUsers = async (page = 1, limit = perPage) => {
@@ -165,7 +167,11 @@ export const UserManagement = () => {
 
     const getAllRoles = async () => {
       try {
-        const { data: response } = await api.get('/admin/roles');
+        const { data: response } = await api.get('/admin/roles', {
+          params: {
+            Limit: 1000,
+          }
+        });
 
         setRoles(response.data);
       } catch (err) {
@@ -178,6 +184,10 @@ export const UserManagement = () => {
   }, []);
 
   React.useEffect(() => {
+    if (formError !== '' && selectedRole) {
+      setFormError('');
+    }
+
     setEditUser({
       ...editUser,
       role_id: selectedRole?.id,
@@ -188,13 +198,7 @@ export const UserManagement = () => {
   const handleUpdateUser = async (id) => {
     try {
       if (!editUser.role_id) {
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: "Role can't be empty!",
-          timer: 1500,
-          showConfirmButton: false,
-        });
+        setFormError("Role can't be empty!");
         return;
       }
 
@@ -355,11 +359,20 @@ export const UserManagement = () => {
               label='Role'
               filterProperty='name'
             />
+            {formError !== '' && (
+              <Typography
+                variant='paragraph'
+                className='text-sm text-red-400 mt-2'
+              >
+                {formError}
+              </Typography>
+            )}
           </div>
           <div className="form-group">
             <Button
               fullWidth
               onClick={() => handleUpdateUser(editUser.id)}
+              className="mt-8"
             >
               {editUser.is_active ? "Update" : "Activate"} User
             </Button>
