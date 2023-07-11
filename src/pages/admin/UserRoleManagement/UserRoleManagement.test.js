@@ -2,7 +2,32 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import UserRoleManagement from '.';
 
+import { useAuth } from '../../../hooks';
+
+export const usePermission = () => {
+  const { auth } = useAuth();
+  const { permission: permissions } = auth || {}; 
+
+  const config = PERMISSIONS_CONFIG; 
+
+  return permissions;
+};
+
 describe('UserRoleManagement', () => {
+  beforeEach(() => {
+    jest.mock('path-to-auth', () => ({
+      useAuth: () => ({
+        auth: {
+          permission: 'admin'
+        }
+      })
+    }));
+
+    jest.mock('path-to-permission', () => ({
+      usePermission: () => 'admin'
+    }));
+  });
+
   test('renders without error', () => {
     render(<UserRoleManagement />);
   });
