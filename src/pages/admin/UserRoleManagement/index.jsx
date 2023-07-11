@@ -24,7 +24,6 @@ const UserRoleManagement = () => {
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
