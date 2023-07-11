@@ -71,11 +71,13 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
           "bg-blue-gray-900 z-10 rounded-none xl:rounded-xl fixed h-full xl:top-4 xl:left-4 xl:h-[calc(100vh-2rem)] w-full max-w-[20rem] xl:translate-x-0 p-4 shadow-xl shadow-blue-gray-900/5 transition-transform",
           { "-translate-x-full left-0": !openSidebar }
         )}
+        role="sidebar"
       >
         <button
           className="xl:hidden w-6 absolute top-0 right-0 hover:bg-gray-100 mt-2 mr-2"
           onClick={() => setOpenSidebar(false)}
         >
+          <div className="sr-only">Close sidebar</div>
           <XMarkIcon />
         </button>
         <div className="flex items-center gap-4 py-6 px-8">
@@ -109,6 +111,7 @@ const Sidebar = ({ openSidebar, setOpenSidebar }) => {
         </List>
       </Card>
       <div
+        data-testid="overlay"
         className={clsx(
           "fixed bg-black inset-0 z-[1] opacity-50 transition-opacity",
           !openSidebar && "hidden",

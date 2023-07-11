@@ -58,6 +58,7 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
               onClick={() => setOpenSidebar(!openSidebar)}
             >
               <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+              <div className="sr-only">Toggle sidebar</div>
             </IconButton>
           </div>
         </div>
