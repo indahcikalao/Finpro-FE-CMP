@@ -1,5 +1,9 @@
 import { Combobox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import {
+	CheckIcon,
+	ChevronUpDownIcon,
+	XMarkIcon,
+} from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import React from 'react';
 
@@ -14,7 +18,9 @@ const SearchableSelect = ({
 }) => {
 	if (data.length > 0 && typeof data[0] === 'object') {
 		if (!filterProperty) {
-			throw new Error('Missing `filterProperty` props due to array of objects data on SearchableSelect!');
+			throw new Error(
+				'Missing `filterProperty` props due to array of objects data on SearchableSelect!'
+			);
 		}
 
 		if (!data[0][filterProperty]) {
@@ -47,27 +53,54 @@ const SearchableSelect = ({
 					}
 			  });
 
+	const inputRef = React.useRef(null);
+	const expandButtonRef = React.useRef(null);
+
+	const isEmptyField = !query && !selected;
+
+	const handleFocusField = () => {
+		inputRef.current.focus();
+		expandButtonRef.current.click();
+	};
+
+	const handleClearField = () => {
+		if (!selected && query) {
+			setQuery('');
+			handleFocusField();
+			return;
+		}
+
+		setSelected(null);
+		handleFocusField();
+	};
+
 	return (
-		<Combobox value={selected ?? ''} onChange={setSelected}>
+		<Combobox value={selected ?? ''} onChange={setSelected} nullable>
 			<Combobox.Label className='text-sm font-medium text-gray-900'>
 				{label}
 			</Combobox.Label>
 			<div className='relative mt-1'>
-				<Combobox.Button
-					className='flex items-center pr-2 border-b-[1px] border-b-blue-gray-200'
-					as='div'
-				>
-					<Combobox.Input
-						className='w-full py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0 focus:outline-none'
-						displayValue={(data) => data[filterProperty] ?? data}
-						onChange={(e) => setQuery(e.target.value)}
-						autoComplete='off'
-					/>
+				<div className='flex items-center border-b-[1px]'>
+					<Combobox.Button className='pr-2 grow' as='div' ref={expandButtonRef}>
+						<Combobox.Input
+							className='w-full py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0 focus:outline-none'
+							displayValue={(data) => data[filterProperty] ?? data}
+							onChange={(e) => setQuery(e.target.value)}
+							autoComplete='off'
+							ref={inputRef}
+						/>
+					</Combobox.Button>
+					{!isEmptyField && (
+						<button onClick={handleClearField}>
+							<XMarkIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+							<div className='sr-only'>Clear field</div>
+						</button>
+					)}
 					<ChevronUpDownIcon
 						className='h-5 w-5 text-gray-400'
 						aria-hidden='true'
 					/>
-				</Combobox.Button>
+				</div>
 				<Transition
 					as={React.Fragment}
 					enter='transition duration-100 ease-out'
@@ -78,7 +111,7 @@ const SearchableSelect = ({
 					leaveTo='transform scale-95 opacity-0'
 					afterLeave={() => setQuery('')}
 				>
-					<Combobox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+					<Combobox.Options className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
 						{filteredData.length === 0 && query !== '' ? (
 							<div className='relative cursor-default select-none py-2 px-4 text-gray-700'>
 								Nothing found.
