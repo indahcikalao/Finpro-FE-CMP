@@ -263,7 +263,10 @@ describe('API integration inside User Management Page', () => {
 	it('fetched roles successfully', async () => {
 		await act(() => view());
 
-		expect(getApiMock).toHaveBeenCalledWith('/admin/roles');
+    const lastCallArgs = getApiMock.mock.lastCall;
+		const endpoint = lastCallArgs[0];
+
+		expect(endpoint).toEqual('/admin/roles');
 	});
 
 	it('user able to open the drawer after users fetched', async () => {
@@ -271,7 +274,9 @@ describe('API integration inside User Management Page', () => {
 
 		const drawer = screen.getByTestId('drawer');
 
-		const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
+		const btnActivateEdit = await screen.findAllByRole('button', {
+			name: /(activate|edit)/i,
+		});
 
 		fireEvent.click(btnActivateEdit[0]);
 
@@ -293,11 +298,9 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnActivateUser);
 
-		const failedAlert = await screen.findByRole('dialog', {
-			name: /failed/i,
-		});
+		const failedError = await screen.findByText(/role can't be empty/i);
 
-		expect(failedAlert).toBeInTheDocument();
+		expect(failedError).toBeInTheDocument();
 	});
 
 	it('shows confirmation dialog when deleting user', async () => {
@@ -346,7 +349,9 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnEdit[0]);
 
-		const btnUpdateUser = await screen.findByText(/update user/i);
+		const btnUpdateUser = await screen.findByRole('button', {
+			name: /update user/i,
+		});
 
 		fireEvent.click(btnUpdateUser);
 
