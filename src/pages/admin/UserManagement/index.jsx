@@ -50,7 +50,7 @@ const initialColumn = [
   {
     id: 'role',
     name: "Role",
-    selector: (row) => row.role,
+    selector: (row) => row.role || "-",
     sortable: true,
     style: {
       textTransform: 'capitalize',
@@ -61,24 +61,20 @@ const initialColumn = [
 const ActionsColumn = ({ row, handleEditUser, handleDeleteUser }) => {
   return (
     <div className="flex gap-2">
-      <Typography
-        as="button"
+      <Button
         onClick={() => handleEditUser(row)}
-        variant="small"
         color="blue"
-        className="font-medium"
+        className="font-medium whitespace-nowrap"
       >
         {row.is_active ? "Edit" : "Activate"}
-      </Typography>
-      <Typography
-        as="button"
+      </Button>
+      <Button
         onClick={() => handleDeleteUser(row.id)}
-        variant="small"
         color="red"
-        className="font-medium"
+        className="font-medium whitespace-nowrap"
       >
         Delete
-      </Typography>
+      </Button>
     </div>
   );
 };
@@ -106,6 +102,7 @@ export const UserManagement = () => {
       id: 'actions',
       name: "Actions",
       button: true,
+      width: '240px',
       cell: (row) => (
         <ActionsColumn
           row={row}
@@ -275,13 +272,15 @@ export const UserManagement = () => {
 
   return (
     <React.Fragment>
-      <div className="my-4 mx-4">
-        <Typography variant="h5" color="blue-gray">
-          User Management
-        </Typography>
-        <Typography color="gray" className="mt-1 font-normal">
-          Activate user and assign/update user's role
-        </Typography>
+      <div className="m-4 space-y-4">
+        <header>
+          <Typography variant="h5" color="blue-gray">
+            User Management
+          </Typography>
+          <Typography color="gray" className="mt-1 font-normal">
+            Activate user and assign/update user's role
+          </Typography>
+        </header>
         <DataTable
           columns={columns}
           data={data}
