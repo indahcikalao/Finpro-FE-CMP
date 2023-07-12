@@ -36,4 +36,12 @@ describe("MonitoringVA Page", () => {
 
     expect(table).toBeInTheDocument();
   });
+
+  it("rendered loading on the table initially", () => {
+    view();
+
+    const loadingTable = screen.getByText(/please wait/i);
+
+    expect(loadingTable).toBeInTheDocument();
+  });
 });
