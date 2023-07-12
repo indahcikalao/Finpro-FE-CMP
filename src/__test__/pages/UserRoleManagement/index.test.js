@@ -2,12 +2,45 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import UserRoleManagement from '../../../pages/admin/UserRoleManagement';
 import api from '../../../api/axios';
+import { usePermission } from '../../../hooks/use-permission';
 
 jest.mock('../../../api/axios', () => ({
   get: jest.fn(),
 }));
 
+jest.mock('../../../hooks/use-permission', () => {
+  const RESOURCES = {
+    monitoring: 'monitoring',
+    download: 'download',
+    user: 'user',
+    role: 'role',
+  };
+
+  const ACCESS = {
+    canRead: 'can_read',
+    canWrite: 'can_write',
+  };
+
+  const PERMISSIONS_CONFIG = {
+    resources: RESOURCES,
+    access: ACCESS,
+  };
+
+  return {
+    usePermission: jest.fn().mockReturnValue({
+      config: PERMISSIONS_CONFIG,
+      hasPermission: jest.fn(),
+      hasWritePermission: jest.fn(),
+      hasReadPermission: jest.fn(),
+    }),
+  };
+});
+
 describe('UserRoleManagement', () => {
+  beforeEach(() => {
+    api.get.mockResolvedValue({ data: {} });
+  });
+
   test('renders without error', () => {
     render(<UserRoleManagement />);
   });
