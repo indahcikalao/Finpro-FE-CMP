@@ -34,12 +34,10 @@ describe("Login Page", () => {
   it("shows username and password input", () => {
     view();
 
-    const usernameInput = screen.getByRole("input", {
+    const usernameInput = screen.getByRole("textbox", {
       name: /username/i,
     });
-    const passwordInput = screen.getByRole("input", {
-      name: /password/i,
-    });
+    const passwordInput = screen.getByLabelText("Password");
 
     expect(usernameInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
