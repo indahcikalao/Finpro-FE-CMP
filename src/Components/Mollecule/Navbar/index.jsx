@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { useAuth } from '../../../hooks';
+import { useAuth } from "../../../hooks";
 
 const Navbar = ({ openSidebar, setOpenSidebar }) => {
   const { auth } = useAuth();
@@ -24,23 +24,11 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
         >
           Cash Management Platform
         </Typography>
-        <div className="relative w-full gap-2 md:w-max hidden sm:flex">
-          <Input
-            type="search"
-            color="white"
-            label="Type here..."
-            className="pr-20"
-          />
-          <Button
-            size="sm"
-            color="white"
-            className="!absolute right-1 top-1 rounded"
-          >
-            Search
-          </Button>
-        </div>
         <div className="flex gap-3 justify-between sm:justify-end w-full lg:w-auto">
-          <Typography variant="paragraph" className="cursor-pointer py-1.5 lg:ml-2">
+          <Typography
+            variant="paragraph"
+            className="cursor-pointer py-1.5 lg:ml-2"
+          >
             Hai, <span className="font-semibold">{auth.username}</span>!
           </Typography>
           <div>
