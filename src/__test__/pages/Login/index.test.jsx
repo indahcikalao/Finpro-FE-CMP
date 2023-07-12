@@ -1,12 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import Login from "../../../pages/login";
 import React from "react";
-import { BrowserRouter, Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-
-const createRouterWrapper = ({ children }) => (
-  <Router history={history}>{children}</Router>
-);
 
 describe("Login Page", () => {
   const view = () => {
