@@ -21,4 +21,14 @@ describe("Login Page", () => {
     expect(title).toBeInTheDocument();
     expect(subTitle).toBeInTheDocument();
   });
+  
+    it("shows reset password Button", () => {
+      view();
+
+      const resetPasswordButton = screen.getByRole("button", {
+        name: /reset password/i,
+      });
+
+      expect(resetPasswordButton).toBeInTheDocument();
+    });
 });
