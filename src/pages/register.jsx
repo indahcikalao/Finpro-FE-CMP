@@ -63,9 +63,12 @@ const Register = () => {
 
         // Show success popup sweetalert2
         Swal.fire({
+          position: "top-end",
           icon: "success",
           title: "Registration Successful",
           text: "Please wait for admin to verify your Account",
+          showConfirmButton: false,
+          timer: 2000,
         }).then(() => {
           // Redirect to login page
           navigate("/login");
