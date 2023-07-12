@@ -10,8 +10,6 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 
-jest.mock("axios");
-
 describe("Reset Password Page", () => {
   const view = () => {
     render(
@@ -88,7 +86,42 @@ describe("Reset Password Page", () => {
 
     expect(resetPasswordButton).toBeDisabled();
   });
+
+  it("toggles password visibility", () => {
+    render(
+      <BrowserRouter>
+        <ResetPassword />
+      </BrowserRouter>
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    const confirmPasswordInput = screen.getByLabelText("Confirm Password");
+
+    expect(passwordInput.type).toBe("password");
+    expect(confirmPasswordInput.type).toBe("password");
+
+    const passwordToggleBtn = screen.getByLabelText(
+      "Toggle Password Visibility"
+    );
+    const confirmPasswordToggleBtn = screen.getByLabelText(
+      "Toggle Confirm Password Visibility"
+    );
+
+    fireEvent.click(passwordToggleBtn);
+    fireEvent.click(confirmPasswordToggleBtn);
+
+    expect(passwordInput.type).toBe("text");
+    expect(confirmPasswordInput.type).toBe("text");
+
+    fireEvent.click(passwordToggleBtn);
+    fireEvent.click(confirmPasswordToggleBtn);
+
+    expect(passwordInput.type).toBe("password");
+    expect(confirmPasswordInput.type).toBe("password");
+  });
 });
+
+jest.mock("axios");
 
 describe("API Integration on Reset Password Page", () => {
   const view = () => {
@@ -107,36 +140,30 @@ describe("API Integration on Reset Password Page", () => {
     },
   };
 
-  afterEach(cleanup);
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   it("submits the form when data valid", async () => {
-    axios.post.mockResolvedValueOnce(updateSucceed);
+    axios.patch.mockResolvedValueOnce(updateSucceed);
 
     view();
-
-    const input = screen.getAllByRole("textbox");
-    const emailInput = input[0];
-    const usernameInput = input[1];
-
-    const passInput = screen.getAllByTestId("password-input");
-    const passwordInput = passInput[0];
-    const passwordConfirmationInput = passInput[1];
 
     const resetPasswordButton = screen.getByRole("button", {
       name: /reset password/i,
     });
 
-    fireEvent.change(emailInput, {
-      target: { value: "test@example.com" },
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "existing@example.com" },
     });
-    fireEvent.change(usernameInput, {
-      target: { value: "test" },
+    fireEvent.change(screen.getByLabelText("Username"), {
+      target: { value: "testuser" },
     });
-    fireEvent.change(passwordInput, {
-      target: { value: "Test123@" },
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "Password123!" },
     });
-    fireEvent.change(passwordConfirmationInput, {
-      target: { value: "Test123@" },
+    fireEvent.change(screen.getByLabelText("Confirm Password"), {
+      target: { value: "Password123!" },
     });
 
     fireEvent.click(resetPasswordButton);
