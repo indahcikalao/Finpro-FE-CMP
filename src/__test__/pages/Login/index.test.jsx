@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Login from "../../../pages/login";
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
+import Login from "../../../pages/login";
 
 describe("Login Page", () => {
   const view = () => {
