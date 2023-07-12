@@ -1,1 +1,1 @@
-export * from './with-permission';
+export * from './with-read-permission';

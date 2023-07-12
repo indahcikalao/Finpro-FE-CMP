@@ -11,7 +11,7 @@ import api from "../../../api/axios";
 import AddRole from "./Components/addRole";
 import EditRole from "./Components/editRole";
 import DeleteRole from "./Components/deleteRole";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { withReadPermission } from "../../../utils/hoc";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { usePermission } from "../../../hooks";
 import { Spinner } from "../../../Components/Atoms";
