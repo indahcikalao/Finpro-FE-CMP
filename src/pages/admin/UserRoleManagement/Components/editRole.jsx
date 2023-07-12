@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -16,60 +16,72 @@ const url = process.env.REACT_APP_BASE_URL;
 
 const EditRole = ({ role, onSave }) => {
   const [name, setName] = useState(role.name);
-  const [monitoringRead, setMonitoringRead] = useState(role.access[0].can_read);
-  const [monitoringWrite, setMonitoringWrite] = useState(role.access[0].can_write);
-  const [downloadRead, setDownloadRead] = useState(role.access[1].can_read);
-  const [downloadWrite, setDownloadWrite] = useState(role.access[1].can_write);
+  const [access, setAccess] = useState([...role.access]);
   const [open, setOpen] = useState(false);
+  const [headers, setHeaders] = useState([]);
+
+  useEffect(() => {
+    const fetchHeaders = async () => {
+      try {
+        const response = await api.get(`${url}/admin/accesses`);
+        setHeaders(response.data.data);
+      } catch (error) {
+        console.error("Error fetching headers:", error);
+      }
+    };
+
+    fetchHeaders();
+  }, []);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleSave = async () => {
     const updatedRole = {
-      id: role.id,
-      name,
-      access: [
-        { can_read: monitoringRead, can_write: monitoringWrite },
-        { can_read: downloadRead, can_write: downloadWrite },
-      ],
+      role: name,
+      data: access,
     };
 
     try {
       await api.put(`${url}/admin/role/${role.id}`, updatedRole);
       onSave(updatedRole);
-      Swal.fire("Success", "Role updated successfully!", "success");
-      handleClose();
+      Swal.fire("Success", "Role updated successfully!", "success").then(() => {
+        handleClose();
+        window.location.reload();
+      });
     } catch (error) {
       console.error("Error updating role:", error);
       Swal.fire("Error", "Failed to update role. Please try again.", "error");
     }
   };
 
-  const renderCheckboxes = (index, label, checked, onChange) => (
-    <Checkbox
-      label={label}
-      ripple={true}
-      checked={checked}
-      onChange={onChange}
-      id={`checkbox-${index}`}
-    />
+  const renderCheckboxes = (index, canRead, canWrite) => (
+    <>
+      <Checkbox
+        label="Read"
+        ripple={true}
+        checked={canRead}
+        onChange={(e) =>
+          handleAccessChange(index, "can_read", e.target.checked)
+        }
+        id={`checkbox-read-${index}`}
+      />
+      <Checkbox
+        label="Write"
+        ripple={true}
+        checked={canWrite}
+        onChange={(e) =>
+          handleAccessChange(index, "can_write", e.target.checked)
+        }
+        id={`checkbox-write-${index}`}
+      />
+    </>
   );
 
-  const handleMonitoringReadChange = (e) => {
-    setMonitoringRead(e.target.checked);
-  };
-
-  const handleMonitoringWriteChange = (e) => {
-    setMonitoringWrite(e.target.checked);
-  };
-
-  const handleDownloadReadChange = (e) => {
-    setDownloadRead(e.target.checked);
-  };
-
-  const handleDownloadWriteChange = (e) => {
-    setDownloadWrite(e.target.checked);
+  const handleAccessChange = (index, key, value) => {
+    const updatedAccess = [...access];
+    updatedAccess[index][key] = value;
+    setAccess(updatedAccess);
   };
 
   return (
@@ -83,9 +95,18 @@ const EditRole = ({ role, onSave }) => {
       >
         Edit
       </Typography>
-      <Dialog open={open} handler={handleClose} size="lg">
+      <Dialog open={open} onClose={handleClose} size="sm">
         <DialogHeader>Edit Role</DialogHeader>
         <DialogBody>
+          <div className="mb-4">
+            <Input
+              variant="outlined"
+              label="Role Name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
           <table className="w-full table-auto text-center">
             <thead>
               <tr>
@@ -95,7 +116,7 @@ const EditRole = ({ role, onSave }) => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                    Role Name
+                    Resource
                   </Typography>
                 </th>
                 <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
@@ -104,61 +125,24 @@ const EditRole = ({ role, onSave }) => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                    Monitoring VA
-                  </Typography>
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    Download VA
+                    Access
                   </Typography>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="p-4">
-                  <Input
-                    variant="outlined"
-                    label="Role Name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="mb-4"
-                  />
-                </td>
-                <td className="p-4">
-                  {renderCheckboxes(
-                    0,
-                    "Read",
-                    monitoringRead,
-                    handleMonitoringReadChange
-                  )}
-                  {renderCheckboxes(
-                    0,
-                    "Write",
-                    monitoringWrite,
-                    handleMonitoringWriteChange
-                  )}
-                </td>
-                <td className="p-4">
-                  {renderCheckboxes(
-                    1,
-                    "Read",
-                    downloadRead,
-                    handleDownloadReadChange
-                  )}
-                  {renderCheckboxes(
-                    1,
-                    "Write",
-                    downloadWrite,
-                    handleDownloadWriteChange
-                  )}
-                </td>
-              </tr>
+              {headers.map((header, index) => (
+                <tr key={index}>
+                  <td>{header.name}</td>
+                  <td>
+                    {renderCheckboxes(
+                      index,
+                      access[index].can_read,
+                      access[index].can_write
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </DialogBody>

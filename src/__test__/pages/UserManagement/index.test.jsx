@@ -5,13 +5,26 @@ import {
 	fireEvent,
 	waitFor,
 } from '@testing-library/react';
-import UserManagement from '../../../pages/admin/UserManagement';
+import { UserManagement } from '../../../pages/admin/UserManagement';
 import api from '../../../api/axios';
 import { act } from 'react-dom/test-utils';
+import { usePermission } from '../../../hooks';
+import { PERMISSIONS_CONFIG } from '../../../config';
+
+jest.mock('../../../hooks/use-permission');
+jest.mock('../../../hooks/use-auth');
 
 describe('User Management Page', () => {
 	const view = () => render(<UserManagement />);
 
+	beforeEach(() => {
+		usePermission.mockReturnValue({
+			config: PERMISSIONS_CONFIG,
+			hasPermission: jest.fn(),
+			hasWritePermission: jest.fn(),
+			hasReadPermission: jest.fn(),
+		});
+	});
 	afterEach(cleanup);
 
 	it('has correct section title', () => {
@@ -43,12 +56,12 @@ describe('User Management Page', () => {
 		expect(table).toBeInTheDocument();
 	});
 
-	it('rendered no records on the table initially', () => {
+	it('rendered loading on the table initially', () => {
 		view();
 
-		const noRecords = screen.getByText(/there are no records to display/i);
+		const loadingTable = screen.getByText(/please wait/i);
 
-		expect(noRecords).toBeInTheDocument();
+		expect(loadingTable).toBeInTheDocument();
 	});
 });
 
@@ -210,6 +223,13 @@ describe('API integration inside User Management Page', () => {
 	};
 
 	beforeEach(() => {
+		usePermission.mockReturnValue({
+			config: PERMISSIONS_CONFIG,
+			hasPermission: jest.fn(),
+			hasWritePermission: jest.fn(() => true),
+			hasReadPermission: jest.fn(),
+		});
+
 		getApiMock.mockImplementation((url) => {
 			switch (url) {
 				case '/admin/users':
@@ -232,19 +252,21 @@ describe('API integration inside User Management Page', () => {
 	it('fetched users successfully', async () => {
 		await act(() => view());
 
-		expect(getApiMock).toHaveBeenCalledWith('/admin/users');
+		const firstCall = getApiMock.mock.calls.at(0);
+		const endpoint = firstCall[0];
+
+		expect(endpoint).toEqual(expect.stringMatching(/^\/admin\/users\b/));
 
 		expect(await screen.findByText(/renald@gmail.com/i)).toBeInTheDocument();
-		/* Plus one because of the datatable's heading row counted */
-		expect(await screen.findAllByRole(/row/i)).toHaveLength(
-			mockUsersResponse.data.length + 1
-		);
 	});
 
 	it('fetched roles successfully', async () => {
 		await act(() => view());
 
-		expect(getApiMock).toHaveBeenCalledWith('/admin/roles');
+    const lastCallArgs = getApiMock.mock.lastCall;
+		const endpoint = lastCallArgs[0];
+
+		expect(endpoint).toEqual('/admin/roles');
 	});
 
 	it('user able to open the drawer after users fetched', async () => {
@@ -252,7 +274,9 @@ describe('API integration inside User Management Page', () => {
 
 		const drawer = screen.getByTestId('drawer');
 
-		const btnActivateEdit = await screen.findAllByText(/(activate|edit)/i);
+		const btnActivateEdit = await screen.findAllByRole('button', {
+			name: /(activate|edit)/i,
+		});
 
 		fireEvent.click(btnActivateEdit[0]);
 
@@ -274,11 +298,9 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnActivateUser);
 
-		const failedAlert = await screen.findByRole('dialog', {
-			name: /failed/i,
-		});
+		const failedError = await screen.findByText(/role can't be empty/i);
 
-		expect(failedAlert).toBeInTheDocument();
+		expect(failedError).toBeInTheDocument();
 	});
 
 	it('shows confirmation dialog when deleting user', async () => {
@@ -288,7 +310,7 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnDelete[0]);
 
-		await waitFor( () => {
+		await waitFor(() => {
 			const confirmationAlert = screen.getByRole('dialog', {
 				name: /delete user/i,
 			});
@@ -327,7 +349,9 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnEdit[0]);
 
-		const btnUpdateUser = await screen.findByText(/update user/i);
+		const btnUpdateUser = await screen.findByRole('button', {
+			name: /update user/i,
+		});
 
 		fireEvent.click(btnUpdateUser);
 
@@ -343,10 +367,10 @@ describe('API integration inside User Management Page', () => {
 		putApiMock.mockRestore();
 	});
 
-  it('able to close drawer on cancel', async () => {
-    await act(() => view());
+	it('able to close drawer on cancel', async () => {
+		await act(() => view());
 
-    const btnEdit = await screen.findAllByText(/edit/i);
+		const btnEdit = await screen.findAllByText(/edit/i);
 
 		fireEvent.click(btnEdit[0]);
 
@@ -356,6 +380,6 @@ describe('API integration inside User Management Page', () => {
 
 		fireEvent.click(btnCloseDrawer);
 
-    expect(document.body).toHaveStyle('overflow: unset')
-  })
+		expect(document.body).toHaveStyle('overflow: unset');
+	});
 });

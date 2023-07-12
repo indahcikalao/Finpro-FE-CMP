@@ -1,10 +1,15 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { Sidebar, Navbar, Footer } from '../../Mollecule/';
 
 const Dashboard = () => {
 	const [openSidebar, setOpenSidebar] = React.useState(false);
+  const location = useLocation();
+
+  React.useEffect(() => {
+    setOpenSidebar(false);
+  }, [location.pathname])
 
 	return (
 		<div className='min-h-screen'>

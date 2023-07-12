@@ -5,26 +5,27 @@
 📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
 
 ## Deployment Link 
-https://finpro-cmp-trb.netlify.app/
+https://finpro-cmp-trb.netlify.app/ ( v1 with old api ) <br>
+https://new-cmp-trb.netlify.app/ ( v2 with new api )
 
 ## Progress Pages 
-Sprint 1 
-- ✅ Register
+Sprint 1 ( 2 weeks )
+- ✅ Register ( done with 5 unit testing and 85-90% code coverage)
 - ✅ Login + Forget Password
 - ✅ Dashboard Homepage
 - ✅ User Management
-- ✅ Role Management ( still need integration with BE )
+- ✅ Role Management ( still on unit testing )
 
-Sprint 2
-- ✅ Monitoring Satker ( still need integration with BE )
-- ✅ Download Report Satker ( still need integration with BE )
+Sprint 2 ( 4 weeks )
+- ✅ MonitoringVA Satker ( still on unit testing )
+- ✅ Download Report Satker ( still on unit testing )
 
 ## Feature
-- Create New Account (status user inactive, input, email, username, password masking validation )
+- Create New Account ( status user inactive, input, email, username, password masking validation )
 - Login and Forget Password ( 3 times wrong password user blocked, 30 minutes expired token )
 - Manage User ( get all user, update activation new user, edit role user, delete user )
 - Manage Role ( get all role, create new role, update access role )
-- MonitoringVA ( see the different balance between the VA and Giro account, Download Transaction )
+- MonitoringVA ( see the different balance between the VA and Giro account, Download Transaction by Rows )
 - DownloadVA ( see preview transaction based on date, download transaction spreadsheet by date), etc <br>
 
 ## Layout Register
