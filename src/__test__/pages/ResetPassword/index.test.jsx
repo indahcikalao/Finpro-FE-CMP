@@ -74,6 +74,20 @@ describe("Reset Password Page", () => {
 
     expect(window.location.pathname).toBe("/login");
   });
+
+  it("button to be disabled", () => {
+    render(
+      <BrowserRouter>
+        <ResetPassword />
+      </BrowserRouter>
+    );
+
+    const resetPasswordButton = screen.getByRole("button", {
+      name: /reset password/i,
+    });
+
+    expect(resetPasswordButton).toHaveAttribute("disabled");
+  });
 });
 
 describe("API Integration on Reset Password Page", () => {
