@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Input,
   Button,
   Typography,
 } from "@material-tailwind/react";
@@ -62,8 +61,6 @@ export default function ResetPassword() {
     try {
       const res = await axios.patch(`${url}/user/forgot-password`, data);
 
-      console.log("data", data);
-      console.log("res", res);
       if (res.status === 200) {
         Swal.fire({
           icon: "success",
@@ -162,13 +159,14 @@ export default function ResetPassword() {
                   Password
                 </label>
                 <input
-                  type={passwordShown ? "text" : "password"}
                   id="password"
+                  type={passwordShown ? "text" : "password"}
                   className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  data-testid="password-input"
                 />
                 <TogglePassword
                   type="button"
@@ -198,8 +196,8 @@ export default function ResetPassword() {
                   Confirm Password
                 </label>
                 <input
-                  type={confirmPasswordShown ? "text" : "password"}
                   id="confirm_password"
+                  type={confirmPasswordShown ? "text" : "password"}
                   className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="confirm_password"
                   value={formik.values.confirm_password}
@@ -208,6 +206,7 @@ export default function ResetPassword() {
                 />
                 <TogglePassword
                   type="button"
+                  ariaLabel="Toggle Confirm Password Visibility"
                   onClick={() => setConfirmPasswordShown(!confirmPasswordShown)}
                   children={
                     passwordShown ? (
