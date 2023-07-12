@@ -86,7 +86,7 @@ describe("Reset Password Page", () => {
       name: /reset password/i,
     });
 
-    expect(resetPasswordButton).toHaveAttribute("disabled");
+    expect(resetPasswordButton).toBeDisabled();
   });
 });
 
