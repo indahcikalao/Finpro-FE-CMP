@@ -1,5 +1,5 @@
 import { render, screen, cleanup, waitFor } from "@testing-library/react";
-import { MonitoringVA } from "../../../pages/admin/MonitoringVA";
+import { MonitoringVA } from "../../../pages/Protected/MonitoringVA";
 import api from "../../../api/axios";
 import { act } from "react-dom/test-utils";
 import { usePermission } from "../../../hooks";

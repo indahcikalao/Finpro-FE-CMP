@@ -1,4 +1,4 @@
-export * from './admin';
+export * from './Protected';
 
 export { default as Login } from './login';
 export { default as Register } from './register';
