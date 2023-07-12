@@ -114,6 +114,7 @@ export default function ResetPassword() {
                 Email
               </label>
               <input
+                role="input"
                 id="email"
                 type="email"
                 className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -136,6 +137,7 @@ export default function ResetPassword() {
                 Username
               </label>
               <input
+                role="input"
                 id="username"
                 type="text"
                 className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -166,6 +168,7 @@ export default function ResetPassword() {
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  role="input"
                 />
                 <TogglePassword
                   type="button"
@@ -202,6 +205,7 @@ export default function ResetPassword() {
                   value={formik.values.confirm_password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  role="input"
                 />
                 <TogglePassword
                   type="button"

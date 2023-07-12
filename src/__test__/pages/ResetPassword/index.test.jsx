@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import ResetPassword from "../../../pages/resetPassword";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
@@ -21,14 +21,33 @@ describe("Login Page", () => {
     expect(title).toBeInTheDocument();
     expect(subTitle).toBeInTheDocument();
   });
-  
-    it("shows reset password Button", () => {
-      view();
 
-      const resetPasswordButton = screen.getByRole("button", {
-        name: /reset password/i,
-      });
+  it("shows reset password Button", () => {
+    view();
 
-      expect(resetPasswordButton).toBeInTheDocument();
+    const resetPasswordButton = screen.getByRole("button", {
+      name: /reset password/i,
     });
+
+    expect(resetPasswordButton).toBeInTheDocument();
+  });
+
+  it("shows all inputs", () => {
+    view();
+
+    const input = screen.getAllByRole("input");
+
+    const emailInput = input[0];
+    const usernameInput = input[1];
+    const passwordInput = input[2];
+    const passwordConfirmationInput = input[3];
+
+    waitFor(() => {
+      expect(emailInput).toBeInTheDocument();
+      expect(usernameInput).toBeInTheDocument();
+      expect(passwordInput).toBeInTheDocument();
+      expect(passwordConfirmationInput).toBeInTheDocument();
+    });
+  });
+
 });
