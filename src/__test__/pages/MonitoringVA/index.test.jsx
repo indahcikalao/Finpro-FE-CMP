@@ -28,4 +28,12 @@ describe("MonitoringVA Page", () => {
 
     expect(sectionTitle).toBeInTheDocument();
   });
+
+  it("rendered datatable component", () => {
+    view();
+
+    const table = screen.getByRole("table");
+
+    expect(table).toBeInTheDocument();
+  });
 });
