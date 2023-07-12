@@ -156,9 +156,10 @@ const MonitoringVA = () => {
               name: <b>No</b>,
               selector: generateRowNumber,
               sortable: true,
-              width: "50px",
+              width: "65px",
               style: {
                 borderRight: "1px solid #dee2e6",
+                textAlign: "center",
               },
             },
             {
@@ -260,7 +261,7 @@ const MonitoringVA = () => {
             <Spinner message="Please wait for a moment..." size="lg" />
           }
           pagination
-          paginationRowsPerPageOptions={[10, 30, 50, 100]}
+          paginationRowsPerPageOptions={[10, 50, 100, 200, 500]}
           paginationServer
           paginationTotalRows={totalRows}
           onChangePage={handlePageChange}
