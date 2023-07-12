@@ -1,6 +1,13 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import Login from "../../../pages/login";
+import { act } from "react-dom/test-utils";
 
 describe("Login Page", () => {
   const view = () => {
@@ -77,5 +84,62 @@ describe("Login Page", () => {
     fireEvent.click(passwordToggleBtn);
 
     expect(passwordInput.type).toBe("password");
+  });
+});
+
+jest.mock("axios", () => {
+  return {
+    create: () => {
+      return {
+        interceptors: {
+          request: { eject: jest.fn(), use: jest.fn() },
+          response: { eject: jest.fn(), use: jest.fn() },
+        },
+      };
+    },
+  };
+});
+
+describe("API Login Integration", () => {
+  const view = () => {
+    render(
+      <BrowserRouter>
+        <Login />
+      </BrowserRouter>
+    );
+  };
+
+  afterEach(cleanup);
+
+  const mockLoginSuccess = {
+    status: "Success",
+    data: {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODkxNzI4NDQsInJvbGVfaWQiOiIyNiIsInJvbGVfbmFtZSI6IkFkbWluIiwic3ViIjoiMjgiLCJ1c2VybmFtZSI6IkFkbWluIn0.D4gnMqjRFNzESDphrI5ofYJdeETv1V1mgmJ1c9rf4XE",
+      is_active: true,
+    },
+  };
+
+  it("Login Succeeded", async () => {
+    jest.fn().mockResolvedValueOnce(mockLoginSuccess);
+
+    act(() => view());
+    act(() => {
+      fireEvent.change(screen.getByLabelText("Username"), {
+        target: { value: "testuser" },
+      });
+
+      fireEvent.change(screen.getByLabelText("Password"), {
+        target: { value: "Password123!" },
+      });
+    });
+
+    const loginButton = screen.getByText("Login");
+
+    fireEvent.click(loginButton);
+
+    waitFor(() => {
+      expect(screen.getByText("Welcome Back")).toBeInTheDocument();
+    });
   });
 });
