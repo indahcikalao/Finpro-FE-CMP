@@ -60,4 +60,24 @@ describe("Login Page", () => {
 
     expect(window.location.pathname).toBe("/reset-password");
   });
+
+  it("toggles password visibility", () => {
+    view();
+
+    const passwordInput = screen.getByLabelText("Password");
+
+    expect(passwordInput.type).toBe("password");
+
+    const passwordToggleBtn = screen.getByLabelText(
+      "Toggle Password Visibility"
+    );
+
+    fireEvent.click(passwordToggleBtn);
+
+    expect(passwordInput.type).toBe("text");
+
+    fireEvent.click(passwordToggleBtn);
+
+    expect(passwordInput.type).toBe("password");
+  });
 });
