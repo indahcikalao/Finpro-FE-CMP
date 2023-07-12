@@ -76,53 +76,59 @@ describe("Reset Password Page", () => {
   });
 });
 
-// describe("API Integration on Reset Password Page", () => {
-//   const view = () => {
-//     render(
-//       <BrowserRouter>
-//         <ResetPassword />
-//       </BrowserRouter>
-//     );
-//   };
+describe("API Integration on Reset Password Page", () => {
+  const view = () => {
+    render(
+      <BrowserRouter>
+        <ResetPassword />
+      </BrowserRouter>
+    );
+  };
 
-//   afterEach(cleanup);
+  const updateSucceed = {
+    success: 200,
+    data: {
+      meesage: "Password changed successfully",
+      status: "Success",
+    },
+  };
 
-//   it("submits the form with valid data", async () => {
-//     axios.post.mockResolvedValueOnce({
-//       success: 200,
-//     });
+  afterEach(cleanup);
 
-//     view();
+  it("submits the form when data valid", async () => {
+    axios.post.mockResolvedValueOnce(updateSucceed);
 
-//     const input = screen.getAllByRole("textbox");
-//     const emailInput = input[0];
-//     const usernameInput = input[1];
+    view();
 
-//     const passInput = screen.getAllByTestId("password-input");
-//     const passwordInput = passInput[0];
-//     const passwordConfirmationInput = passInput[1];
+    const input = screen.getAllByRole("textbox");
+    const emailInput = input[0];
+    const usernameInput = input[1];
 
-//     const resetPasswordButton = screen.getByRole("button", {
-//       name: /reset password/i,
-//     });
+    const passInput = screen.getAllByTestId("password-input");
+    const passwordInput = passInput[0];
+    const passwordConfirmationInput = passInput[1];
 
-//     fireEvent.change(emailInput, {
-//       target: { value: "test@example.com" },
-//     });
-//     fireEvent.change(usernameInput, {
-//       target: { value: "test" },
-//     });
-//     fireEvent.change(passwordInput, {
-//       target: { value: "Test123@" },
-//     });
-//     fireEvent.change(passwordConfirmationInput, {
-//       target: { value: "Test123@" },
-//     });
+    const resetPasswordButton = screen.getByRole("button", {
+      name: /reset password/i,
+    });
 
-//     fireEvent.click(resetPasswordButton);
+    fireEvent.change(emailInput, {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(usernameInput, {
+      target: { value: "test" },
+    });
+    fireEvent.change(passwordInput, {
+      target: { value: "Test123@" },
+    });
+    fireEvent.change(passwordConfirmationInput, {
+      target: { value: "Test123@" },
+    });
 
-//     await waitFor(() => {
-//       expect(screen.getByText("Password Updated")).toBeInTheDocument();
-//     });
-//   });
-// });
+    fireEvent.click(resetPasswordButton);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/login");
+    });
+  });
+});
