@@ -150,4 +150,28 @@ describe("API integration inside Monitoring VA Page", () => {
       },
     ],
   };
+
+  beforeEach(() => {
+    usePermission.mockReturnValue({
+      config: PERMISSIONS_CONFIG,
+      hasPermission: jest.fn(),
+      hasWritePermission: jest.fn(() => true),
+      hasReadPermission: jest.fn(),
+    });
+
+    getApiMock.mockImplementation((url) => {
+      switch (url) {
+        case "/admin/transactions":
+          return Promise.resolve({ data: mockTransactionResponse });
+        default:
+          return Promise.reject(new Error("Not found"));
+      }
+    });
+
+    getApiMock.mockResolvedValueOnce({ data: mockTransactionResponse });
+  });
+  afterEach(cleanup);
+  afterAll(() => {
+    getApiMock.mockRestore();
+  });
 });
