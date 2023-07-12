@@ -7,3 +7,17 @@ import { PERMISSIONS_CONFIG } from "../../../config";
 
 jest.mock("../../../hooks/use-permission");
 jest.mock("../../../hooks/use-auth");
+
+describe("MonitoringVA Page", () => {
+  const view = () => render(<MonitoringVA />);
+
+  beforeEach(() => {
+    usePermission.mockReturnValue({
+      config: PERMISSIONS_CONFIG,
+      hasPermission: jest.fn(),
+      hasWritePermission: jest.fn(),
+      hasReadPermission: jest.fn(),
+    });
+  });
+  afterEach(cleanup);
+});
