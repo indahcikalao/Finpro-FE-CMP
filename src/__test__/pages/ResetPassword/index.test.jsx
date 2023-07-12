@@ -3,7 +3,7 @@ import ResetPassword from "../../../pages/resetPassword";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
-describe("Login Page", () => {
+describe("Reset Password Page", () => {
   const view = () => {
     render(
       <BrowserRouter>
@@ -49,5 +49,4 @@ describe("Login Page", () => {
       expect(passwordConfirmationInput).toBeInTheDocument();
     });
   });
-
 });
