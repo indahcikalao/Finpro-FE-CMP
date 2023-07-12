@@ -1,9 +1,12 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Login from "../../../pages/login";
-import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
-
-import Register from "../../../pages/register";
+import React from "react";
+import { BrowserRouter, Router } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
+
+const createRouterWrapper = ({ children }) => (
+  <Router history={history}>{children}</Router>
+);
 
 describe("Login Page", () => {
   const view = () => {
@@ -24,7 +27,7 @@ describe("Login Page", () => {
     expect(subTitle).toBeInTheDocument();
   });
 
-  it("shown login Button", () => {
+  it("shows login Button", () => {
     view();
 
     const loginButton = screen.getByRole("button", {
@@ -48,5 +51,14 @@ describe("Login Page", () => {
     expect(passwordInput).toBeInTheDocument();
   });
 
-  
+  it("navigates to regsiter and forgot password page", () => {
+    view();
+    const user = userEvent.setup();
+
+    user.click(screen.getByText(/Register/i));
+    user.click(screen.getByText(/Forgot password/i));
+
+    expect(screen.getByText(/Register/i)).toBeInTheDocument();
+    expect(screen.getByText(/Forgot password/i)).toBeInTheDocument();
+  });
 });
