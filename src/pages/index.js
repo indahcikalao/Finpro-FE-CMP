@@ -1,6 +1,4 @@
 export * from './Protected';
+export * from './Auth';
 
-export { default as Login } from './login';
-export { default as Register } from './register';
 export { default as Forbidden } from './Forbidden';
-export { default as ResetPassword } from './resetPassword';
