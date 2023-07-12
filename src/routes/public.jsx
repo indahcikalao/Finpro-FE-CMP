@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import Forbidden from "../pages/Forbidden";
+import { Forbidden } from "../pages";
 
 export const publicRoutes = [
 	{ path: '/forbidden', element: <Forbidden /> },
