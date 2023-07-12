@@ -113,6 +113,7 @@ export default function Login() {
                 Username
               </label>
               <input
+                role="input"
                 id="username"
                 type="text"
                 className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -136,6 +137,7 @@ export default function Login() {
                   Password
                 </label>
                 <input
+                  role="input"
                   type={passwordShown ? "text" : "password"}
                   id="password"
                   className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
