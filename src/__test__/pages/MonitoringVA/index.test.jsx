@@ -20,4 +20,34 @@ describe("MonitoringVA Page", () => {
     });
   });
   afterEach(cleanup);
+
+  it("has correct section title", () => {
+    view();
+
+    const sectionTitle = screen.getByText(/transactions/i);
+
+    expect(sectionTitle).toBeInTheDocument();
+  });
+
+  it("rendered datatable component", () => {
+    view();
+
+    const table = screen.getByRole("table");
+
+    expect(table).toBeInTheDocument();
+  });
+
+  it("rendered loading on the table initially", () => {
+    view();
+
+    const loadingTable = screen.getByText(/please wait/i);
+
+    expect(loadingTable).toBeInTheDocument();
+  });
+});
+
+describe("API integration inside Monitoring VA Page", () => {
+  const view = () => render(<MonitoringVA />);
+
+  const getApiMock = jest.spyOn(api, "get");
 });
