@@ -4,7 +4,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { useFormik } from "formik";
 import { giroHistoryColumn } from "../../../utils/giroHistoryColumn";
 import { vaHistoryColumn } from "../../../utils/vaHistoryColumn";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { withReadPermission } from "../../../utils/hoc";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { usePermission } from "../../../hooks";
 import { Spinner } from "../../../Components/Atoms";

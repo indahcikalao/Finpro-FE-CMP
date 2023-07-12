@@ -14,7 +14,7 @@ import { Badge, SearchableSelect, Spinner } from "../../../Components/Atoms";
 import api from "../../../api/axios";
 import { usePermission } from "../../../hooks";
 import { PERMISSIONS_CONFIG } from "../../../config";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { withReadPermission } from "../../../utils/hoc";
 
 const initialColumn = [
   {
