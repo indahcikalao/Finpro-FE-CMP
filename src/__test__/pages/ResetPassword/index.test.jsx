@@ -5,7 +5,7 @@ import {
   waitFor,
   fireEvent,
 } from "@testing-library/react";
-import ResetPassword from "../../../pages/resetPassword";
+import ResetPassword from "../../../pages/Auth/resetPassword";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
