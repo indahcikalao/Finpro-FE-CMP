@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Input,
   Button,
   Typography,
 } from "@material-tailwind/react";
@@ -62,8 +61,6 @@ export default function ResetPassword() {
     try {
       const res = await axios.patch(`${url}/user/forgot-password`, data);
 
-      console.log("data", data);
-      console.log("res", res);
       if (res.status === 200) {
         Swal.fire({
           icon: "success",
