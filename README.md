@@ -1,30 +1,32 @@
 # Final Project CMP BRI 2023
+🧑‍🏫 Mentors : Mas Agung, Mas Bayu, Mas Andi, Mas Ifan <br>
 👩‍💻 Front End Dev : Arya, Cikal, Rhenald, Aziz <br>
 👨‍💻 Back End Dev : Roby, Irfan, Andre <br>
 📌 Jobdesk : Create TRB Web Admin to monitoring Transastion between Giro and VA <br>
 
 ## Deployment Link 
-https://finpro-cmp-trb.netlify.app/
+https://finpro-cmp-trb.netlify.app/ ( v1 with old api ) <br>
+https://new-cmp-trb.netlify.app/ ( v2 with new api )
 
 ## Progress Pages 
-Sprint 1 
-- ✅ Register
+Sprint 1 ( 2 weeks )
+- ✅ Register ( done with 5 unit testing and 85-90% code coverage)
 - ✅ Login + Forget Password
 - ✅ Dashboard Homepage
 - ✅ User Management
-- ⏳ Role Management ( still need integration with BE )
+- ✅ Role Management ( still on unit testing )
 
-Sprint 2
-- ⏳ Monitoring Satker ( still need integration with BE )
-- ⏳ Download Report Satker ( still need integration with BE )
+Sprint 2 ( 4 weeks )
+- ✅ MonitoringVA Satker ( still on unit testing )
+- ✅ Download Report Satker ( still on unit testing )
 
 ## Feature
 - Create New Account ( status user inactive, input, email, username, password masking validation )
 - Login and Forget Password ( 3 times wrong password user blocked, 30 minutes expired token )
 - Manage User ( get all user, update activation new user, edit role user, delete user )
 - Manage Role ( get all role, create new role, update access role )
-- MonitoringVA ( see the different balance between the VA and Giro account, Download Transaction )
-- Download report VA convert into Spreadsheet, etc <br>
+- MonitoringVA ( see the different balance between the VA and Giro account, Download Transaction by Rows )
+- DownloadVA ( see preview transaction based on date, download transaction spreadsheet by date), etc <br>
 
 ## Layout Register
 ![register account](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/d48e26d5-828d-46dc-8bfe-1e6b22357e73)
@@ -42,12 +44,12 @@ Sprint 2
 ![User Management](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/90277145-5f8f-44ac-9906-f2d6df190873)
 
 ## Layout Role Management
-![Role Management](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/0dd89729-dc7c-4755-bd10-06f171d18595)
+![RoleManagement](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/c80e76e7-8265-46c7-aac5-58c26b00bc35)
 
 ## Layout Monitoring Satker
 ![monitoringVA](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/c6e06634-60dc-4baa-a419-5334cfe681aa)
 
-## Layout Coming Soon
-![Coming soon](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/726c1f3b-0ae9-4a0d-956e-a1566cb0210b)
+## Layout Download VA
+![DownloadVA](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/935456a6-8d69-4cb7-b891-650e93ac052b)
 
 ## More detail, layout and feature will update soon ⏰

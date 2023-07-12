@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { STORAGE_PREFIX } from '../hooks';
+import { STORAGE_PREFIX } from '../config';
+import Swal from 'sweetalert2';
 
 const baseURL = process.env.REACT_APP_BASE_URL
 
@@ -29,5 +30,24 @@ api.interceptors.request.use(
     Promise.reject(error);
   }
 );
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error?.response?.status === 401) {
+      localStorage.clear();
+
+      await Swal.fire({
+        icon: "error",
+        title: "Session ended",
+        text: "Please login back!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      window.location.reload();
+    }
+  }
+)
 
 export default api

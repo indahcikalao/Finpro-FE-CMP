@@ -9,8 +9,9 @@ import {
 	AccordionBody,
 	Typography,
 	ListItem,
-  List
+	List,
 } from '@material-tailwind/react';
+import { usePermission } from '../../../../hooks';
 
 export const SidebarMenuItemIcon = ({ Icon = TbPointFilled }) => {
 	return <Icon className='h-5 w-5 text-white' />;
@@ -18,6 +19,12 @@ export const SidebarMenuItemIcon = ({ Icon = TbPointFilled }) => {
 
 const SidebarMenuItem = ({ menu }) => {
 	const navigate = useNavigate();
+
+	const { hasReadPermission } = usePermission();
+
+	if (!hasReadPermission(menu.resourceName)) {
+		return <></>;
+	}
 
 	return (
 		<ListItem onClick={() => navigate(menu.path)}>
@@ -29,28 +36,32 @@ const SidebarMenuItem = ({ menu }) => {
 	);
 };
 
-const SidebarMultilevelMenuItem = ({ menu }) => {
-	const [open, setOpen] = React.useState(0);
+const SidebarMultilevelMenuItem = ({ menu, open, handleOpen, index }) => {
+	const { hasReadPermission } = usePermission();
 
-	const handleOpen = (value) => {
-		setOpen(open === value ? 0 : value);
-	};
+  const hasOneCanRead = menu.menus.some((menu) =>
+    hasReadPermission(menu.resourceName)
+  );
+
+  if (!hasOneCanRead) {
+    return <></>;
+  }
 
 	return (
 		<Accordion
-			open={open === 1}
+			open={open === index}
 			icon={
 				<ChevronDownIcon
 					strokeWidth={2.5}
 					className={`mx-auto h-4 w-4 transition-transform text-white ${
-						open === 1 ? 'rotate-180' : ''
+						open === index ? 'rotate-180' : ''
 					}`}
 				/>
 			}
 		>
-			<ListItem className='p-0' selected={open === 1}>
+			<ListItem className='p-0' selected={open === index}>
 				<AccordionHeader
-					onClick={() => handleOpen(1)}
+					onClick={() => handleOpen(index)}
 					className='border-b-0 p-3'
 				>
 					<ListItemPrefix>
@@ -72,9 +83,16 @@ const SidebarMultilevelMenuItem = ({ menu }) => {
 	);
 };
 
-export const SidebarMenu = ({ menu }) => {
+export const SidebarMenu = ({ menu, open, handleOpen, index }) => {
 	if (menu.hasOwnProperty('menus')) {
-		return <SidebarMultilevelMenuItem menu={menu} />;
+		return (
+      <SidebarMultilevelMenuItem
+        menu={menu}
+        open={open}
+        handleOpen={handleOpen}
+        index={index}
+      />
+    );
 	}
 
 	return <SidebarMenuItem menu={menu} />;

@@ -1,6 +1,5 @@
 import React from 'react';
-
-export const STORAGE_PREFIX = '__finpro-cmp__';
+import { STORAGE_PREFIX } from '../../config';
 
 export const useLocalStorage = (key) => {
 	key = STORAGE_PREFIX + key;

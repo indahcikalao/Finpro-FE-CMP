@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
@@ -8,22 +8,26 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Input,
   Button,
   Typography,
 } from "@material-tailwind/react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-export function Register() {
+const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const url = process.env.REACT_APP_BASE_URL;
+  const navigate = useNavigate();
 
-  //Yup validation
+  // Yup validation
   const validationSchema = Yup.object().shape({
-    fullname: Yup.string().required("Full Name is required"),
-    username: Yup.string().required("Username is required"),
+    fullname: Yup.string()
+      .min(4, "Full Name must be at least 4 characters")
+      .required("Full Name is required"),
+    username: Yup.string()
+      .min(4, "Username must be at least 4 characters")
+      .required("Username is required"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
@@ -49,7 +53,6 @@ export function Register() {
       role: "",
     },
     validationSchema,
-
     onSubmit: async (values) => {
       try {
         const response = await axios.post(`${url}/register`, values, {
@@ -60,47 +63,48 @@ export function Register() {
 
         // Show success popup sweetalert2
         Swal.fire({
+          position: "top-end",
           icon: "success",
           title: "Registration Successful",
-          text: "Please wait admin to verify your Account",
+          text: "Please wait for admin to verify your Account",
+          showConfirmButton: false,
+          timer: 2000,
         }).then(() => {
           // Redirect to login page
-          window.location.href = "/login";
+          navigate("/login");
         });
 
         console.log(response);
         console.log(response.data);
       } catch (error) {
-        console.error(error);
+        console.log(error);
 
-        //check if email already registered
-        if (error.response.data.message === "Email already registered") {
+        // Check if email already registered
+        if (error.response?.data?.message === "Email already registered") {
           formik.setFieldError(
             "email",
             "Email already taken. Choose another one"
           );
         }
-        //check if username already registered
+        // Check if username already registered
         else if (
-          error.response.data.message === "Username already registered"
+          error.response?.data?.message === "Username already registered"
         ) {
           formik.setFieldError(
             "username",
             "Username already taken. Choose another one"
           );
-        } else {
-          formik.setFieldError("email", "Error happend. Please try again.");
         }
       }
     },
   });
 
-  //function to show password
+  // Function to show password
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  //function to show confirm password
+  // Function to show confirm password
   const handleToggleConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
@@ -118,17 +122,24 @@ export function Register() {
           <CardHeader
             variant="gradient"
             color="blue"
-            className="mb-2 grid h-28 place-items-center"
+            className="mb-1 grid h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
               Create Account
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
-            <div className="mb-2">
-              <Input
-                label="Email"
-                size="lg"
+            <div className="mb-1">
+              <label
+                htmlFor="email"
+                className="block text-gray-700 text-sm font-bold mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                className="shadow appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
@@ -141,10 +152,17 @@ export function Register() {
               )}
             </div>
 
-            <div className="mb-2">
-              <Input
-                label="Username"
-                size="lg"
+            <div className="mb-1">
+              <label
+                htmlFor="username"
+                className="block text-gray-700 text-sm font-bold mb-1"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                className="shadow appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="username"
                 value={formik.values.username}
                 onChange={formik.handleChange}
@@ -157,10 +175,17 @@ export function Register() {
               )}
             </div>
 
-            <div className="mb-2">
-              <Input
-                label="Full Name"
-                size="lg"
+            <div className="mb-1">
+              <label
+                htmlFor="fullname"
+                className="block text-gray-700 text-sm font-bold mb-1"
+              >
+                Full Name
+              </label>
+              <input
+                id="fullname"
+                type="text"
+                className="shadow appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="fullname"
                 value={formik.values.fullname}
                 onChange={formik.handleChange}
@@ -172,20 +197,28 @@ export function Register() {
                 </Typography>
               )}
             </div>
-            <div className="mb-2">
+            <div className="mb-1">
               <div className="relative">
-                <Input
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 text-sm font-bold mb-1"
+                >
+                  Password
+                </label>
+                <input
                   type={showPassword ? "text" : "password"}
-                  label="Password"
-                  size="lg"
+                  id="password"
+                  className="shadow appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  data-testid="password-input"
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-3 focus:outline-none"
+                  className="absolute right-4 top-8 focus:outline-none"
+                  aria-label="Toggle Password Visibility"
                   onClick={handleTogglePassword}
                 >
                   {showPassword ? (
@@ -201,20 +234,28 @@ export function Register() {
                 </Typography>
               )}
             </div>
-            <div className="mb-2">
+            <div className="mb-1">
               <div className="relative">
-                <Input
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-gray-700 text-sm font-bold mb-1"
+                >
+                  Confirm Password
+                </label>
+                <input
                   type={showConfirmPassword ? "text" : "password"}
-                  label="Confirm Password"
-                  size="lg"
+                  id="confirmPassword"
+                  className="shadow appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="confirmPassword"
                   value={formik.values.confirmPassword}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                  data-testid="confirmPassword-input"
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-3 focus:outline-none"
+                  className="absolute right-4 top-8 focus:outline-none"
+                  aria-label="Toggle Confirm Password Visibility"
                   onClick={handleToggleConfirmPassword}
                 >
                   {showConfirmPassword ? (
@@ -232,7 +273,7 @@ export function Register() {
                 )}
             </div>
           </CardBody>
-          <CardFooter className="mb-2 pt-0">
+          <CardFooter className="mb-1 pt-0">
             <Button
               variant="gradient"
               fullWidth
@@ -241,7 +282,7 @@ export function Register() {
             >
               Register
             </Button>
-            <Typography variant="small" className="mt-3 flex justify-center">
+            <Typography variant="small" className="mt-2 flex justify-center">
               Already have an account?
               <Link to="/login">
                 <Typography
@@ -259,6 +300,6 @@ export function Register() {
       </div>
     </>
   );
-}
+};
 
 export default Register;
