@@ -20,4 +20,12 @@ describe("MonitoringVA Page", () => {
     });
   });
   afterEach(cleanup);
+
+  it("has correct section title", () => {
+    view();
+
+    const sectionTitle = screen.getByText(/transactions/i);
+
+    expect(sectionTitle).toBeInTheDocument();
+  });
 });
