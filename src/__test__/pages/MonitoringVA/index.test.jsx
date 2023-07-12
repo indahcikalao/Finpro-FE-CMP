@@ -45,3 +45,9 @@ describe("MonitoringVA Page", () => {
     expect(loadingTable).toBeInTheDocument();
   });
 });
+
+describe("API integration inside Monitoring VA Page", () => {
+  const view = () => render(<MonitoringVA />);
+
+  const getApiMock = jest.spyOn(api, "get");
+});
