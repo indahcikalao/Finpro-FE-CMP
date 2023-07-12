@@ -10,7 +10,7 @@ import { withReadPermission } from "../../../utils/hoc/with-read-permission";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { usePermission } from "../../../hooks";
 
-const MonitoringVA = () => {
+export const MonitoringVA = () => {
   const { config, hasWritePermission } = usePermission();
 
   const [data, setData] = React.useState([]);
