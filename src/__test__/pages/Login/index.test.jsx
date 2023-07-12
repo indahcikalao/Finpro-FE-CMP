@@ -6,7 +6,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import Login from "../../../pages/Auth/login";
+import Login from "../../../pages/Auth/Login";
 import { act } from "react-dom/test-utils";
 
 describe("Login Page", () => {

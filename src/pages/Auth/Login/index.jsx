@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
-import { TogglePassword } from "../../Components/Atoms";
-import { useAuth, useLocalStorage } from "../../hooks";
+import { TogglePassword } from "../../../Components/Atoms";
+import { useAuth, useLocalStorage } from "../../../hooks";
 import {
   Card,
   CardHeader,

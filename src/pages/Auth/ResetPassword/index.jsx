@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
-import { TogglePassword } from "../../Components/Atoms";
+import { TogglePassword } from "../../../Components/Atoms";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import {

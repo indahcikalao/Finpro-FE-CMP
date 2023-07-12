@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Register from "../../../pages/Auth/register";
+import Register from "../../../pages/Auth/Register";
 import axios from "axios";
 
 jest.mock("axios");
