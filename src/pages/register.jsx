@@ -22,8 +22,12 @@ const Register = () => {
 
   // Yup validation
   const validationSchema = Yup.object().shape({
-    fullname: Yup.string().required("Full Name is required"),
-    username: Yup.string().required("Username is required"),
+    fullname: Yup.string()
+      .min(4, "Full Name must be at least 4 characters")
+      .required("Full Name is required"),
+    username: Yup.string()
+      .min(4, "Username must be at least 4 characters")
+      .required("Username is required"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
