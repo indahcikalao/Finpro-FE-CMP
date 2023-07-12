@@ -18,7 +18,7 @@ import { Spinner } from "../../../Components/Atoms";
 
 const url = process.env.REACT_APP_BASE_URL;
 
-const UserRoleManagement = () => {
+export const UserRoleManagement = () => {
   const { config, hasWritePermission } = usePermission();
   const resourceRole = config.resources.role;
 
