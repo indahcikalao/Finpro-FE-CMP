@@ -170,8 +170,20 @@ describe("API integration inside Monitoring VA Page", () => {
 
     getApiMock.mockResolvedValueOnce({ data: mockTransactionResponse });
   });
+
   afterEach(cleanup);
   afterAll(() => {
     getApiMock.mockRestore();
+  });
+
+  it("fetched transactions successfully", async () => {
+    await act(() => view());
+
+    const firstCall = getApiMock.mock.calls.at(0);
+    const endpoint = firstCall[0];
+
+    expect(endpoint).toEqual(expect.stringMatching(/^\/admin\/transactions\b/));
+
+    expect(await screen.findByText(/usd/i)).toBeInTheDocument();
   });
 });
