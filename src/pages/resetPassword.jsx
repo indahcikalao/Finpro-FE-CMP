@@ -62,11 +62,16 @@ export default function ResetPassword() {
     try {
       const res = await axios.patch(`${url}/user/forgot-password`, data);
 
+      console.log("data", data);
+      console.log("res", res);
       if (res.status === 200) {
         Swal.fire({
           icon: "success",
           title: "Password Updated!",
           text: "Your password has been successfully updated.",
+          showConfirmButton: false,
+          timerProgressBar: true,
+          timer: 3000,
         }).then(() => {
           navigate("/login");
         });
@@ -76,6 +81,9 @@ export default function ResetPassword() {
         icon: "error",
         title: error.response.data.message,
         text: "Please try again!",
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
       });
     }
   };
@@ -102,10 +110,16 @@ export default function ResetPassword() {
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
             <div className="mb-2">
-              <Input
+              <label
+                htmlFor="email"
+                className="block text-gray-700 text-sm font-bold mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
                 type="email"
-                label="Email"
-                size="lg"
+                className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
@@ -118,10 +132,16 @@ export default function ResetPassword() {
               )}
             </div>
             <div className="mb-2">
-              <Input
+              <label
+                htmlFor="username"
+                className="block text-gray-700 text-sm font-bold mb-1"
+              >
+                Username
+              </label>
+              <input
+                id="username"
                 type="text"
-                label="Username"
-                size="lg"
+                className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 name="username"
                 value={formik.values.username}
                 onChange={formik.handleChange}
@@ -135,10 +155,16 @@ export default function ResetPassword() {
             </div>
             <div className="mb-2">
               <div className="relative">
-                <Input
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 text-sm font-bold mb-1"
+                >
+                  Password
+                </label>
+                <input
                   type={passwordShown ? "text" : "password"}
-                  label="Password"
-                  size="lg"
+                  id="password"
+                  className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
@@ -146,12 +172,13 @@ export default function ResetPassword() {
                 />
                 <TogglePassword
                   type="button"
+                  ariaLabel="Toggle Password Visibility"
                   onClick={() => setPasswordShown(!passwordShown)}
                   children={
                     passwordShown ? (
-                      <RiEyeOffLine className="w-5 h-5" />
+                      <RiEyeOffLine className="w-6 h-6" />
                     ) : (
-                      <RiEyeLine className="w-5 h-5" />
+                      <RiEyeLine className="w-6 h-6" />
                     )
                   }
                 />
@@ -164,10 +191,16 @@ export default function ResetPassword() {
             </div>
             <div className="mb-2">
               <div className="relative">
-                <Input
+                <label
+                  htmlFor="confirm_password"
+                  className="block text-gray-700 text-sm font-bold mb-1"
+                >
+                  Confirm Password
+                </label>
+                <input
                   type={confirmPasswordShown ? "text" : "password"}
-                  label="Confrim Password"
-                  size="lg"
+                  id="confirm_password"
+                  className="shadow appearance-none border border-gray-400 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   name="confirm_password"
                   value={formik.values.confirm_password}
                   onChange={formik.handleChange}
@@ -177,10 +210,10 @@ export default function ResetPassword() {
                   type="button"
                   onClick={() => setConfirmPasswordShown(!confirmPasswordShown)}
                   children={
-                    confirmPasswordShown ? (
-                      <RiEyeOffLine className="w-5 h-5" />
+                    passwordShown ? (
+                      <RiEyeOffLine className="w-6 h-6" />
                     ) : (
-                      <RiEyeLine className="w-5 h-5" />
+                      <RiEyeLine className="w-6 h-6" />
                     )
                   }
                 />
@@ -202,7 +235,7 @@ export default function ResetPassword() {
                 (!formik.touched.email &&
                   !formik.touched.password &&
                   !formik.touched.confirm_password &&
-                  formik.touched.username) ||
+                  !formik.touched.username) ||
                 formik.errors.password ||
                 formik.errors.email ||
                 formik.errors.confirm_password ||
