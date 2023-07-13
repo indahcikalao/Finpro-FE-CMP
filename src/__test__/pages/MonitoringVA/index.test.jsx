@@ -1,4 +1,10 @@
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  cleanup,
+  waitFor,
+  fireEvent,
+} from "@testing-library/react";
 import { MonitoringVA } from "../../../pages/Protected/MonitoringVA";
 import api from "../../../api/axios";
 import { act } from "react-dom/test-utils";
@@ -185,5 +191,65 @@ describe("API integration inside Monitoring VA Page", () => {
     expect(endpoint).toEqual(expect.stringMatching(/^\/admin\/transactions\b/));
 
     expect(await screen.findByText(/usd/i)).toBeInTheDocument();
+  });
+
+  it("handles error while fetching transactions", async () => {
+    jest.spyOn(api, "get").mockRejectedValueOnce(new Error("API Error"));
+
+    await view();
+
+    await waitFor(() => {
+      const errorMessage = screen.queryByText((content, element) =>
+        content.toLowerCase().includes("error fetching transactions")
+      );
+      expect(errorMessage).toBeNull(); // Expecting null when error message is not found
+    });
+  });
+
+  it("renders the correct number of rows in the table", async () => {
+    await view();
+
+    await waitFor(() => {
+      const tableRows = screen.getAllByRole("row");
+      expect(tableRows.length).toBe(mockTransactionResponse.data.length + 1);
+    });
+  });
+});
+
+describe("Download MonitoringVA", () => {
+  beforeEach(() => {
+    api.get.mockImplementation(() => Promise.resolve({})); // Mock the API response for successful download
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+  });
+
+  it("handles the download button click", async () => {
+    render(<MonitoringVA />);
+
+    const downloadButton = screen.getByText("Download");
+    fireEvent.click(downloadButton);
+
+    expect(api.get).toHaveBeenCalledWith("/admin/transactions/download", {
+      responseType: "blob",
+    });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(api.get).toHaveBeenCalledTimes(1);
+
+    expect(window.URL.createObjectURL).toHaveBeenCalledTimes(1);
+    expect(window.URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+
+    const link = screen.getByRole("link", { name: "monitoringVA.xlsx" });
+    expect(link.href).toMatch(/^blob:http:\/\/.*$/);
+
+    fireEvent.click(link);
+
+    expect(link.download).toBe("monitoringVA.xlsx");
   });
 });
