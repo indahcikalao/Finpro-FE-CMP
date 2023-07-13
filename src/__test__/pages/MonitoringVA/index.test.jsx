@@ -199,4 +199,13 @@ describe("API integration inside Monitoring VA Page", () => {
       expect(errorMessage).toBeNull(); // Expecting null when error message is not found
     });
   });
+
+  it("renders the correct number of rows in the table", async () => {
+    await view();
+
+    await waitFor(() => {
+      const tableRows = screen.getAllByRole("row");
+      expect(tableRows.length).toBe(mockTransactionResponse.data.length + 1);
+    });
+  });
 });
