@@ -6,11 +6,11 @@ import * as XLSX from "xlsx/xlsx.mjs";
 import api from "../../../api/axios";
 import numeral from "numeral";
 import { Spinner } from "../../../Components/Atoms";
-import { withReadPermission } from "../../../utils/hoc/with-read-permission";
+import { withReadPermission } from "../../../utils/hoc";
 import { PERMISSIONS_CONFIG } from "../../../config";
 import { usePermission } from "../../../hooks";
 
-const MonitoringVA = () => {
+export const MonitoringVA = () => {
   const { config, hasWritePermission } = usePermission();
 
   const [data, setData] = React.useState([]);

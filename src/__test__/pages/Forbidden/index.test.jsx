@@ -1,5 +1,5 @@
 import { screen, cleanup, fireEvent, render } from '@testing-library/react';
-import Forbidden from '../../../pages/Forbidden';
+import Forbidden from '../../../pages/Public/Forbidden';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('forbidden page', () => {

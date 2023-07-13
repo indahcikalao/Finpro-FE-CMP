@@ -5,7 +5,7 @@ import {
 	fireEvent,
 	waitFor,
 } from '@testing-library/react';
-import { UserManagement } from '../../../pages/admin/UserManagement';
+import { UserManagement } from '../../../pages/Protected/UserManagement';
 import api from '../../../api/axios';
 import { act } from 'react-dom/test-utils';
 import { usePermission } from '../../../hooks';
