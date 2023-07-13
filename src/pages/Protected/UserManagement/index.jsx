@@ -281,19 +281,21 @@ export const UserManagement = () => {
             Activate user and assign/update user's role
           </Typography>
         </header>
-        <DataTable
-          columns={columns}
-          data={data}
-          progressPending={loading}
-          progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
-          pagination
-          paginationServer
-          paginationTotalRows={totalRows}
-          onChangePage={handlePageChange}
-          onChangeRowsPerPage={handlePerRowsChange}
-          defaultSortAsc={true}
-          defaultSortFieldId='status'
-        />
+        <div className="border-2">
+          <DataTable
+            columns={columns}
+            data={data}
+            progressPending={loading}
+            progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handlePerRowsChange}
+            defaultSortAsc={true}
+            defaultSortFieldId='status'
+          />
+        </div>
       </div>
       <Drawer
         overlayProps={{ className: "fixed" }}
