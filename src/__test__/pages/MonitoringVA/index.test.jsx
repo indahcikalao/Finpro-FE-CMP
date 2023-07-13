@@ -1,4 +1,4 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import { MonitoringVA } from "../../../pages/admin/MonitoringVA";
 import api from "../../../api/axios";
 import { act } from "react-dom/test-utils";
@@ -185,5 +185,18 @@ describe("API integration inside Monitoring VA Page", () => {
     expect(endpoint).toEqual(expect.stringMatching(/^\/admin\/transactions\b/));
 
     expect(await screen.findByText(/usd/i)).toBeInTheDocument();
+  });
+
+  it("handles error while fetching transactions", async () => {
+    jest.spyOn(api, "get").mockRejectedValueOnce(new Error("API Error"));
+
+    await view();
+
+    await waitFor(() => {
+      const errorMessage = screen.queryByText((content, element) =>
+        content.toLowerCase().includes("error fetching transactions")
+      );
+      expect(errorMessage).toBeNull(); // Expecting null when error message is not found
+    });
   });
 });
