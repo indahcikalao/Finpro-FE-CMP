@@ -1,4 +1,10 @@
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  cleanup,
+  waitFor,
+  fireEvent,
+} from "@testing-library/react";
 import { MonitoringVA } from "../../../pages/admin/MonitoringVA";
 import api from "../../../api/axios";
 import { act } from "react-dom/test-utils";
@@ -207,5 +213,43 @@ describe("API integration inside Monitoring VA Page", () => {
       const tableRows = screen.getAllByRole("row");
       expect(tableRows.length).toBe(mockTransactionResponse.data.length + 1);
     });
+  });
+});
+
+describe("Download MonitoringVA", () => {
+  beforeEach(() => {
+    api.get.mockImplementation(() => Promise.resolve({})); // Mock the API response for successful download
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    cleanup();
+  });
+
+  it("handles the download button click", async () => {
+    render(<MonitoringVA />);
+
+    const downloadButton = screen.getByText("Download");
+    fireEvent.click(downloadButton);
+
+    expect(api.get).toHaveBeenCalledWith("/admin/transactions/download", {
+      responseType: "blob",
+    });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(api.get).toHaveBeenCalledTimes(1);
+
+    expect(window.URL.createObjectURL).toHaveBeenCalledTimes(1);
+    expect(window.URL.revokeObjectURL).toHaveBeenCalledTimes(1);
+
+    const link = screen.getByRole("link", { name: "monitoringVA.xlsx" });
+    expect(link.href).toMatch(/^blob:http:\/\/.*$/);
+
+    fireEvent.click(link);
+
+    expect(link.download).toBe("monitoringVA.xlsx");
   });
 });
