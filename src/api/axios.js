@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { STORAGE_PREFIX } from '../config';
 import Swal from 'sweetalert2';
+import { Encryption } from '../utils/lib';
 
 const baseURL = process.env.REACT_APP_BASE_URL
 
@@ -20,9 +21,13 @@ export const publicApi = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'token'));
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    const token = localStorage.getItem(STORAGE_PREFIX + 'token');
+    const decryptedToken = Encryption.decrypt(token);
+
+    console.log('decrypt token:', decryptedToken)
+
+    if (decryptedToken) {
+      config.headers['Authorization'] = `Bearer ${decryptedToken}`;
     }
     return config;
   },
