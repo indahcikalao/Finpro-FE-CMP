@@ -461,6 +461,7 @@ export const UserManagement = () => {
             onChangePage={handlePageChange}
             onChangeRowsPerPage={handlePerRowsChange}
             fixedHeader
+            fixedHeaderScrollHeight="60vh"
             defaultSortAsc={true}
             paginationResetDefaultPage={resetDefaultPage}
             defaultSortFieldId='status'
