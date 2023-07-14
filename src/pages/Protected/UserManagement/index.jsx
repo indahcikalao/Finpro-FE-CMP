@@ -172,6 +172,7 @@ export const UserManagement = () => {
       return;
     }
 
+    setLoading(true);
     setResetDefaultPage(resetDefaultPage);
 
     switch (searchFilter) {
@@ -199,6 +200,8 @@ export const UserManagement = () => {
             timer: 1500,
             showConfirmButton: false,
           });
+        } finally {
+          setLoading(false);
         }
         break;
       case SEARCH_FILTER.username:
@@ -225,6 +228,8 @@ export const UserManagement = () => {
             timer: 1500,
             showConfirmButton: false,
           });
+        } finally {
+          setLoading(false);
         }
         break;
       default:
