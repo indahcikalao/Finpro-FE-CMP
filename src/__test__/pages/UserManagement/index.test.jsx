@@ -11,6 +11,7 @@ import { act } from 'react-dom/test-utils';
 import { usePermission } from '../../../hooks';
 import { PERMISSIONS_CONFIG } from '../../../config';
 
+global.ResizeObserver = require('resize-observer-polyfill');
 jest.mock('../../../hooks/use-permission');
 jest.mock('../../../hooks/use-auth');
 
@@ -382,4 +383,63 @@ describe('API integration inside User Management Page', () => {
 
 		expect(document.body).toHaveStyle('overflow: unset');
 	});
+});
+
+describe('Search functionality inside User Management Page', () => {
+	const view = () => render(<UserManagement />);
+
+  beforeEach(() => {
+		usePermission.mockReturnValue({
+			config: PERMISSIONS_CONFIG,
+			hasPermission: jest.fn(),
+			hasWritePermission: jest.fn(),
+			hasReadPermission: jest.fn(),
+		});
+	});
+
+	afterEach(cleanup);
+
+  it('input can be typed', () => {
+    const searchKeyword = 'admin';
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    expect(searchTextbox).toHaveValue(searchKeyword);
+  });
+
+  it('can change the filter option', async () => {
+    view();
+
+    const filterButton = screen.getByRole('button', {
+      name: /username/i,
+    });
+
+    fireEvent.click(filterButton);
+
+    const emailOption = await screen.findByRole('menuitem', {
+      name: /email/i
+    });
+
+    fireEvent.click(emailOption);
+
+    expect(filterButton).toHaveTextContent(/email/i);
+
+    fireEvent.click(filterButton);
+
+    const usernameOption = await screen.findByRole('menuitem', {
+      name: /username/i
+    });
+
+    fireEvent.click(usernameOption);
+
+    expect(filterButton).toHaveTextContent(/username/i);
+  });
 });
