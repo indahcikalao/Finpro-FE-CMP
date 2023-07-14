@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useLocalStorage } from '../../hooks';
+import { useSecureLocalStorage } from '../../hooks';
 import api from '../../api/axios';
 
 export const AuthContext = createContext({});
@@ -24,8 +24,8 @@ const events = [
 ];
 
 export const AuthProvider = ({ children }) => {
-	const tokenStorage = useLocalStorage('token');
-	const userDataStorage = useLocalStorage('userData');
+	const tokenStorage = useSecureLocalStorage('token');
+	const userDataStorage = useSecureLocalStorage('userData');
 
 	const navigate = useNavigate();
 	const timerRef = useRef();

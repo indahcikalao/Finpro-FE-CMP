@@ -3,7 +3,7 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
 import { TogglePassword } from "../../../Components/Atoms";
-import { useAuth, useLocalStorage } from "../../../hooks";
+import { useAuth, useSecureLocalStorage } from "../../../hooks";
 import {
   Card,
   CardHeader,
@@ -30,7 +30,7 @@ export default function Login() {
     password: "",
   };
 
-  const tokenStorage = useLocalStorage("token");
+  const tokenStorage = useSecureLocalStorage("token");
   const token = tokenStorage.get();
 
   const validationSchema = Yup.object().shape({
