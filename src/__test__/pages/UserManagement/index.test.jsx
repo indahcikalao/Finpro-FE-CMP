@@ -415,6 +415,102 @@ describe('Search functionality inside User Management Page', () => {
     expect(searchTextbox).toHaveValue(searchKeyword);
   });
 
+  it('search function runs properly', async () => {
+    const searchKeyword = 'admin';
+
+    const getApiMock = jest.spyOn(api, 'get');
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    const searchButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    fireEvent.click(searchButton);
+
+    getApiMock.mockResolvedValueOnce({
+      data: [
+        {
+          id: 1,
+          username: 'admin',
+          fullname: 'Admin',
+          email: 'admin@gmail.com',
+          is_active: true,
+          role: 'admin',
+          role_id: 1,
+        },
+      ]
+    });
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    const filterButton = screen.getByRole('button', {
+      name: /username/i,
+    });
+
+    fireEvent.click(filterButton);
+
+    const emailOption = await screen.findByRole('menuitem', {
+      name: /email/i
+    });
+
+    fireEvent.click(emailOption);
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: '',
+      },
+    });
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+  });
+
+  it('can reset search via reset button or when submitting empty string', () => {
+    const searchKeyword = 'admin';
+
+    const getApiMock = jest.spyOn(api, 'get');
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    const searchButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    const resetButton = screen.getByRole('button', {
+      name: /reset/i,
+    });
+
+    fireEvent.click(resetButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+  });
+
   it('can change the filter option', async () => {
     view();
 
