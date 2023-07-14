@@ -432,7 +432,7 @@ export const UserManagement = () => {
         <div className="border-2">
           <DataTable
             columns={columns}
-            data={data}
+            data={data ?? []}
             progressPending={loading}
             progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
             pagination
