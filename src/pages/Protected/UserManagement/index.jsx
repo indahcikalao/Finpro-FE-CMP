@@ -94,6 +94,7 @@ export const UserManagement = () => {
   const [data, setData] = React.useState([]);
   const [roles, setRoles] = React.useState([]);
 
+  const [isSearching, setIsSearching] = React.useState(false);
   const [searchFilter, setSearchFilter] = React.useState(SEARCH_FILTER.username);
   const [searchKeyword, setSearchKeyword] = React.useState('');
 
@@ -143,6 +144,7 @@ export const UserManagement = () => {
 
   const fetchUsers = async ({ page = 1, limit = perPage, resetDefaultPage = false }) => {
     setLoading(true);
+    setIsSearching(false);
     setResetDefaultPage(resetDefaultPage);
 
     try {
@@ -240,7 +242,17 @@ export const UserManagement = () => {
   const handleSearchUsers = (e) => {
     e.preventDefault();
 
+    setIsSearching(true);
+
     fetchSearchUsers({ resetDefaultPage: true });
+  }
+
+  const handleResetSearch = async () => {
+    setSearchKeyword('');
+
+    await fetchUsers({
+      resetDefaultPage: true,
+    });
   }
 
   const handlePerRowsChange = async (newPerPage, page) => {
@@ -428,6 +440,14 @@ export const UserManagement = () => {
             />
           </div>
           <Button type="submit">Search</Button>
+          <Button
+            type="button"
+            disabled={!isSearching}
+            variant="outlined"
+            onClick={handleResetSearch}
+          >
+            Reset
+          </Button>
         </form>
         <div className="border-2">
           <DataTable
