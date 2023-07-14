@@ -262,7 +262,7 @@ export const UserManagement = () => {
   React.useEffect(() => {
     const getUsers = async () => {
       try {
-        await fetchUsers();
+        await fetchUsers({});
       } catch (error) {
         console.log("Error fetching users:", error);
       }
