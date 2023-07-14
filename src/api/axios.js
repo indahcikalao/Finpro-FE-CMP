@@ -24,8 +24,6 @@ api.interceptors.request.use(
     const token = localStorage.getItem(STORAGE_PREFIX + 'token');
     const decryptedToken = Encryption.decrypt(token);
 
-    console.log('decrypt token:', decryptedToken)
-
     if (decryptedToken) {
       config.headers['Authorization'] = `Bearer ${decryptedToken}`;
     }
