@@ -467,16 +467,6 @@ describe('Search functionality inside User Management Page', () => {
     fireEvent.click(searchButton);
 
     expect(getApiMock).toHaveBeenCalled();
-
-    fireEvent.change(searchTextbox, {
-      target: {
-        value: '',
-      },
-    });
-
-    fireEvent.click(searchButton);
-
-    expect(getApiMock).toHaveBeenCalled();
   });
 
   it('can reset search via reset button or when submitting empty string', () => {
@@ -507,6 +497,16 @@ describe('Search functionality inside User Management Page', () => {
     });
 
     fireEvent.click(resetButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: '',
+      },
+    });
+
+    fireEvent.click(searchButton);
 
     expect(getApiMock).toHaveBeenCalled();
   });
