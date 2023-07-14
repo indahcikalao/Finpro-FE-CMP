@@ -479,6 +479,38 @@ describe('Search functionality inside User Management Page', () => {
     expect(getApiMock).toHaveBeenCalled();
   });
 
+  it('can reset search via reset button or when submitting empty string', () => {
+    const searchKeyword = 'admin';
+
+    const getApiMock = jest.spyOn(api, 'get');
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    const searchButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    const resetButton = screen.getByRole('button', {
+      name: /reset/i,
+    });
+
+    fireEvent.click(resetButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+  });
+
   it('can change the filter option', async () => {
     view();
 
