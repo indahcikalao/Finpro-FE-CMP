@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import UserRoleManagement from '../../../pages/admin/UserRoleManagement';
+import UserRoleManagement from '../../../pages/Protected/UserRoleManagement';
 import api from '../../../api/axios';
-import { usePermission } from '../../../hooks/use-permission';
+import { usePermission } from '../../../hooks';
 
 jest.mock('../../../api/axios', () => ({
   get: jest.fn(),
