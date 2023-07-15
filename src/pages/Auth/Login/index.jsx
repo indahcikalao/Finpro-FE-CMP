@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import { useFormik } from "formik";
-import { TogglePassword } from "../Components/Atoms";
-import { useAuth, useLocalStorage } from "../hooks";
+import { TogglePassword } from "../../../Components/Atoms";
+import { useAuth, useSecureLocalStorage } from "../../../hooks";
 import {
   Card,
   CardHeader,
@@ -30,7 +30,7 @@ export default function Login() {
     password: "",
   };
 
-  const tokenStorage = useLocalStorage("token");
+  const tokenStorage = useSecureLocalStorage("token");
   const token = tokenStorage.get();
 
   const validationSchema = Yup.object().shape({
@@ -50,7 +50,6 @@ export default function Login() {
   const handleLogin = async (value) => {
     try {
       const res = await axios.post(`${url}/login`, value);
-      console.log(res);
 
       if (res.status === 200) {
         tokenStorage.set(res.data.data.token);

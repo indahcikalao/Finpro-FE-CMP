@@ -5,12 +5,13 @@ import {
 	fireEvent,
 	waitFor,
 } from '@testing-library/react';
-import { UserManagement } from '../../../pages/admin/UserManagement';
+import { UserManagement } from '../../../pages/Protected/UserManagement';
 import api from '../../../api/axios';
 import { act } from 'react-dom/test-utils';
 import { usePermission } from '../../../hooks';
 import { PERMISSIONS_CONFIG } from '../../../config';
 
+global.ResizeObserver = require('resize-observer-polyfill');
 jest.mock('../../../hooks/use-permission');
 jest.mock('../../../hooks/use-auth');
 
@@ -382,4 +383,159 @@ describe('API integration inside User Management Page', () => {
 
 		expect(document.body).toHaveStyle('overflow: unset');
 	});
+});
+
+describe('Search functionality inside User Management Page', () => {
+	const view = () => render(<UserManagement />);
+
+  beforeEach(() => {
+		usePermission.mockReturnValue({
+			config: PERMISSIONS_CONFIG,
+			hasPermission: jest.fn(),
+			hasWritePermission: jest.fn(),
+			hasReadPermission: jest.fn(),
+		});
+	});
+
+	afterEach(cleanup);
+
+  it('input can be typed', () => {
+    const searchKeyword = 'admin';
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    expect(searchTextbox).toHaveValue(searchKeyword);
+  });
+
+  it('search function runs properly', async () => {
+    const searchKeyword = 'admin';
+
+    const getApiMock = jest.spyOn(api, 'get');
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    const searchButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    fireEvent.click(searchButton);
+
+    getApiMock.mockResolvedValueOnce({
+      data: [
+        {
+          id: 1,
+          username: 'admin',
+          fullname: 'Admin',
+          email: 'admin@gmail.com',
+          is_active: true,
+          role: 'admin',
+          role_id: 1,
+        },
+      ]
+    });
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    const filterButton = screen.getByRole('button', {
+      name: /username/i,
+    });
+
+    fireEvent.click(filterButton);
+
+    const emailOption = await screen.findByRole('menuitem', {
+      name: /email/i
+    });
+
+    fireEvent.click(emailOption);
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+  });
+
+  it('can reset search via reset button or when submitting empty string', () => {
+    const searchKeyword = 'admin';
+
+    const getApiMock = jest.spyOn(api, 'get');
+
+    view();
+
+    const searchTextbox = screen.getByPlaceholderText(/find user.../i);
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: searchKeyword,
+      },
+    });
+
+    const searchButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    const resetButton = screen.getByRole('button', {
+      name: /reset/i,
+    });
+
+    fireEvent.click(resetButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+
+    fireEvent.change(searchTextbox, {
+      target: {
+        value: '',
+      },
+    });
+
+    fireEvent.click(searchButton);
+
+    expect(getApiMock).toHaveBeenCalled();
+  });
+
+  it('can change the filter option', async () => {
+    view();
+
+    const filterButton = screen.getByRole('button', {
+      name: /username/i,
+    });
+
+    fireEvent.click(filterButton);
+
+    const emailOption = await screen.findByRole('menuitem', {
+      name: /email/i
+    });
+
+    fireEvent.click(emailOption);
+
+    expect(filterButton).toHaveTextContent(/email/i);
+
+    fireEvent.click(filterButton);
+
+    const usernameOption = await screen.findByRole('menuitem', {
+      name: /username/i
+    });
+
+    fireEvent.click(usernameOption);
+
+    expect(filterButton).toHaveTextContent(/username/i);
+  });
 });

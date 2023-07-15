@@ -10,10 +10,6 @@ body {
   z-index: 999999999;
 }
 
-.rdt_Table {
-  border: 1px solid #dee2e6;
-}
-
 .rdt_TableCell:where(:not(:last-child)) {
   border-right: 1px solid #dee2e6;
 }

@@ -1,32 +1,19 @@
-import { useRoutes, Navigate } from 'react-router-dom';
-import { useLocalStorage } from '../hooks/use-local-storage';
+import { useRoutes } from 'react-router-dom';
+import { useSecureLocalStorage } from '../hooks';
 import React from 'react';
-import { Dashboard } from '../Components/Layout';
-import Homepage from '../pages/admin/Homepage';
-import { UserManagement, UserRoleManagement } from '../pages/admin';
-import MonitoringVA from '../pages/admin/MonitoringVA';
-import DownloadVA from '../pages/admin/DownloadVA';
+import { protectedRoutes } from './protected';
+import { publicRoutes } from './public';
+import { authRoutes } from './auth';
 
 const AppRoutes = () => {
-	const tokenStorage = useLocalStorage('token');
+	const token = useSecureLocalStorage('token').get();
+
+  const routes = token ? protectedRoutes : authRoutes;
 
 	const element = useRoutes([
-    {
-      path: "/",
-      element: <Dashboard />,
-      children: [
-        { path: "/", element: <Homepage /> },
-        { path: "/role-management", element: <UserRoleManagement /> },
-        { path: "/user-management", element: <UserManagement /> },
-        { path: "/monitoring-va", element: <MonitoringVA /> },
-        { path: "/download-va", element: <DownloadVA /> },
-      ],
-    },
+    ...routes,
+    ...publicRoutes,
   ]);
-
-	if (!tokenStorage.get()) {
-		return <Navigate to='/login' />;
-	}
 
 	return <>{element}</>;
 };

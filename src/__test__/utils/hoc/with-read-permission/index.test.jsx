@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { withReadPermission } from '../../../../utils/hoc/with-read-permission';
+import { withReadPermission } from '../../../../utils/hoc';
 import { usePermission } from '../../../../hooks';
 import { MemoryRouter } from 'react-router-dom';
 
