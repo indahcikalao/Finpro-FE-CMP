@@ -170,17 +170,17 @@ export const UserRoleManagement = () => {
           </CardHeader>
 
           <CardBody className="overflow-scroll px-0">
-              <DataTable
-                columns={columns}
-                data={filteredData}
-                progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
-                progressPending={loading}
-                pagination
-                paginationServer
-                paginationTotalRows={totalRows}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handlePerPageChange}
-              />
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              progressComponent={<Spinner message="Please wait for a moment..." size="lg" />}
+              progressPending={loading}
+              pagination
+              paginationServer
+              paginationTotalRows={totalRows}
+              onChangePage={handlePageChange}
+              onChangeRowsPerPage={handlePerPageChange}
+            />
           </CardBody>
         </Card>
       </div>
