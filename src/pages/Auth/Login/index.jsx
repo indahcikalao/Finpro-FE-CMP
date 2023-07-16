@@ -60,6 +60,9 @@ export default function Login() {
           icon: "success",
           title: "Welcome Back!",
           text: "You are logged in.",
+          showConfirmButton: false,
+          timerProgressBar: true,
+          timer: 3000,
         }).then(() => {
           navigate("/");
         });
@@ -78,6 +81,9 @@ export default function Login() {
             : error.data.input_false === 3
             ? `Your Account is unactivated. Please contact Admin to reactivate your account!`
             : "please try again!",
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 3000,
       });
     }
   };
