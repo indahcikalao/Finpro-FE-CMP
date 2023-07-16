@@ -9,16 +9,16 @@ https://finpro-cmp-trb.netlify.app/ ( v1 with old api ) <br>
 https://new-cmp-trb.netlify.app/ ( v2 with new api )
 
 ## Progress Pages 
-Sprint 1 ( 2 weeks )
-- ✅ Register ( done with 5 unit testing and 85-90% code coverage)
+Sprint 1 ( 3 weeks )
+- ✅ Register
 - ✅ Login + Forget Password
 - ✅ Dashboard Homepage
 - ✅ User Management
-- ✅ Role Management ( still on unit testing )
+- ✅ Role Management 
 
-Sprint 2 ( 4 weeks )
-- ✅ MonitoringVA Satker ( still on unit testing )
-- ✅ Download Report Satker ( still on unit testing )
+Sprint 2 ( 3 weeks )
+- ✅ MonitoringVA Satker 
+- ✅ Download Report Satker
 
 ## Feature
 - Create New Account ( status user inactive, input, email, username, password masking validation )
@@ -51,5 +51,3 @@ Sprint 2 ( 4 weeks )
 
 ## Layout Download VA
 ![DownloadVA](https://github.com/indahcikalao/Finpro-FE-CMP/assets/75374189/935456a6-8d69-4cb7-b891-650e93ac052b)
-
-## More detail, layout and feature will update soon ⏰
