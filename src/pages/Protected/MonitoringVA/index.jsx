@@ -255,7 +255,7 @@ export const MonitoringVA = () => {
               },
             },
           ]}
-          data={data}
+          data={data ?? []}
           progressPending={loading}
           progressComponent={
             <Spinner message="Please wait for a moment..." size="lg" />
@@ -266,6 +266,8 @@ export const MonitoringVA = () => {
           paginationTotalRows={totalRows}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handlePerRowsChange}
+          fixedHeader
+          fixedHeaderScrollHeight="60vh"
           defaultSortAsc={true}
           defaultSortFieldId="status"
         />
